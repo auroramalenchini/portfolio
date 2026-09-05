@@ -59,9 +59,9 @@ placeholders de picsum.photos para que el sitio se vea sin ningún asset.
 
 ## Identidad visual
 
-- Tres colores y nada más: fondo crema `#F3EDE1`, texto y títulos en marrón
-  oscuro `#24211C`, y bordó `#7A2233` para los detalles (líneas, subrayados,
-  kicker, hover).
+- Fondo crema `#F3EDE1`, texto en marrón casi negro `#24211C`, títulos en
+  marrón oscuro `#4A3527` y bordó `#7A2233` para el nombre de la portada y los
+  detalles (líneas, subrayados, botón de contacto, hover).
 - Títulos en **Archivo** 800, siempre en mayúscula, y textos en **Inter**
   (nada por debajo de 400). Los tokens están arriba de todo en
   `css/style.css`.
