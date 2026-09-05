@@ -15,7 +15,7 @@
 
 const SITE = {
   name: "Aurora Malenchini",
-  tagline: "Fotógrafa, directora y creativa",
+  tagline: "Directora · Fotógrafa · Creativa",
   location: "Buenos Aires, Capital Federal",
   email: "auroramalenchini@gmail.com",
   // El teléfono se renderiza como link directo a WhatsApp (wa.me).

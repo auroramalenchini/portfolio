@@ -5,8 +5,8 @@ HTML plano, un archivo CSS y dos archivos JS chicos.
 
 ```
 portfolio/
-  index.html      portada: el nombre, la info, las dos puertas (Video y Foto),
-                  trabajos destacados, sobre mí, contacto
+  index.html      portada: apertura (nombre adelante, Video y Foto atrás),
+                  la frase, trabajos destacados, sobre mí, contacto
   video.html      videoclips, sesiones en vivo, cortometrajes
   photo.html      foto y video comercial (restaurantes, eventos, espacios)
   css/style.css
@@ -78,16 +78,20 @@ funciones del final de `js/main.js`:
   mientras carga la página. Se muestra una sola vez por sesión del navegador
   (queda anotado en `sessionStorage`) y tiene un corte de seguridad a los 7
   segundos por si algún recurso no responde.
-- **Entrada de la portada**: la primera pantalla es solo el nombre, que sube
-  línea por línea. Al bajar, el nombre se va quedando atrás y se apaga.
+- **Apertura**: la sección `.opening` mide 220vh y adentro tiene un escenario
+  pegado arriba (`position: sticky`). Ese tramo de scroll es el que desenfoca el
+  nombre y trae las puertas de Video y Foto desde el fondo. Las variables
+  `--back-*`, `--front-*` y `--veil` las mueve `pintarApertura()` en `main.js`.
+  Las puertas recién se pueden clickear cuando están casi nítidas.
 - **La frase**: se enciende palabra por palabra según cuánto scrolleaste.
-- **Apariciones**: los bloques y las placas se revelan al entrar en pantalla,
-  con un pequeño escalonado entre placas vecinas.
-- **Scroll**: el header se achica y una línea bordó marca cuánto falta para el
-  final.
+- **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
+  poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
+  vecinas.
+- **Scroll**: el header se achica al bajar.
 - **Las puertas**: al pasar el cursor, la imagen crece y la otra se atenúa.
 
-Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
+Debajo de 800 px de ancho la apertura no se fija: primero el nombre, después
+las puertas apiladas. Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
 la página se ve completa y quieta. Y si el sistema pide menos animación
 (`prefers-reduced-motion`), se apaga todo automáticamente.
 

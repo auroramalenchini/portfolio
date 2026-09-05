@@ -71,65 +71,59 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .nav a.cta:hover { transform: translateY(-2px); }
 .nav a.cta:hover, .nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); border-color: transparent; }
 
-/* ---------- Portada: solo el nombre ---------- */
-.hero {
-  position: relative;
-  min-height: 100vh;
-  min-height: 100svh;   /* en celular descuenta la barra del navegador */
+/* ---------- Apertura: el nombre adelante, Video y Foto atrás ----------
+   La sección mide más que la pantalla y el escenario queda pegado arriba:
+   ese tramo de scroll es el que enfoca las puertas y desenfoca el nombre.
+   Las variables --back-*, --front-* y --veil las mueve js/main.js.        */
+.opening { position: relative; height: 220vh; }
+.opening-stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: hidden;
   display: grid; place-items: center;
-  padding: 7rem var(--pad) 6rem;
-  max-width: var(--max); margin: 0 auto; width: 100%;
 }
-.hero h1 {
-  margin: 0; text-align: center;
-  font-size: clamp(2.9rem, 11.5vw, 10rem);
+.opening-back {
+  position: absolute; inset: 0; z-index: 0;
+  pointer-events: none;
+  transform: scale(var(--back-scale, .8));
+  filter: blur(var(--back-blur, 18px));
+  opacity: var(--back-op, .5);
+  will-change: transform, filter, opacity;
+}
+.opening-stage.enfoque .opening-back { pointer-events: auto; }
+.opening-veil {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--bg); opacity: var(--veil, .72);
+}
+.opening-front {
+  position: relative; z-index: 2; pointer-events: none;
+  display: grid; gap: clamp(1.1rem, 2.5vw, 1.9rem);
+  text-align: center; padding: 0 var(--pad);
+  opacity: var(--front-op, 1);
+  filter: blur(var(--front-blur, 0px));
+  transform: scale(var(--front-scale, 1));
+  will-change: transform, filter, opacity;
+}
+.opening-front h1 {
+  margin: 0; max-width: 100%; overflow-wrap: break-word;
+  font-size: clamp(2.5rem, 9.5vw, 8rem);
   line-height: .9; letter-spacing: -.02em;
   text-transform: uppercase; color: var(--accent);
-  will-change: transform, opacity;
 }
-.scroll-cue {
-  position: absolute; left: 0; right: 0; bottom: 2rem;
-  width: max-content; margin: 0 auto;
-  display: flex; flex-direction: column; align-items: center; gap: .7rem;
-  font-size: .7rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-muted);
-}
-.scroll-cue::after {
-  content: ""; width: 2px; height: 44px; background: var(--accent);
-  transform-origin: top; animation: cue 2.2s ease-in-out infinite;
-}
-@keyframes cue { 0%, 100% { transform: scaleY(.3); opacity: .45; } 50% { transform: scaleY(1); opacity: 1; } }
-.scroll-cue:hover { color: var(--fg); }
-
-/* ---------- La info, que aparece al bajar ---------- */
-.statement {
-  display: grid; gap: 1.75rem; justify-items: start;
-  max-width: var(--max); margin: 0 auto; width: 100%;
-  padding: clamp(3.5rem, 12vh, 8rem) var(--pad) clamp(3rem, 8vh, 5.5rem);
-}
-.statement-kicker {
-  margin: 0; font-size: .74rem; font-weight: 600;
-  letter-spacing: .22em; text-transform: uppercase; color: var(--fg-muted);
-}
-.statement-text {
-  margin: 0; max-width: 24ch;
-  font-family: var(--font-display); font-weight: 600;
-  font-size: clamp(1.7rem, 4.4vw, 3.5rem); line-height: 1.12; letter-spacing: -.015em;
-  color: var(--fg-title); text-wrap: balance;
-}
-.statement-role {
-  margin: 0; padding-top: 1rem; border-top: 2px solid var(--accent);
-  font-size: .8rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+.hero-role {
+  margin: 0;
+  font-size: clamp(.7rem, 1.35vw, .88rem); font-weight: 600;
+  letter-spacing: .3em; text-transform: uppercase; color: var(--fg-title);
 }
 
-/* ---------- Las dos puertas: Video y Foto ---------- */
+/* Las dos puertas, que ocupan el fondo entero de la apertura */
 .doors {
-  display: grid; grid-template-columns: 1fr 1fr; gap: .75rem;
-  max-width: var(--max); margin: 0 auto; width: 100%;
-  padding: 0 var(--pad) clamp(2.5rem, 7vw, 4.5rem);
+  position: absolute; inset: 0;
+  display: grid; grid-template-columns: 1fr 1fr; gap: .6rem;
 }
 .door {
   position: relative; display: block; overflow: hidden;
-  height: clamp(340px, 64vh, 640px); background: var(--bg-2);
+  height: 100%; background: var(--bg-2);
   transition: opacity .5s ease;
 }
 .door img {
@@ -145,7 +139,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .doors:hover .door:not(:hover) { opacity: .45; }
 .door-body {
   position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
-  padding: clamp(1.25rem, 2.5vw, 2rem);
+  padding: clamp(1.25rem, 2.5vw, 2.25rem);
   display: flex; flex-direction: column; align-items: flex-start; gap: .45rem;
   color: var(--on-media);
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
@@ -166,7 +160,24 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   transition: width .45s cubic-bezier(.2,.7,.2,1);
 }
 .door:hover .door-go::after { width: 58px; }
-.door:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+
+/* ---------- La frase, que se enciende al bajar ---------- */
+.statement {
+  display: grid; gap: 1.75rem; justify-items: start;
+  max-width: var(--max); margin: 0 auto; width: 100%;
+  padding: clamp(4rem, 14vh, 9rem) var(--pad) clamp(3rem, 8vh, 5.5rem);
+}
+.statement-kicker {
+  margin: 0; font-size: .74rem; font-weight: 600;
+  letter-spacing: .22em; text-transform: uppercase; color: var(--fg-muted);
+}
+.statement-text {
+  margin: 0; max-width: 24ch;
+  font-family: var(--font-display); font-weight: 600;
+  font-size: clamp(1.7rem, 4.4vw, 3.5rem); line-height: 1.12; letter-spacing: -.015em;
+  color: var(--fg-title); text-wrap: balance;
+}
 
 /* ---------- Bloques de trabajo (portada) ---------- */
 .work-block { padding-top: clamp(3rem, 7vw, 5.5rem); }
@@ -315,36 +326,31 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 body.loading { overflow: hidden; }
 
 /* Entrada de la portada: primero el nombre, después el resto */
-.js .hero h1 .line { display: block; overflow: hidden; padding-bottom: .04em; }
-.js .hero h1 .line > span { display: block; transform: translateY(110%); }
-.js body.ready .hero h1 .line > span { animation: rise 1s cubic-bezier(.16,.84,.28,1) both; }
-.js body.ready .hero h1 .line:nth-child(2) > span { animation-delay: .11s; }
-.js .scroll-cue { opacity: 0; }
-.js body.ready .scroll-cue { animation: fade-up 1s cubic-bezier(.2,.7,.2,1) 1.1s both; }
+.js .opening-front h1 .line { display: block; overflow: hidden; padding-bottom: .04em; }
+.js .opening-front h1 .line > span { display: block; transform: translateY(110%); }
+.js body.ready .opening-front h1 .line > span { animation: rise 1s cubic-bezier(.16,.84,.28,1) both; }
+.js body.ready .opening-front h1 .line:nth-child(2) > span { animation-delay: .11s; }
+.js .hero-role { opacity: 0; }
+.js body.ready .hero-role { animation: fade-in 1.1s cubic-bezier(.2,.7,.2,1) .75s both; }
 @keyframes rise { from { transform: translateY(110%); } to { transform: translateY(0); } }
-@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
 /* La frase de abajo se va encendiendo palabra por palabra mientras scrolleás */
 .js .statement-text span { opacity: .16; transition: opacity .3s ease; }
 
 /* Aparición al scrollear */
 .js .reveal {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+  opacity: 0; transform: scale(.955);
+  transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
 }
 .js .reveal.in { opacity: 1; transform: none; }
 /* Las placas usan variables para que la aparición y el hover no se pisen */
 .js .card.reveal {
-  --rev: 26px; opacity: 0; transform: translateY(calc(var(--rev) + var(--lift, 0px)));
-  transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s ease;
+  --rev: .94; opacity: 0; transform: translateY(var(--lift, 0px)) scale(var(--rev));
+  transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .5s ease;
 }
-.js .card.reveal.in { --rev: 0px; opacity: 1; }
+.js .card.reveal.in { --rev: 1; opacity: 1; }
 
-/* Barra de avance del scroll, pegada al borde del header */
-.site-header::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
-  background: var(--accent); transform: scaleX(var(--sp, 0)); transform-origin: left;
-}
 .site-header.scrolled { padding-top: .6rem; padding-bottom: .6rem; }
 
 /* Visor */
@@ -355,12 +361,22 @@ body.loading { overflow: hidden; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
-  .hero { padding: 6rem var(--pad) 5.5rem; }
   .statement-text { max-width: 20ch; }
 }
 @media (max-width: 800px) {
-  .doors { grid-template-columns: 1fr; }
-  .door { height: clamp(280px, 46vh, 420px); }
+  /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
+  .opening { height: auto; }
+  .opening-stage { position: static; height: auto; display: block; overflow: visible; }
+  .opening-back {
+    position: static; transform: none; filter: none; opacity: 1; pointer-events: auto;
+  }
+  .opening-veil { display: none; }
+  .opening-front {
+    opacity: 1; filter: none; transform: none; pointer-events: auto;
+    padding: clamp(6rem, 22vh, 9rem) var(--pad) clamp(3.5rem, 12vh, 5rem);
+  }
+  .doors { position: static; grid-template-columns: 1fr; gap: .6rem; padding: 0 var(--pad) 1rem; }
+  .door { height: clamp(300px, 48vh, 440px); }
 }
 @media (max-width: 800px) {
   .about { grid-template-columns: 1fr; gap: 2rem; }
@@ -377,15 +393,21 @@ body.loading { overflow: hidden; }
   .nav { width: 100%; gap: 1rem; }
   .nav a.cta { margin-left: auto; }
   .brand small { display: none; }
-  .scroll-cue { display: none; }
   .work-block .grid-photo { grid-auto-rows: 190px; }
   .contact-links { gap: 1rem 1.75rem; font-size: .8rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .js .reveal, .js .card, .js .scroll-cue,
-  .js .statement-text span { opacity: 1 !important; --rev: 0px !important; transform: none !important; }
-  .js .hero h1 .line > span { transform: none !important; }
+  .js .reveal, .js .card, .js .hero-role,
+  .js .statement-text span { opacity: 1 !important; --rev: 1 !important; transform: none !important; }
+  .opening { height: auto; }
+  .opening-stage { position: static; height: auto; display: block; overflow: visible; }
+  .opening-back { transform: none !important; filter: none !important; opacity: 1 !important; pointer-events: auto; }
+  .opening-veil { display: none; }
+  .opening-front { opacity: 1 !important; filter: none !important; transform: none !important; padding: 5rem var(--pad) 3rem; }
+  .doors { position: static; }
+  .door { height: clamp(300px, 48vh, 460px); }
+  .js .opening-front h1 .line > span { transform: none !important; }
   .loader { display: none !important; }
 }

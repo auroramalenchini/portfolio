@@ -174,7 +174,7 @@
 
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
-    var sel = ".statement-kicker, .statement-role, .door, " +
+    var sel = ".statement-kicker, " +
               ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
               ".about img, .about > div, .contact h2, .contact p, .contact-links";
     var bloques = [].slice.call(document.querySelectorAll(sel));
@@ -235,10 +235,47 @@
     });
   }
 
+  // ---- La apertura: el nombre se desenfoca y las puertas vienen desde el fondo ----
+  var apertura = $(".opening");
+  var escenario = $(".opening-stage");
+
+  function aperturaFija() {
+    // En pantallas chicas y con movimiento reducido no se fija nada: se apila.
+    return apertura && escenario && !reduced && window.innerWidth > 800;
+  }
+
+  function pintarApertura() {
+    if (!apertura || !escenario) return;
+    if (!aperturaFija()) {
+      ["--back-scale", "--back-blur", "--back-op", "--veil",
+       "--front-op", "--front-blur", "--front-scale"].forEach(function (v) {
+        escenario.style.removeProperty(v);
+      });
+      escenario.classList.add("enfoque");
+      return;
+    }
+    var caja = apertura.getBoundingClientRect();
+    var recorrido = apertura.offsetHeight - window.innerHeight;
+    var avance = recorrido > 0 ? Math.max(0, Math.min(1, -caja.top / recorrido)) : 0;
+    // Termina antes del final para que quede un tramo con las puertas nítidas.
+    var t = Math.max(0, Math.min(1, avance / 0.72));
+    var suave = t * t * (3 - 2 * t);      // arranca y termina suave
+
+    escenario.style.setProperty("--back-scale", (0.8 + 0.2 * suave).toFixed(4));
+    escenario.style.setProperty("--back-blur", (18 * (1 - suave)).toFixed(2) + "px");
+    escenario.style.setProperty("--back-op", (0.5 + 0.5 * suave).toFixed(3));
+    escenario.style.setProperty("--veil", (0.72 * (1 - suave)).toFixed(3));
+    escenario.style.setProperty("--front-op", Math.max(0, 1 - t * 1.2).toFixed(3));
+    escenario.style.setProperty("--front-blur", (11 * Math.min(1, t * 1.2)).toFixed(2) + "px");
+    escenario.style.setProperty("--front-scale", (1 - t * 0.07).toFixed(4));
+    // Recién cuando están casi nítidas se pueden clickear.
+    if (t > 0.55) escenario.classList.add("enfoque");
+    else escenario.classList.remove("enfoque");
+  }
+
   // ---- Efectos ligados al scroll ----
   function initScroll() {
     var header = $(".site-header");
-    var heroTitle = $(".hero h1");
     var pendiente = false;
 
     function update() {
@@ -246,19 +283,8 @@
       if (header) {
         if (y > 40) header.classList.add("scrolled");
         else header.classList.remove("scrolled");
-        var total = document.documentElement.scrollHeight - window.innerHeight;
-        header.style.setProperty("--sp", total > 0 ? Math.min(1, y / total).toFixed(4) : 0);
       }
-      // El nombre se va quedando atrás y se apaga mientras entra el resto.
-      if (heroTitle && !reduced) {
-        var alto = window.innerHeight || 1;
-        var av = Math.min(1, y / (alto * 0.85));
-        if (y < alto * 1.4) {
-          heroTitle.style.transform =
-            "translate3d(0," + (y * 0.28).toFixed(2) + "px,0) scale(" + (1 - av * 0.09).toFixed(4) + ")";
-          heroTitle.style.opacity = Math.max(0, 1 - av * 1.15).toFixed(3);
-        }
-      }
+      pintarApertura();
       pintarPalabras();
       pendiente = false;
     }
