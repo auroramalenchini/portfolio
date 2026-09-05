@@ -20,7 +20,7 @@ const SITE = {
   email: "auroramalenchini@gmail.com",
   // El teléfono se renderiza como link directo a WhatsApp (wa.me).
   phone: "+54 9 11 2367 9398",
-  instagram: "https://instagram.com/auroramalenchini",
+  instagram: "https://www.instagram.com/auromalenchini/",
 };
 
 const VIDEO_WORK = [
