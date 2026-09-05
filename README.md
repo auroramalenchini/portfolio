@@ -62,8 +62,8 @@ placeholders de picsum.photos para que el sitio se vea sin ningún asset.
 - Tres colores y nada más: fondo crema `#F3EDE1`, texto y títulos en marrón
   oscuro `#24211C`, y bordó `#7A2233` para los detalles (líneas, subrayados,
   kicker, hover).
-- Títulos en **Playfair Display** 800, siempre en mayúscula, y textos en
-  **Inter** (nada por debajo de 400). Los tokens están arriba de todo en
+- Títulos en **Archivo** 800, siempre en mayúscula, y textos en **Inter**
+  (nada por debajo de 400). Los tokens están arriba de todo en
   `css/style.css`.
 
 ## Deploy
