@@ -2,12 +2,11 @@
    CONTENIDO
    Este es el único archivo que hay que tocar para sumar trabajos.
    - VIDEO_WORK  -> se muestra en video.html (videoclips, films)
-   - PHOTO_WORK  -> se muestra en photo.html (comercial: hoteles,
-                    restaurantes, eventos, espacios). Cada ítem
-                    puede ser type "photo" o type "video".
-   Embeds de video: pegá la URL de embed de Vimeo o YouTube.
-     Vimeo:   https://player.vimeo.com/video/ID_DEL_VIDEO
-     YouTube: https://www.youtube-nocookie.com/embed/ID_DEL_VIDEO
+   - PHOTO_WORK  -> se muestra en photo.html (comercial: restaurantes,
+                    eventos, espacios). Cada ítem puede ser
+                    type "photo" o type "video".
+   Embeds de video: pegá la URL de embed de YouTube.
+     https://www.youtube-nocookie.com/embed/ID_DEL_VIDEO
    Miniaturas e imágenes: poné los archivos en /img y referencialos
    como "img/nombre.jpg".
    Los placeholders de abajo usan picsum.photos y videos públicos
@@ -17,11 +16,11 @@
 const SITE = {
   name: "Aurora Malenchini",
   tagline: "Fotógrafa, directora y creativa",
-  location: "Buenos Aires, AR",
+  location: "Buenos Aires, Capital Federal",
   email: "auroramalenchini@gmail.com",
+  // El teléfono se renderiza como link directo a WhatsApp (wa.me).
   phone: "+54 9 11 2367 9398",
   instagram: "https://instagram.com/auroramalenchini",
-  vimeo: "https://vimeo.com/",
 };
 
 const VIDEO_WORK = [
@@ -83,12 +82,6 @@ const VIDEO_WORK = [
 ];
 
 const PHOTO_WORK = [
-  // ---- Hoteles ----
-  { type: "photo", category: "Hoteles", title: "Hotel Palermo · Suites", client: "Hotel Palermo", src: "https://picsum.photos/seed/hotel1/1600/1067", tall: false },
-  { type: "photo", category: "Hoteles", title: "Hotel Palermo · Lobby", client: "Hotel Palermo", src: "https://picsum.photos/seed/hotel2/1067/1600", tall: true },
-  { type: "video", category: "Hoteles", title: "Hotel Palermo · Video institucional", client: "Hotel Palermo", embed: "https://www.youtube-nocookie.com/embed/LXb3EKWsInQ", thumb: "https://picsum.photos/seed/hotel3/1600/1067" },
-  { type: "photo", category: "Hoteles", title: "Posada del Valle", client: "Posada del Valle", src: "https://picsum.photos/seed/hotel4/1600/1067" },
-
   // ---- Restaurantes ----
   { type: "photo", category: "Restaurantes", title: "Cocina Abierta · Platos", client: "Restaurante Sur", src: "https://picsum.photos/seed/rest1/1600/1067" },
   { type: "photo", category: "Restaurantes", title: "Barra · Noche", client: "Bar Central", src: "https://picsum.photos/seed/rest2/1067/1600", tall: true },

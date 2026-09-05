@@ -7,9 +7,15 @@
   document.querySelectorAll("[data-site]").forEach((el) => {
     const key = el.dataset.site;
     if (!(key in SITE)) return;
-    if (el.tagName === "A" && (key === "instagram" || key === "vimeo")) el.href = SITE[key];
+    if (el.tagName === "A" && key === "instagram") el.href = SITE[key];
     else if (el.tagName === "A" && key === "email") { el.href = "mailto:" + SITE.email; el.textContent = SITE.email; }
-    else if (el.tagName === "A" && key === "phone") { el.href = "tel:" + SITE.phone.replace(/[^+\d]/g, ""); el.textContent = SITE.phone; }
+    else if (el.tagName === "A" && key === "phone") {
+      // El teléfono abre WhatsApp, no el marcador del teléfono.
+      el.href = "https://wa.me/" + SITE.phone.replace(/\D/g, "");
+      el.target = "_blank";
+      el.rel = "noopener";
+      el.textContent = el.dataset.text || SITE.phone;
+    }
     else el.textContent = SITE[key];
   });
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
