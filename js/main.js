@@ -120,4 +120,111 @@
     if (!items.length) { grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`; }
     else { items.forEach((it, i) => grid.appendChild(card(it, i))); }
   }
+  // =======================================================
+  //  MOVIMIENTO
+  //  Precarga, entrada de la portada, apariciones al scrollear.
+  //  Si alguien pidió menos animación en su sistema, se apaga todo.
+  // =======================================================
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function markReady() { document.body.classList.add("ready"); }
+
+  // ---- Precarga con el monograma AM ----
+  function initLoader() {
+    var el = document.getElementById("loader");
+    if (!el) { markReady(); return; }
+    var fill = $(".loader-fill", el);
+    var vista = false;
+    try { vista = sessionStorage.getItem("am-loader") === "1"; } catch (e) {}
+
+    function finish(instant) {
+      try { sessionStorage.setItem("am-loader", "1"); } catch (e) {}
+      if (fill) fill.style.setProperty("--p", "100%");
+      if (instant) el.classList.add("instant");
+      el.classList.add("done");
+      document.body.classList.remove("loading");
+      markReady();
+      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, instant ? 0 : 900);
+    }
+
+    if (vista || reduced) { finish(true); return; }
+
+    document.body.classList.add("loading");
+    var listo = document.readyState === "complete";
+    window.addEventListener("load", function () { listo = true; });
+
+    var inicio = performance.now(), p = 0;
+    (function tick(now) {
+      // Sube sola hasta 90 y espera a que termine de cargar para completar.
+      var objetivo = listo ? 100 : Math.min(90, (now - inicio) / 18);
+      p += (objetivo - p) * 0.1;
+      if (listo && p > 99) p = 100;
+      if (fill) fill.style.setProperty("--p", p.toFixed(1) + "%");
+      if (p >= 99.5) { setTimeout(function () { finish(false); }, 280); return; }
+      if (now - inicio > 7000) { finish(false); return; }  // red de seguridad
+      requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  // ---- Aparición de bloques y placas al entrar en pantalla ----
+  function initReveals() {
+    var sel = ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
+              ".about img, .about > div, .contact h2, .contact p, .contact-links";
+    var bloques = [].slice.call(document.querySelectorAll(sel));
+    var placas = [].slice.call(document.querySelectorAll(".card"));
+    bloques.forEach(function (el) { el.classList.add("reveal"); });
+    placas.forEach(function (el, i) {
+      el.classList.add("reveal");
+      el.style.transitionDelay = (i % 8) * 55 + "ms";
+    });
+    var todos = bloques.concat(placas);
+
+    if (reduced || !("IntersectionObserver" in window)) {
+      todos.forEach(function (el) { el.classList.add("in"); el.style.transitionDelay = ""; });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        el.classList.add("in");
+        io.unobserve(el);
+        // El retardo era solo para la entrada: si queda, el hover se siente pegajoso.
+        setTimeout(function () { el.style.transitionDelay = ""; }, 1100);
+      });
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.08 });
+    todos.forEach(function (el) { io.observe(el); });
+  }
+
+  // ---- Efectos ligados al scroll ----
+  function initScroll() {
+    var header = $(".site-header");
+    var heroImg = $(".hero-media img");
+    var pendiente = false;
+
+    function update() {
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      if (header) {
+        if (y > 40) header.classList.add("scrolled");
+        else header.classList.remove("scrolled");
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        header.style.setProperty("--sp", total > 0 ? Math.min(1, y / total).toFixed(4) : 0);
+      }
+      if (heroImg && !reduced && y < window.innerHeight * 1.3) {
+        heroImg.style.transform =
+          "translate3d(0," + (y * 0.09).toFixed(2) + "px,0) scale(" + (1 + y * 0.00009).toFixed(4) + ")";
+      }
+      pendiente = false;
+    }
+
+    window.addEventListener("scroll", function () {
+      if (!pendiente) { pendiente = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    update();
+  }
+
+  initLoader();
+  initReveals();
+  initScroll();
 })();

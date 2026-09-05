@@ -66,6 +66,26 @@ placeholders de picsum.photos para que el sitio se vea sin ningún asset.
   (nada por debajo de 400). Los tokens están arriba de todo en
   `css/style.css`.
 
+## Movimiento
+
+Las animaciones viven en el bloque `Movimiento` de `css/style.css` y en las tres
+funciones del final de `js/main.js`:
+
+- **Precarga**: el monograma `AM` de `index.html` se llena de abajo hacia arriba
+  mientras carga la página. Se muestra una sola vez por sesión del navegador
+  (queda anotado en `sessionStorage`) y tiene un corte de seguridad a los 7
+  segundos por si algún recurso no responde.
+- **Entrada de la portada**: primero sube el nombre línea por línea, después
+  entran la foto, la ubicación, el rol y la bajada.
+- **Apariciones**: los bloques y las placas se revelan al entrar en pantalla,
+  con un pequeño escalonado entre placas vecinas.
+- **Scroll**: el header se achica, una línea bordó marca cuánto falta para el
+  final y la foto de la portada se mueve más lento que el resto.
+
+Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
+la página se ve completa y quieta. Y si el sistema pide menos animación
+(`prefers-reduced-motion`), se apaga todo automáticamente.
+
 ## Deploy
 
 Sirve cualquier hosting estático: GitHub Pages, Netlify, Cloudflare Pages,

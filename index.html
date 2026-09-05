@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.className += " js";</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,6 +12,13 @@
   <meta name="description" content="Videoclips, films y fotografía comercial para restaurantes, eventos y espacios. Buenos Aires.">
 </head>
 <body data-page="home">
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-mark">
+      <span class="loader-ghost">AM</span>
+      <span class="loader-fill">AM</span>
+    </div>
+  </div>
+
   <header class="site-header">
     <a class="brand" href="index.html"><span data-site="name"></span><small data-site="tagline"></small></a>
     <nav class="nav" aria-label="Principal">
@@ -25,7 +33,7 @@
     <section class="hero" aria-label="Presentación">
       <div class="hero-text">
         <p class="hero-kicker">Buenos Aires, Capital Federal</p>
-        <h1>Aurora <br>Malenchini</h1>
+        <h1><span class="line"><span>Aurora</span></span><span class="line"><span>Malenchini</span></span></h1>
         <p class="hero-role">Fotógrafa, directora y creativa</p>
         <p class="hero-sub">Dirijo, filmo y edito piezas para artistas, restaurantes, eventos y espacios.</p>
       </div>
