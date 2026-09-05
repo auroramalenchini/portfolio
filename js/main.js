@@ -20,6 +20,12 @@
   });
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
 
+  // ---- Imágenes de las dos puertas de la portada ----
+  document.querySelectorAll("img[data-door]").forEach((el) => {
+    var url = SITE.doors && SITE.doors[el.dataset.door];
+    if (url) el.src = url;
+  });
+
   // ---- Visor ----
   let items = [];   // ítems visibles en este momento
   let index = -1;
@@ -168,7 +174,8 @@
 
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
-    var sel = ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
+    var sel = ".statement-kicker, .statement-role, .door, " +
+              ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
               ".about img, .about > div, .contact h2, .contact p, .contact-links";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));
@@ -196,10 +203,42 @@
     todos.forEach(function (el) { io.observe(el); });
   }
 
+  // ---- La frase de la portada se enciende palabra por palabra ----
+  var palabras = [];
+  function initStatement() {
+    var el = $(".statement-text");
+    if (!el) return;
+    var texto = el.textContent.trim();
+    el.textContent = "";
+    texto.split(/\s+/).forEach(function (w, i) {
+      var span = document.createElement("span");
+      span.textContent = (i ? " " : "") + w;
+      el.appendChild(span);
+      palabras.push(span);
+    });
+    if (reduced) palabras.forEach(function (w) { w.style.opacity = 1; });
+  }
+
+  function pintarPalabras() {
+    if (!palabras.length || reduced) return;
+    var el = $(".statement-text");
+    var caja = el.getBoundingClientRect();
+    var desde = window.innerHeight * 0.95;
+    var hasta = window.innerHeight * 0.45;
+    var avance = (desde - caja.top) / (desde - hasta);
+    avance = Math.max(0, Math.min(1, avance));
+    var n = palabras.length;
+    palabras.forEach(function (w, i) {
+      var inicio = (i / n) * 0.6;           // cada palabra arranca un poco después
+      var v = (avance - inicio) / 0.3;
+      w.style.opacity = Math.max(0.16, Math.min(1, v)).toFixed(3);
+    });
+  }
+
   // ---- Efectos ligados al scroll ----
   function initScroll() {
     var header = $(".site-header");
-    var heroImg = $(".hero-media img");
+    var heroTitle = $(".hero h1");
     var pendiente = false;
 
     function update() {
@@ -210,10 +249,17 @@
         var total = document.documentElement.scrollHeight - window.innerHeight;
         header.style.setProperty("--sp", total > 0 ? Math.min(1, y / total).toFixed(4) : 0);
       }
-      if (heroImg && !reduced && y < window.innerHeight * 1.3) {
-        heroImg.style.transform =
-          "translate3d(0," + (y * 0.09).toFixed(2) + "px,0) scale(" + (1 + y * 0.00009).toFixed(4) + ")";
+      // El nombre se va quedando atrás y se apaga mientras entra el resto.
+      if (heroTitle && !reduced) {
+        var alto = window.innerHeight || 1;
+        var av = Math.min(1, y / (alto * 0.85));
+        if (y < alto * 1.4) {
+          heroTitle.style.transform =
+            "translate3d(0," + (y * 0.28).toFixed(2) + "px,0) scale(" + (1 - av * 0.09).toFixed(4) + ")";
+          heroTitle.style.opacity = Math.max(0, 1 - av * 1.15).toFixed(3);
+        }
       }
+      pintarPalabras();
       pendiente = false;
     }
 
@@ -225,6 +271,7 @@
   }
 
   initLoader();
+  initStatement();
   initReveals();
   initScroll();
 })();

@@ -5,7 +5,8 @@ HTML plano, un archivo CSS y dos archivos JS chicos.
 
 ```
 portfolio/
-  index.html      portada: presentación, video y foto destacados, sobre mí, contacto
+  index.html      portada: el nombre, la info, las dos puertas (Video y Foto),
+                  trabajos destacados, sobre mí, contacto
   video.html      videoclips, sesiones en vivo, cortometrajes
   photo.html      foto y video comercial (restaurantes, eventos, espacios)
   css/style.css
@@ -37,7 +38,9 @@ Editá `js/data.js`.
     verticales.
   - `type: "video"` con `embed` y `thumb`.
 
-Nombre, bajada, ubicación, mail, teléfono e Instagram están en `SITE`.
+Nombre, bajada, ubicación, mail, teléfono e Instagram están en `SITE`. Las dos
+imágenes grandes de la portada (las puertas a Video y a Foto) también salen de
+ahí: `SITE.doors.video` y `SITE.doors.photo`.
 El teléfono se renderiza como link directo a WhatsApp (`wa.me`), así que
 alcanza con escribirlo con el código de país.
 
@@ -75,12 +78,14 @@ funciones del final de `js/main.js`:
   mientras carga la página. Se muestra una sola vez por sesión del navegador
   (queda anotado en `sessionStorage`) y tiene un corte de seguridad a los 7
   segundos por si algún recurso no responde.
-- **Entrada de la portada**: primero sube el nombre línea por línea, después
-  entran la foto, la ubicación, el rol y la bajada.
+- **Entrada de la portada**: la primera pantalla es solo el nombre, que sube
+  línea por línea. Al bajar, el nombre se va quedando atrás y se apaga.
+- **La frase**: se enciende palabra por palabra según cuánto scrolleaste.
 - **Apariciones**: los bloques y las placas se revelan al entrar en pantalla,
   con un pequeño escalonado entre placas vecinas.
-- **Scroll**: el header se achica, una línea bordó marca cuánto falta para el
-  final y la foto de la portada se mueve más lento que el resto.
+- **Scroll**: el header se achica y una línea bordó marca cuánto falta para el
+  final.
+- **Las puertas**: al pasar el cursor, la imagen crece y la otra se atenúa.
 
 Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
 la página se ve completa y quieta. Y si el sistema pide menos animación

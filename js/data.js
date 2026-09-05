@@ -21,6 +21,11 @@ const SITE = {
   // El teléfono se renderiza como link directo a WhatsApp (wa.me).
   phone: "+54 9 11 2367 9398",
   instagram: "https://www.instagram.com/auromalenchini/",
+  // Las dos imágenes grandes de la portada, una por sección.
+  doors: {
+    video: "https://picsum.photos/seed/doorvideo/1600/1200",
+    photo: "https://picsum.photos/seed/doorphoto/1600/1200",
+  },
 };
 
 const VIDEO_WORK = [
