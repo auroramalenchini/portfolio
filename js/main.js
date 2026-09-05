@@ -174,9 +174,8 @@
 
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
-    var sel = ".statement-kicker, " +
-              ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
-              ".about img, .about > div, .contact h2, .contact p, .contact-links";
+    var sel = ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
+              ".about img, .about > div, .contact h2, .contact p, .contact-links, .contact-place";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));
     bloques.forEach(function (el) { el.classList.add("reveal"); });
@@ -203,41 +202,18 @@
     todos.forEach(function (el) { io.observe(el); });
   }
 
-  // ---- La frase de la portada se enciende palabra por palabra ----
-  var palabras = [];
-  function initStatement() {
-    var el = $(".statement-text");
-    if (!el) return;
-    var texto = el.textContent.trim();
-    el.textContent = "";
-    texto.split(/\s+/).forEach(function (w, i) {
-      var span = document.createElement("span");
-      span.textContent = (i ? " " : "") + w;
-      el.appendChild(span);
-      palabras.push(span);
-    });
-    if (reduced) palabras.forEach(function (w) { w.style.opacity = 1; });
-  }
-
-  function pintarPalabras() {
-    if (!palabras.length || reduced) return;
-    var el = $(".statement-text");
-    var caja = el.getBoundingClientRect();
-    var desde = window.innerHeight * 0.95;
-    var hasta = window.innerHeight * 0.45;
-    var avance = (desde - caja.top) / (desde - hasta);
-    avance = Math.max(0, Math.min(1, avance));
-    var n = palabras.length;
-    palabras.forEach(function (w, i) {
-      var inicio = (i / n) * 0.6;           // cada palabra arranca un poco después
-      var v = (avance - inicio) / 0.3;
-      w.style.opacity = Math.max(0.16, Math.min(1, v)).toFixed(3);
-    });
-  }
-
   // ---- La apertura: el nombre se desenfoca y las puertas vienen desde el fondo ----
   var apertura = $(".opening");
   var escenario = $(".opening-stage");
+  var header = $(".site-header");
+  if (apertura && header) document.body.classList.add("tiene-apertura");
+
+  // En la portada el header entra recién cuando las puertas toman la pantalla.
+  function mostrarHeader(si) {
+    if (!header) return;
+    if (si) header.classList.add("visible");
+    else header.classList.remove("visible");
+  }
 
   function aperturaFija() {
     // En pantallas chicas y con movimiento reducido no se fija nada: se apila.
@@ -252,6 +228,9 @@
         escenario.style.removeProperty(v);
       });
       escenario.classList.add("enfoque");
+      // Apilado: el header entra cuando pasaste la pantalla del nombre.
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      mostrarHeader(reduced || y > window.innerHeight * 0.55);
       return;
     }
     var caja = apertura.getBoundingClientRect();
@@ -271,11 +250,11 @@
     // Recién cuando están casi nítidas se pueden clickear.
     if (t > 0.55) escenario.classList.add("enfoque");
     else escenario.classList.remove("enfoque");
+    mostrarHeader(t > 0.5);
   }
 
   // ---- Efectos ligados al scroll ----
   function initScroll() {
-    var header = $(".site-header");
     var pendiente = false;
 
     function update() {
@@ -285,7 +264,6 @@
         else header.classList.remove("scrolled");
       }
       pintarApertura();
-      pintarPalabras();
       pendiente = false;
     }
 
@@ -297,7 +275,6 @@
   }
 
   initLoader();
-  initStatement();
   initReveals();
   initScroll();
 })();

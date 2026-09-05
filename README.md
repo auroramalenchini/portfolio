@@ -6,7 +6,7 @@ HTML plano, un archivo CSS y dos archivos JS chicos.
 ```
 portfolio/
   index.html      portada: apertura (nombre adelante, Video y Foto atrás),
-                  la frase, trabajos destacados, sobre mí, contacto
+                  trabajos destacados, sobre mí, contacto
   video.html      videoclips, sesiones en vivo, cortometrajes
   photo.html      foto y video comercial (restaurantes, eventos, espacios)
   css/style.css
@@ -83,12 +83,14 @@ funciones del final de `js/main.js`:
   nombre y trae las puertas de Video y Foto desde el fondo. Las variables
   `--back-*`, `--front-*` y `--veil` las mueve `pintarApertura()` en `main.js`.
   Las puertas recién se pueden clickear cuando están casi nítidas.
-- **La frase**: se enciende palabra por palabra según cuánto scrolleaste.
+- **El header**: en la portada no está desde el arranque. Entra cuando las
+  puertas toman la pantalla (en el resto de las páginas está siempre).
 - **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
   poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
   vecinas.
 - **Scroll**: el header se achica al bajar.
-- **Las puertas**: al pasar el cursor, la imagen crece y la otra se atenúa.
+- **Las puertas**: al pasar el cursor, esa puerta se lleva más ancho y la imagen
+  crece. La otra se achica, pero no se apaga.
 
 Debajo de 800 px de ancho la apertura no se fija: primero el nombre, después
 las puertas apiladas. Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
