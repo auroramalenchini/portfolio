@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <title>Foto · Aurora Malenchini</title>
+  <meta name="description" content="Fotografía y video comercial para hoteles, restaurantes, eventos y espacios.">
+</head>
+<body data-page="photo">
+  <header class="site-header">
+    <a class="brand" href="index.html"><span data-site="name"></span><small data-site="tagline"></small></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="video.html">Video</a>
+      <a href="photo.html" aria-current="page">Foto</a>
+      <a href="index.html#about">Sobre mí</a>
+      <a href="index.html#contact">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-intro">
+      <h1>Foto</h1>
+      <p>Trabajo comercial para hoteles, restaurantes, eventos y espacios. Algunos proyectos incluyen video, marcados con un botón de play.</p>
+    </section>
+    <section id="grid" class="grid grid-photo" aria-label="Trabajos de fotografía"></section>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-year></span> <span data-site="name"></span></span>
+    <span><a data-site="email" href="#"></a> · <a data-site="phone" href="#"></a></span>
+    <span><a data-site="instagram" href="#" target="_blank" rel="noopener">Instagram</a> · <a data-site="vimeo" href="#" target="_blank" rel="noopener">Vimeo</a></span>
+  </footer>
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Visor de contenido">
+    <button class="lb-btn lb-close" type="button" aria-label="Cerrar">×</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="Anterior">‹</button>
+    <button class="lb-btn lb-next" type="button" aria-label="Siguiente">›</button>
+    <div class="lightbox-stage"></div>
+    <div class="lightbox-caption"></div>
+  </div>
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
