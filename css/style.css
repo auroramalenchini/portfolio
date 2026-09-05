@@ -73,11 +73,11 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .hero-kicker {
   margin: 0 0 1.5rem; font-size: .76rem; font-weight: 600;
-  letter-spacing: .22em; text-transform: uppercase; color: var(--accent);
+  letter-spacing: .22em; text-transform: uppercase; color: var(--fg-muted);
 }
 .hero h1 {
   font-size: clamp(2.3rem, 5.4vw, 4.6rem); line-height: .92; letter-spacing: -.01em;
-  text-transform: uppercase; color: var(--fg);
+  text-transform: uppercase; color: var(--accent);
   margin: 0 0 1.25rem;
 }
 .hero-role {
