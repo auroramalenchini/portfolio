@@ -112,8 +112,8 @@ const VIDEO_WORK = [
    (ancho dividido alto), que el mosaico usa para no recortarlas.
    ========================================================= */
 const PHOTO_WORK = [
-  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 18,
-    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78] },
+  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 34,
+    ar: [0.56, 0.56, 0.56, 0.56, 0.56, 1.78, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 1.78, 1.78, 0.56, 1.78, 1.78, 0.56, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56] },
   { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6,
     ar: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
   { slug: "apertura-bar",     titulo: "Fotografías para apertura de bar",            categoria: "Evento",     fotos: 19,

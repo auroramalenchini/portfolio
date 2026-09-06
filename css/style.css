@@ -266,12 +266,14 @@ body[data-page="proyecto"] .mosaico .card {
 .card.foto .card-meta { display: none; }
 .grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
 
-.volver { margin: 0 0 1.25rem; }
+.volver { margin: 0 0 1.5rem; }
 .volver a {
-  font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--fg-muted); transition: color .2s;
+  display: inline-block; padding: .5rem .9rem;
+  font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--fg-title); border: 1px solid var(--line);
+  transition: color .2s, background .2s, border-color .2s;
 }
-.volver a:hover { color: var(--accent); }
+.volver a:hover { color: var(--on-media); background: var(--accent); border-color: var(--accent); }
 .grupo-fila .card { aspect-ratio: 16 / 9; }
 
 .card {
