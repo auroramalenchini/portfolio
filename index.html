@@ -60,24 +60,6 @@
       </div>
     </section>
 
-    <section class="work-block" id="work">
-      <div class="section-head">
-        <h2>Video</h2>
-        <a class="section-link" href="video.html">Todo el video</a>
-      </div>
-      <p class="section-sub">Videoclips, sesiones en vivo, cortometrajes y fashion films.</p>
-      <div id="home-video" class="grid grid-video" aria-label="Videos destacados"></div>
-    </section>
-
-    <section class="work-block">
-      <div class="section-head">
-        <h2>Foto</h2>
-        <a class="section-link" href="photo.html">Toda la fotografía</a>
-      </div>
-      <p class="section-sub">Trabajo comercial para restaurantes, eventos y espacios.</p>
-      <div id="home-photo" class="grid grid-photo" aria-label="Fotografías destacadas"></div>
-    </section>
-
     <section class="about" id="about">
       <img src="https://picsum.photos/seed/portrait/900/1125" alt="Retrato de Aurora Malenchini">
       <div>
@@ -92,9 +74,18 @@
       <h2>Trabajemos juntos</h2>
       <p>Para briefs, disponibilidad y tarifas, escribime por mail o WhatsApp.</p>
       <div class="contact-links">
-        <a data-site="phone" data-text="WhatsApp" href="#"></a>
-        <a data-site="instagram" href="#" target="_blank" rel="noopener">Instagram</a>
-        <a data-site="email" href="#"></a>
+        <a class="contact-link" data-site="phone" href="#">
+          <span class="cl-label">WhatsApp</span>
+          <span class="cl-value" data-value="phone"></span>
+        </a>
+        <a class="contact-link" data-site="instagram" href="#" target="_blank" rel="noopener">
+          <span class="cl-label">Instagram</span>
+          <span class="cl-value" data-value="instagram"></span>
+        </a>
+        <a class="contact-link" data-site="email" href="#">
+          <span class="cl-label">Mail</span>
+          <span class="cl-value" data-value="email"></span>
+        </a>
       </div>
       <p class="contact-place" data-site="location"></p>
     </section>
@@ -104,13 +95,6 @@
     <span>© <span data-year></span> <span data-site="name"></span></span>
   </footer>
 
-  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Visor de contenido">
-    <button class="lb-btn lb-close" type="button" aria-label="Cerrar">×</button>
-    <button class="lb-btn lb-prev" type="button" aria-label="Anterior">‹</button>
-    <button class="lb-btn lb-next" type="button" aria-label="Siguiente">›</button>
-    <div class="lightbox-stage"></div>
-    <div class="lightbox-caption"></div>
-  </div>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>

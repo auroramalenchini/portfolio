@@ -7,16 +7,26 @@
   document.querySelectorAll("[data-site]").forEach((el) => {
     const key = el.dataset.site;
     if (!(key in SITE)) return;
-    if (el.tagName === "A" && key === "instagram") el.href = SITE[key];
-    else if (el.tagName === "A" && key === "email") { el.href = "mailto:" + SITE.email; el.textContent = SITE.email; }
-    else if (el.tagName === "A" && key === "phone") {
+    var link = el.tagName === "A";
+    var conHijos = el.children.length > 0;   // si trae etiqueta y dato, no lo pisamos
+    if (link && key === "instagram") el.href = SITE.instagram;
+    else if (link && key === "email") {
+      el.href = "mailto:" + SITE.email;
+      if (!conHijos) el.textContent = SITE.email;
+    } else if (link && key === "phone") {
       // El teléfono abre WhatsApp, no el marcador del teléfono.
       el.href = "https://wa.me/" + SITE.phone.replace(/\D/g, "");
       el.target = "_blank";
       el.rel = "noopener";
-      el.textContent = el.dataset.text || SITE.phone;
-    }
-    else el.textContent = SITE[key];
+      if (!conHijos) el.textContent = el.dataset.text || SITE.phone;
+    } else if (!link) el.textContent = SITE[key];
+  });
+
+  // ---- El dato que va debajo de cada etiqueta de contacto ----
+  document.querySelectorAll("[data-value]").forEach((el) => {
+    var k = el.dataset.value;
+    if (k === "instagram") el.textContent = "@" + SITE.instagram.replace(/\/+$/, "").split("/").pop();
+    else el.textContent = SITE[k] || "";
   });
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
 
@@ -101,17 +111,6 @@
     return btn;
   }
 
-  // ---- Portada (trabajos destacados, ítems reales) ----
-  if (page === "home") {
-    const vGrid = $("#home-video");
-    const pGrid = $("#home-photo");
-    const vPick = VIDEO_WORK.slice(0, 3);
-    const pPick = PHOTO_WORK.slice(0, 8);
-    items = [...vPick, ...pPick];
-    vPick.forEach((it, i) => vGrid.appendChild(card(it, i)));
-    pPick.forEach((it, i) => pGrid.appendChild(card(it, vPick.length + i)));
-  }
-
   // ---- Página de video ----
   if (page === "video") {
     const grid = $("#grid");
@@ -174,7 +173,7 @@
 
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
-    var sel = ".section-head, .section-sub, .page-intro h1, .page-intro p, " +
+    var sel = ".page-intro h1, .page-intro p, " +
               ".about img, .about > div, .contact h2, .contact p, .contact-links, .contact-place";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));
