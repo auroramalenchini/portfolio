@@ -87,6 +87,9 @@ funciones del final de `js/main.js`:
   Las puertas recién se pueden clickear cuando están casi nítidas.
 - **El header**: en la portada no está desde el arranque. Entra cuando las
   puertas toman la pantalla (en el resto de las páginas está siempre).
+- **Llegar a una sección**: si la URL trae ancla (`index.html#about`, por
+  ejemplo, que es lo que usan los links de video.html y photo.html), la portada
+  saltea la precarga y la apertura, y arranca directo en esa sección.
 - **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
   poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
   vecinas. En "Sobre mí" el escalonado va párrafo por párrafo.

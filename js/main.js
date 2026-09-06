@@ -134,6 +134,26 @@
 
   function markReady() { document.body.classList.add("ready"); }
 
+  // Si venís de otra página apuntando a una sección (index.html#about),
+  // el destino es esa sección: ni precarga, ni recorrido por la apertura.
+  function destinoDeLaUrl() {
+    var h = window.location.hash;
+    if (!h || h.length < 2) return null;
+    try { return document.querySelector(h); } catch (e) { return null; }
+  }
+
+  function irAlDestino() {
+    var destino = destinoDeLaUrl();
+    if (!destino) return;
+    var previo = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "auto";  // sin viaje animado
+    destino.scrollIntoView();                                // respeta scroll-margin-top
+    requestAnimationFrame(function () {
+      document.documentElement.style.scrollBehavior = previo;
+      pintarApertura();
+    });
+  }
+
   // ---- Precarga con el monograma AM ----
   function initLoader() {
     var el = document.getElementById("loader");
@@ -152,7 +172,7 @@
       setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, instant ? 0 : 900);
     }
 
-    if (vista || reduced) { finish(true); return; }
+    if (vista || reduced || destinoDeLaUrl()) { finish(true); return; }
 
     document.body.classList.add("loading");
     var listo = document.readyState === "complete";
@@ -280,4 +300,5 @@
   initLoader();
   initReveals();
   initScroll();
+  irAlDestino();
 })();
