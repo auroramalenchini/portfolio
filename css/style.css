@@ -257,17 +257,25 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .card.foto .card-meta { display: none; }
 .grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
 
-/* El botón arranca bien arriba y deja aire antes del título del proyecto. */
-body[data-page="proyecto"] .page-intro { padding-top: clamp(1.5rem, 3.5vw, 2.25rem); }
-/* Con la clase sola no alcanza: ".page-intro p" le ganaba y lo dejaba en cero. */
-.page-intro .volver { margin: 0 0 clamp(2.25rem, 5vw, 3.5rem); max-width: none; }
+/* Botón flotante: queda a mano estés donde estés dentro del proyecto.
+   Sale del flujo, así que no le roba espacio al título. */
+.page-intro .volver { position: fixed; right: var(--pad); bottom: 1.5rem; z-index: 30; margin: 0; max-width: none; }
 .volver a {
-  display: inline-block; padding: .5rem .9rem;
+  display: inline-block; padding: .7rem 1.1rem;
   font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--fg-title); border: 1px solid var(--line);
-  transition: color .2s, background .2s, border-color .2s;
+  color: var(--fg-title); background: rgba(243,237,225,.92); backdrop-filter: blur(8px);
+  border: 1px solid var(--line); box-shadow: 0 10px 30px -18px rgba(36,33,28,.8);
+  transition: color .2s, background .2s, border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1);
 }
-.volver a:hover { color: var(--on-media); background: var(--accent); border-color: var(--accent); }
+.volver a:hover {
+  color: var(--on-media); background: var(--accent); border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.js .volver { opacity: 0; animation: fade-in .6s ease .5s both; }
+@media (max-width: 560px) {
+  .page-intro .volver { right: 1rem; bottom: 1rem; }
+  .volver a { padding: .6rem .85rem; font-size: .68rem; }
+}
 .grupo-fila .card { aspect-ratio: 16 / 9; }
 
 .card {

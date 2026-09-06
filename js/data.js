@@ -132,6 +132,6 @@ const PHOTO_WORK = [
     ar: [1.5, 1.5, 1.5, 0.67, 0.75, 1.5, 0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 0.67, 0.67, 0.67] },
   { slug: "psicodear-retiro", titulo: "Fotografías retiro PsicoDeAr",                categoria: "Evento",     fotos: 13,
     ar: [1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
-  { slug: "pasteleria",       titulo: "Fotografías para pastelería",                 categoria: "Restaurante", fotos: 6,
+  { slug: "pasteleria",       titulo: "Fotografías para pastelería",                 categoria: "Emprendimiento", fotos: 6,
     ar: [0.67, 0.67, 0.67, 0.67, 1.78, 0.67] },
 ];
