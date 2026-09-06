@@ -24,7 +24,7 @@ const SITE = {
   // Las dos imágenes grandes de la portada, una por sección.
   doors: {
     video: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
-    photo: "img/foto/vereda/01.jpg",
+    photo: "img/foto/vereda/03.jpg",
   },
 };
 
