@@ -161,13 +161,26 @@
     return arriba - header;
   }
 
-  function irA(destino, suave) {
-    var top = Math.max(0, Math.round(posicionDe(destino)));
-    try {
-      window.scrollTo({ top: top, behavior: suave ? "smooth" : "auto" });
-    } catch (e) {
-      window.scrollTo(0, top);
-    }
+  // El CSS tiene scroll suave para el resto; acá lo apagamos a propósito.
+  function saltar(y) {
+    var raiz = document.documentElement;
+    var previo = raiz.style.scrollBehavior;
+    raiz.style.scrollBehavior = "auto";
+    try { window.scrollTo({ top: y, behavior: "auto" }); } catch (e) { window.scrollTo(0, y); }
+    raiz.style.scrollBehavior = previo;
+  }
+
+  // Siempre directo: nada de recorrer la portada entera para llegar a una sección.
+  function irA(destino) {
+    saltar(Math.max(0, Math.round(posicionDe(destino))));
+    // Ya ubicados, el header pasó a su versión chica: recalculamos una vez.
+    requestAnimationFrame(function () {
+      var h = $(".site-header");
+      if (h) h.classList.toggle("scrolled", (window.pageYOffset || 0) > 40);
+      pintarApertura();
+      var fino = Math.max(0, Math.round(posicionDe(destino)));
+      if (Math.abs(fino - (window.pageYOffset || 0)) > 2) saltar(fino);
+    });
   }
 
   // El navegador hace su propio salto al ancla cuando termina de cargar, y usa
@@ -181,8 +194,7 @@
     if (usuarioMovio) return;
     var destino = destinoDeLaUrl();
     if (!destino) return;
-    irA(destino, false);
-    requestAnimationFrame(pintarApertura);
+    irA(destino);
   }
 
   // Los links del menú de la misma página también van centrados.
@@ -195,7 +207,7 @@
         try { destino = document.querySelector(ref); } catch (err) { return; }
         if (!destino) return;
         e.preventDefault();
-        irA(destino, !reduced);
+        irA(destino);
         if (history.replaceState) history.replaceState(null, "", ref);
       });
     });
