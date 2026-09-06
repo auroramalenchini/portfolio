@@ -111,11 +111,37 @@
     return btn;
   }
 
+  // Un proyecto de varias piezas: título arriba y las piezas en fila.
+  function bloqueGrupo(it, indices) {
+    const wrap = document.createElement("div");
+    wrap.className = "grupo";
+    const head = document.createElement("div");
+    head.className = "grupo-head";
+    head.innerHTML = `<h3>${esc(it.grupo)}</h3><span>${esc(it.client || "")}</span>`;
+    const fila = document.createElement("div");
+    fila.className = "grupo-fila";
+    it.videos.forEach((v, k) => fila.appendChild(card(v, indices[k])));
+    wrap.appendChild(head);
+    wrap.appendChild(fila);
+    return wrap;
+  }
+
   // ---- Página de video ----
   if (page === "video") {
     const grid = $("#grid");
-    items = VIDEO_WORK;
-    items.forEach((it, i) => grid.appendChild(card(it, i)));
+    items = [];
+    VIDEO_WORK.forEach((it) => {
+      if (it.videos) {
+        const indices = it.videos.map((v) => {
+          items.push({ ...v, client: it.client, category: it.category, role: it.role });
+          return items.length - 1;
+        });
+        grid.appendChild(bloqueGrupo(it, indices));
+      } else {
+        items.push(it);
+        grid.appendChild(card(it, items.length - 1));
+      }
+    });
   }
 
   // ---- Página de foto ----

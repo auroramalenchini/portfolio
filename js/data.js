@@ -39,6 +39,30 @@ const VIDEO_WORK = [
     featured: true,
   },
   {
+    // Un proyecto con varias piezas: se muestra como un bloque con título.
+    grupo: "VISUALIZERS PARA EL EP",
+    client: "Maqui",
+    category: "Visualizers",
+    role: "Dirección y edición",
+    videos: [
+      {
+        title: "DESENAMORAME",
+        embed: "https://www.youtube.com/embed/lr7U2yjpUsk",
+        thumb: "https://i.ytimg.com/vi/lr7U2yjpUsk/maxresdefault.jpg",
+      },
+      {
+        title: "NUNCA TE LO DIJE",
+        embed: "https://www.youtube.com/embed/DdJpP_VcAN8",
+        thumb: "https://i.ytimg.com/vi/DdJpP_VcAN8/maxresdefault.jpg",
+      },
+      {
+        title: "EN LA LLUVIA",
+        embed: "https://www.youtube.com/embed/PBJ7VX3cNhs",
+        thumb: "https://i.ytimg.com/vi/PBJ7VX3cNhs/maxresdefault.jpg",
+      },
+    ],
+  },
+  {
     title: "MI ALMA",
     client: "FROSONO",
     category: "Videoclip",
