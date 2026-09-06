@@ -30,9 +30,8 @@ const SITE = {
 
 const VIDEO_WORK = [
   {
-    // TODO: poné el título real y el artista. No pude leerlos desde YouTube.
-    title: "Videoclip",
-    client: "Artista",
+    title: "GUSTO A SAL",
+    client: "Maqui",
     year: 2025,
     category: "Videoclip",
     embed: "https://www.youtube.com/embed/QOTH0P_PPqc",
