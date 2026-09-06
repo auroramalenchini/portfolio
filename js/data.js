@@ -97,6 +97,8 @@ const VIDEO_WORK = [
     embed: "https://www.youtube.com/embed/tZqkLeCPrL0",
     thumb: "https://i.ytimg.com/vi/tZqkLeCPrL0/maxresdefault.jpg",
     role: "Dirección y edición",
+    stills: 7,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
   },
   {
     slug: "miel",
