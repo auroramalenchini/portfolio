@@ -330,7 +330,7 @@
 
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
-    var sel = ".page-intro h1, .page-intro p, " +
+    var sel = ".page-intro h1, .page-intro p, .intro-fotos img, " +
               ".about img, .about h2, .about p, .contact h2, .contact-lead, .contact-links, .contact-place";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));

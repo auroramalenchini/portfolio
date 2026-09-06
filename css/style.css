@@ -167,6 +167,15 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 /* ---------- Intro de página ---------- */
 .page-intro { padding: clamp(2.5rem, 7vw, 5rem) var(--pad) 1.5rem; max-width: var(--max); margin: 0 auto; width: 100%; }
 .page-intro h1 { font-size: clamp(2.1rem, 4.4vw, 3.6rem); line-height: .96; margin: 0 0 .9rem; text-transform: uppercase; letter-spacing: -.01em; color: var(--fg-title); }
+/* Variante con fotos al lado del texto (la usa video.html) */
+.page-intro.con-fotos {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem); align-items: end;
+}
+.intro-fotos { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.intro-fotos img {
+  width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--bg-2);
+}
 .page-intro p {
   color: var(--fg-muted); max-width: 52ch; margin: 0;
   font-family: var(--font-read); font-weight: 400;
@@ -400,6 +409,7 @@ body.loading { overflow: hidden; }
   .door { height: clamp(300px, 48vh, 440px); }
 }
 @media (max-width: 800px) {
+  .page-intro.con-fotos { grid-template-columns: 1fr; gap: 1.75rem; }
   .about { grid-template-columns: 1fr; gap: 2rem; }
   .grid-photo { grid-auto-rows: 200px; }
   .grid-video .featured.card { aspect-ratio: 16 / 9; }
