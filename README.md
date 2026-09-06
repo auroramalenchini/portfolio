@@ -33,7 +33,9 @@ Editá `js/data.js`.
   tiene varias piezas, en vez de `embed` poné `grupo` (el título del bloque) y
   `videos: [...]`: se dibuja como una sección con título y las piezas en fila.
 - **Página de foto**: cada objeto de `PHOTO_WORK` es un proyecto entero, con
-  `slug`, `titulo`, `categoria` y `fotos` (cuántas tiene). Las imágenes van en
+  `slug`, `titulo`, `categoria`, `fotos` (cuántas tiene) y `ar` (la relación de
+  aspecto de cada una, que el mosaico usa para no recortarlas). Se ven las
+  primeras 5 y el resto se despliega con un botón. Las imágenes van en
   `img/foto/<slug>/` numeradas `01.jpg`, `02.jpg`... en el orden en que se
   muestran. Para sumar una foto: copiala con el número que sigue y subí el
   contador. Para sumar un proyecto: carpeta nueva más una línea en la lista.

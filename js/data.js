@@ -108,19 +108,30 @@ const VIDEO_WORK = [
    FOTO
    Un objeto por proyecto. Las fotos viven en img/foto/<slug>/
    numeradas 01.jpg, 02.jpg... en el mismo orden de la galería;
-   `fotos` es cuántas hay. Para sumar una: copiala con el número
-   que sigue y subí ese contador.
+   `fotos` es cuántas hay y `ar` la relación de aspecto de cada una
+   (ancho dividido alto), que el mosaico usa para no recortarlas.
    ========================================================= */
 const PHOTO_WORK = [
-  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 18 },
-  { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6 },
-  { slug: "apertura-bar",     titulo: "Fotografías para apertura de bar",            categoria: "Evento",     fotos: 19 },
-  { slug: "gramme",           titulo: "Fotografías para Gramme catering",            categoria: "Casamiento", fotos: 17 },
-  { slug: "marte",            titulo: "Fotografías para bar: Marte",                 categoria: "Restaurante", fotos: 15 },
-  { slug: "hackaton",         titulo: "Fotografía de evento: Hackaton YHAT",         categoria: "Evento",     fotos: 15 },
-  { slug: "vereda",           titulo: "Fotografías para bar: Vereda Adentro",        categoria: "Restaurante", fotos: 24 },
-  { slug: "feria-salvaje",    titulo: "Fotografías para evento: Feria Salvaje",      categoria: "Evento",     fotos: 16 },
-  { slug: "psicodear-charla", titulo: "Fotografías charla y fiesta PsicodeAr",       categoria: "Evento",     fotos: 10 },
-  { slug: "psicodear-retiro", titulo: "Fotografías retiro PsicoDeAr",                categoria: "Evento",     fotos: 13 },
-  { slug: "pasteleria",       titulo: "Fotografías para pastelería",                 categoria: "Restaurante", fotos: 6 },
+  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 18,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78] },
+  { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6,
+    ar: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
+  { slug: "apertura-bar",     titulo: "Fotografías para apertura de bar",            categoria: "Evento",     fotos: 19,
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67] },
+  { slug: "gramme",           titulo: "Fotografías para Gramme catering",            categoria: "Casamiento", fotos: 17,
+    ar: [0.67, 1.5, 1.5, 0.67, 1.5, 1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 0.67, 1.5, 0.67, 1.5, 0.67] },
+  { slug: "marte",            titulo: "Fotografías para bar: Marte",                 categoria: "Restaurante", fotos: 15,
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 1.5, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67] },
+  { slug: "hackaton",         titulo: "Fotografía de evento: Hackaton YHAT",         categoria: "Evento",     fotos: 15,
+    ar: [1.5, 1.5, 1.5, 0.67, 0.75, 1.5, 0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 0.67, 0.67, 0.67] },
+  { slug: "vereda",           titulo: "Fotografías para bar: Vereda Adentro",        categoria: "Restaurante", fotos: 24,
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.56, 0.67, 0.67, 0.67, 0.56, 0.56, 1.5, 0.56, 0.56, 0.56, 0.56, 0.56] },
+  { slug: "feria-salvaje",    titulo: "Fotografías para evento: Feria Salvaje",      categoria: "Evento",     fotos: 16,
+    ar: [0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67] },
+  { slug: "psicodear-charla", titulo: "Fotografías charla y fiesta PsicodeAr",       categoria: "Evento",     fotos: 10,
+    ar: [1.5, 1.33, 0.67, 0.67, 1.5, 0.67, 0.67, 0.67, 0.67, 0.67] },
+  { slug: "psicodear-retiro", titulo: "Fotografías retiro PsicoDeAr",                categoria: "Evento",     fotos: 13,
+    ar: [1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
+  { slug: "pasteleria",       titulo: "Fotografías para pastelería",                 categoria: "Restaurante", fotos: 6,
+    ar: [0.67, 0.67, 0.67, 0.67, 1.78, 0.67] },
 ];

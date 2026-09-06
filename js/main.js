@@ -144,18 +144,26 @@
     });
   }
 
-  // ---- Página de foto: un bloque por proyecto ----
+  // ---- Página de foto: un bloque por proyecto, con previa y despliegue ----
   if (page === "photo") {
     const grid = $("#grid");
     items = [];
-    PHOTO_WORK.forEach((pr) => {
+    const PREVIA = 5;
+
+    PHOTO_WORK.forEach((pr, idx) => {
       const wrap = document.createElement("div");
-      wrap.className = "grupo";
+      wrap.className = "grupo proyecto" + (idx % 2 ? " der" : "");
+
       const head = document.createElement("div");
       head.className = "grupo-head";
       head.innerHTML = `<h3>${esc(pr.titulo)}</h3><span>${esc(pr.categoria)}</span>`;
-      const fila = document.createElement("div");
-      fila.className = "grid-foto";
+
+      const previa = document.createElement("div");
+      previa.className = "mosaico";
+      const todas = document.createElement("div");
+      todas.className = "mosaico";
+      todas.hidden = true;
+
       for (let n = 1; n <= pr.fotos; n++) {
         const it = {
           src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
@@ -163,12 +171,30 @@
           client: pr.categoria,
         };
         items.push(it);
-        fila.appendChild(card(it, items.length - 1, "foto"));
+        const c = card(it, items.length - 1, "foto");
+        c.style.setProperty("--ar", (pr.ar && pr.ar[n - 1]) || 1.5);
+        (n <= PREVIA ? previa : todas).appendChild(c);
       }
+
       wrap.appendChild(head);
-      wrap.appendChild(fila);
+      wrap.appendChild(previa);
+      if (pr.fotos > PREVIA) {
+        wrap.appendChild(todas);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "ver-todas";
+        const abrir = `Ver las ${pr.fotos} fotos`;
+        btn.textContent = abrir;
+        btn.addEventListener("click", () => {
+          todas.hidden = !todas.hidden;
+          btn.textContent = todas.hidden ? abrir : "Ver menos";
+          if (todas.hidden) wrap.scrollIntoView({ block: "nearest" });
+        });
+        wrap.appendChild(btn);
+      }
       grid.appendChild(wrap);
     });
+
     if (!items.length) grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`;
   }
 
