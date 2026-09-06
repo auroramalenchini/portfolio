@@ -130,8 +130,10 @@
     return a;
   }
 
-  // Las placas de un video: si ya tiene stills van esos, y si no, la
-  // miniatura de YouTube. Toquen la que toquen, se abre el video.
+  // Las placas de un video: si ya tiene stills van esos y se abren como
+  // fotos, con un botón de play sobre el primero para ver el video. Si el
+  // proyecto todavía no tiene stills, va la miniatura de YouTube y esa sí
+  // abre el video directamente.
   function placasDeVideo(v, indice, contenedor) {
     const cuantos = v.stills || 0;
     if (!cuantos) {
@@ -142,13 +144,30 @@
     }
     for (let n = 1; n <= cuantos; n++) {
       const src = `img/video/${v.slug}/${String(n).padStart(2, "0")}.jpg`;
-      const c = card({ ...v, thumb: src }, indice, "foto");
+      // Sin `embed`, el visor lo muestra como foto y se puede pasar de una
+      // a la otra con las flechas.
+      const still = { src, title: v.title, client: v.category };
+      items.push(still);
+      const c = card(still, items.length - 1, "foto");
       c.style.setProperty("--ar", (v.ar && v.ar[n - 1]) || 1.78);
-      // El botón de play va sólo en el primer still: con uno alcanza para
-      // saber que son frames de un video y no se llena la pantalla de círculos.
-      if (n > 1) { const play = c.querySelector(".play"); if (play) play.remove(); }
+      if (n === 1) c.appendChild(botonDePlay(indice, v.title));
       contenedor.appendChild(c);
     }
+  }
+
+  // El play del primer still: es lo único que abre el reproductor.
+  function botonDePlay(indice, titulo) {
+    const b = document.createElement("span");
+    b.className = "play play-boton";
+    b.setAttribute("role", "button");
+    b.setAttribute("aria-label", "Ver el video" + (titulo ? ": " + titulo : ""));
+    b.tabIndex = 0;
+    const abrir = (e) => { e.stopPropagation(); e.preventDefault(); show(indice); };
+    b.addEventListener("click", abrir);
+    b.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") abrir(e);
+    });
+    return b;
   }
 
   // ---- Página de video: un bloque por proyecto, igual que en foto ----
