@@ -115,6 +115,30 @@
     });
   }
 
+  // ---- Versalitas hechas a mano ----
+  // El navegador, cuando no encuentra versalitas en la tipografía, las inventa
+  // achicando la mayúscula: el trazo se afina y no pega con las mayúsculas de
+  // verdad. Acá las minúsculas se escriben en mayúscula más chica pero con más
+  // grosor, así las dos tienen el mismo espesor de línea.
+  function versalitas(texto) {
+    var salida = "", junta = "";
+    var cerrar = function () {
+      if (junta) { salida += '<span class="vs">' + esc(junta.toUpperCase()) + "</span>"; junta = ""; }
+    };
+    String(texto).split("").forEach(function (ch) {
+      var esMinuscula = ch.toLowerCase() === ch && ch.toUpperCase() !== ch;
+      if (esMinuscula) junta += ch;
+      else { cerrar(); salida += esc(ch); }
+    });
+    cerrar();
+    return salida;
+  }
+
+  function ponerVersalitas(el) {
+    if (!el || el.querySelector(".vs")) return;
+    el.innerHTML = versalitas(el.textContent);
+  }
+
   function esc(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
 
   function card(it, i, extraClass = "") {
@@ -201,7 +225,7 @@
       const info = document.createElement("div");
       info.className = "proyecto-info";
       const bajada = [pr.category, pr.client].filter(Boolean).join(" · ");
-      info.innerHTML = `<h3>${esc(pr.grupo || pr.title)}</h3>` +
+      info.innerHTML = `<h3>${versalitas(pr.grupo || pr.title)}</h3>` +
         `<span class="proyecto-cat">${esc(bajada)}</span>` +
         (pr.premio ? `<span class="proyecto-premio">${esc(pr.premio)}</span>` : "");
 
@@ -370,7 +394,7 @@
 
       const info = document.createElement("div");
       info.className = "proyecto-info";
-      info.innerHTML = `<h3>${esc(pr.titulo)}</h3><span class="proyecto-cat">${esc(pr.categoria)}</span>`;
+      info.innerHTML = `<h3>${versalitas(pr.titulo)}</h3><span class="proyecto-cat">${esc(pr.categoria)}</span>`;
 
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";
@@ -410,7 +434,7 @@
       $(".proyecto-bajada").textContent = "No encontramos ese proyecto.";
     } else {
       document.title = pr.titulo + " · " + SITE.name;
-      $(".page-intro h1").textContent = pr.titulo;
+      $(".page-intro h1").innerHTML = versalitas(pr.titulo);
       $(".proyecto-bajada").textContent = pr.categoria + " · " + pr.fotos + " fotos";
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";
@@ -774,6 +798,11 @@
     revisar();
     window.addEventListener("scroll", revisar, { passive: true });
   }
+
+  // Los títulos que ya están escritos en el html, más el nombre del header.
+  [".brand [data-site='name']", ".door-label", ".page-intro h1",
+   ".about h2", ".contact h2", ".opening-front h1 .line > span"]
+    .forEach(function (sel) { document.querySelectorAll(sel).forEach(ponerVersalitas); });
 
   initArriba();
   initLoader();

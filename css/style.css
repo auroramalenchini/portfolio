@@ -38,6 +38,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* Display: Archivo, siempre con peso. Nunca fina. */
 h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
+/* La parte "minúscula" de las versalitas: más chica, pero más gruesa, para
+   que el trazo mida lo mismo que el de las mayúsculas. */
+.vs { font-size: .82em; font-weight: 800; letter-spacing: .005em; }
 .brand { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 
 /* ---------- Header ---------- */
@@ -50,7 +53,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
-.brand { font-size: 1.26rem; letter-spacing: .04em; font-variant-caps: small-caps; color: var(--fg-title); }
+.brand { font-size: 1.26rem; letter-spacing: .04em; color: var(--fg-title); }
 .brand small {
   display: block; font-family: var(--font-sans); font-weight: 500;
   font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-muted);
@@ -111,7 +114,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   margin: 0; max-width: 100%; overflow-wrap: break-word;
   font-size: clamp(2.8rem, 10.6vw, 9rem);
   line-height: .9; letter-spacing: -.01em;
-  font-variant-caps: small-caps; color: var(--accent);
+  color: var(--accent);
 }
 .hero-role {
   margin: 0;
@@ -157,14 +160,14 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 .door-label {
   font-family: var(--font-display); font-weight: var(--peso-titulo);
   font-size: clamp(2.15rem, 4.5vw, 3.5rem); line-height: 1;
-  font-variant-caps: small-caps; letter-spacing: 0;
+  letter-spacing: 0;
 }
 .door-sub { font-size: .88rem; color: rgba(246,241,231,.82); max-width: 36ch; }
 .door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 
 /* ---------- Intro de página ---------- */
 .page-intro { padding: clamp(2.5rem, 7vw, 5rem) var(--pad) 1.5rem; max-width: var(--max); margin: 0 auto; width: 100%; }
-.page-intro h1 { font-size: clamp(2.35rem, 5vw, 4rem); line-height: .96; margin: 0 0 .9rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
+.page-intro h1 { font-size: clamp(2.35rem, 5vw, 4rem); line-height: .96; margin: 0 0 .9rem; letter-spacing: 0; color: var(--fg-title); }
 /* Variante con fotos al lado del texto (la usa video.html) */
 .page-intro.con-fotos {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -220,7 +223,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 .proyecto-info h3 {
   margin: 0; font-family: var(--font-display); font-weight: var(--peso-titulo);
   font-size: var(--titulo-fs); line-height: 1.05;
-  font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
+  letter-spacing: 0; color: var(--fg-title);
   text-wrap: balance;
 }
 .proyecto-cat {
@@ -378,7 +381,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 /* Escalonadas: la de arriba corrida a la izquierda, la de abajo a la derecha. */
 .about-fotos img:first-child { justify-self: start; }
 .about-fotos img:last-child { justify-self: end; }
-.about h2 { font-size: clamp(1.85rem, 3.4vw, 2.75rem); line-height: 1.02; margin: 0 0 1.1rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
+.about h2 { font-size: clamp(1.85rem, 3.4vw, 2.75rem); line-height: 1.02; margin: 0 0 1.1rem; letter-spacing: 0; color: var(--fg-title); }
 .about p {
   color: var(--fg-muted); max-width: none;
   font-family: var(--font-read); font-weight: 400;
@@ -397,7 +400,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 }
 .contact h2 {
   font-size: clamp(2.25rem, 4.7vw, 3.6rem); line-height: 1.02; margin: 0 0 1rem;
-  font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
+  letter-spacing: 0; color: var(--fg-title);
 }
 .contact-lead {
   color: var(--fg-muted); margin: 0 auto; max-width: 42ch;
