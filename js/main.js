@@ -136,10 +136,21 @@
 
   // Si venís de otra página apuntando a una sección (index.html#about),
   // el destino es esa sección: ni precarga, ni recorrido por la apertura.
+  var anclaGuardada = window.__ancla || null;
+
   function destinoDeLaUrl() {
-    var h = window.location.hash;
+    var h = anclaGuardada || window.location.hash;
     if (!h || h.length < 2) return null;
     try { return document.querySelector(h); } catch (e) { return null; }
+  }
+
+  // La devolvemos a la URL recién después de que el navegador terminó de cargar:
+  // si estuviera antes, al terminar la carga él haría su propio salto al ancla
+  // (con otro margen) y eso era el segundo movimiento que se veía.
+  function restaurarAncla() {
+    if (!anclaGuardada) return;
+    try { if (history.replaceState) history.replaceState(null, "", anclaGuardada); } catch (e) {}
+    anclaGuardada = null;
   }
 
   // Cuánto ocupa el header una vez que la página está scrolleada (ahí se achica).
@@ -176,9 +187,16 @@
   // (esa corrección era el saltito).
   function irA(destino) {
     var h = $(".site-header");
-    if (h) h.classList.add("scrolled");
+    if (h) {
+      // El achique del header está animado: sin cortar la transición mediríamos
+      // un alto intermedio y la cuenta saldría distinta en cada intento.
+      h.style.transition = "none";
+      h.classList.add("scrolled");
+      void h.offsetHeight;
+    }
     saltar(Math.max(0, Math.round(posicionDe(destino))));
     pintarApertura();
+    if (h) requestAnimationFrame(function () { h.style.transition = ""; });
   }
 
   // El navegador hace su propio salto al ancla cuando termina de cargar, y usa
@@ -359,6 +377,8 @@
   initScroll();
   initAnclas();
   irAlDestino();
-  window.addEventListener("load", irAlDestino);
-  setTimeout(irAlDestino, 150);
+  window.addEventListener("load", function () {
+    irAlDestino();
+    setTimeout(function () { irAlDestino(); restaurarAncla(); }, 200);
+  });
 })();

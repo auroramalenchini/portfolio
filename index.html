@@ -3,7 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script>document.documentElement.className += " js";</script>
+  <script>
+    document.documentElement.className += " js";
+    // Si llegamos con ancla (index.html#about), la guardamos y la sacamos de la
+    // URL antes de que cargue nada: así el navegador no hace su propio salto al
+    // ancla y la posición final la decide main.js de una sola vez.
+    try {
+      if (location.hash.length > 1) {
+        window.__ancla = location.hash;
+        history.replaceState(null, "", location.pathname + location.search);
+      }
+    } catch (e) {}
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">

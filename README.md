@@ -89,7 +89,12 @@ funciones del final de `js/main.js`:
   puertas toman la pantalla (en el resto de las páginas está siempre).
 - **Llegar a una sección**: si la URL trae ancla (`index.html#about`, por
   ejemplo, que es lo que usan los links de video.html y photo.html), la portada
-  saltea la precarga y la apertura, y arranca directo en esa sección.
+  saltea la precarga y la apertura y arranca directo ahí. Un script en el
+  `<head>` guarda el ancla y la borra de la URL antes de que cargue nada, para
+  que el navegador no haga además su propio salto (con otro margen); se la
+  devuelve una vez terminada la carga. La sección queda centrada en pantalla si
+  entra entera, y si no, arranca justo debajo del header. Todo en un solo
+  movimiento, sin scroll animado.
 - **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
   poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
   vecinas. En "Sobre mí" el escalonado va párrafo por párrafo.
