@@ -157,35 +157,66 @@
     if (ancho <= 0) return;
     const gap = parseFloat(getComputedStyle(cont).gap) || 8;
     const objetivo = parseFloat(cont.dataset.alto) || 400;
-
     const ars = placas.map((p) => parseFloat(p.style.getPropertyValue("--ar")) || 1.5);
+    const altoDe = (f) => (ancho - gap * (f.n - 1)) / f.suma;
+
+    // 1) agrupamos en filas: sumamos fotos hasta acercarnos al alto buscado
+    const filas = [];
     let i = 0;
     while (i < placas.length) {
-      let suma = 0, n = 0, alto = 0, altoPrevio = 0;
-      // sumamos fotos hasta pasarnos del alto buscado
+      let suma = 0, n = 0, alto = 0, previo = 0;
       while (i + n < placas.length) {
-        altoPrevio = alto;
+        previo = alto;
         suma += ars[i + n];
         n++;
         alto = (ancho - gap * (n - 1)) / suma;
         if (alto <= objetivo) break;
       }
-      // ¿queda más cerca del objetivo con esta foto o sin ella?
-      if (n > 1 && Math.abs(altoPrevio - objetivo) < Math.abs(alto - objetivo)) {
-        suma -= ars[i + n - 1]; n--;
-        alto = (ancho - gap * (n - 1)) / suma;
+      if (n > 1 && Math.abs(previo - objetivo) < Math.abs(alto - objetivo)) {
+        n--; suma -= ars[i + n];
       }
-      // La última fila también llena el ancho, salvo que quede desproporcionada.
-      const ultima = i + n >= placas.length;
-      if (ultima && alto > objetivo * 1.45) alto = objetivo * 1.45;
-      const h = Math.floor(alto);
-      for (let k = 0; k < n; k++) {
-        const p = placas[i + k];
-        p.style.height = h + "px";
-        p.style.width = Math.floor(h * ars[i + k]) + "px";
-      }
+      filas.push({ ini: i, n: n, suma: suma });
       i += n;
     }
+
+    // 2) si la última fila quedaría desproporcionada, le pasamos fotos de la
+    //    anterior hasta que entre bien. Así todas las filas llenan el ancho.
+    const tope = objetivo * 1.5;
+    let vueltas = 0;
+    while (filas.length > 1 && altoDe(filas[filas.length - 1]) > tope && vueltas++ < 20) {
+      const ult = filas[filas.length - 1];
+      const prev = filas[filas.length - 2];
+      if (prev.n <= 1) break;
+      // probamos el movimiento y lo deshacemos si deja la fila anterior peor
+      prev.n--; prev.suma -= ars[prev.ini + prev.n];
+      ult.ini--; ult.n++; ult.suma += ars[ult.ini];
+      if (altoDe(prev) > tope) {
+        prev.suma += ars[prev.ini + prev.n]; prev.n++;
+        ult.suma -= ars[ult.ini]; ult.n--; ult.ini++;
+        break;
+      }
+    }
+
+    // 3) aplicamos medidas
+    filas.forEach((f) => {
+      let alto = altoDe(f);
+      const recortada = alto > tope;   // fila que quedaría gigante
+      if (recortada) alto = tope;
+      const h = Math.floor(alto);
+      let usado = gap * (f.n - 1);
+      for (let x = 0; x < f.n; x++) {
+        const p = placas[f.ini + x];
+        p.style.height = h + "px";
+        const w = Math.floor(h * ars[f.ini + x]);
+        p.style.width = w + "px";
+        p.style.marginLeft = "";
+        usado += w;
+      }
+      // si por el tope la fila no llena el ancho, la centramos
+      if (recortada && usado < ancho) {
+        placas[f.ini].style.marginLeft = Math.round((ancho - usado) / 2) + "px";
+      }
+    });
   }
 
   function acomodarTodos() {
