@@ -575,42 +575,6 @@
   }
 
   // ---- Precarga con el monograma AM ----
-  function initLoader() {
-    var el = document.getElementById("loader");
-    if (!el) { markReady(); return; }
-    var fill = $(".loader-fill", el);
-    var vista = false;
-    try { vista = sessionStorage.getItem("am-loader") === "1"; } catch (e) {}
-
-    function finish(instant) {
-      try { sessionStorage.setItem("am-loader", "1"); } catch (e) {}
-      if (fill) fill.style.setProperty("--p", "100%");
-      if (instant) el.classList.add("instant");
-      el.classList.add("done");
-      document.body.classList.remove("loading");
-      markReady();
-      setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, instant ? 0 : 900);
-    }
-
-    if (vista || reduced || destinoDeLaUrl()) { finish(true); return; }
-
-    document.body.classList.add("loading");
-    var listo = document.readyState === "complete";
-    window.addEventListener("load", function () { listo = true; });
-
-    var inicio = performance.now(), p = 0;
-    (function tick(now) {
-      // Sube sola hasta 90 y espera a que termine de cargar para completar.
-      var objetivo = listo ? 100 : Math.min(90, (now - inicio) / 18);
-      p += (objetivo - p) * 0.1;
-      if (listo && p > 99) p = 100;
-      if (fill) fill.style.setProperty("--p", p.toFixed(1) + "%");
-      if (p >= 99.5) { setTimeout(function () { finish(false); }, 280); return; }
-      if (now - inicio > 7000) { finish(false); return; }  // red de seguridad
-      requestAnimationFrame(tick);
-    })(performance.now());
-  }
-
   // El texto de "Sobre mí" entra de a un párrafo por vez.
   function escalonarAbout() {
     [].slice.call(document.querySelectorAll(".about h2, .about p")).forEach(function (el, i) {
@@ -805,7 +769,7 @@
     .forEach(function (sel) { document.querySelectorAll(sel).forEach(ponerVersalitas); });
 
   initArriba();
-  initLoader();
+  markReady();   // la página entra directo, sin precarga
   initReveals();
   initScroll();
   initAnclas();

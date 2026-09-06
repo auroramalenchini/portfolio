@@ -10,8 +10,10 @@
   --on-media: #F6F1E7;    /* texto sobre fotos */
   --max: 1400px;
   --pad: clamp(1rem, 4vw, 3rem);
-  /* Grosor de los títulos: 800 es el más gordo, 500 el más liviano. */
-  --peso-titulo: 600;
+  /* Grosor de los títulos. Si lo cambiás, cambiá también el peso de .vs para
+     que las versalitas mantengan el mismo espesor de trazo. Medido sobre la
+     letra: 600 va con 730, 700 con 800, 800 con 900. */
+  --peso-titulo: 800;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-read: "Lora", Georgia, "Times New Roman", serif;   /* textos largos */
@@ -40,9 +42,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 /* La parte "minúscula" de las versalitas: más chica, pero más gruesa, para
    que el trazo mida lo mismo que el de las mayúsculas. */
-/* 730 no es un capricho: medido sobre la letra, a 82% del cuerpo el asta de
-   la versalita mide exactamente lo mismo que la de la mayúscula en 600. */
-.vs { font-size: .82em; font-weight: 730; letter-spacing: .005em; }
+/* 900 no es un capricho: medido sobre la letra, a 82% del cuerpo el asta de
+   la versalita mide lo mismo que la de la mayúscula en 800. */
+.vs { font-size: .82em; font-weight: 900; letter-spacing: .005em; }
 .brand { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 
 /* ---------- Header ---------- */
@@ -443,28 +445,6 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 /* ---------- Movimiento ---------- */
 /* Casi todo esto cuelga de .js: sin JavaScript la página se ve completa y quieta. */
 
-/* Precarga: el monograma AM se llena de abajo hacia arriba */
-.loader {
-  position: fixed; inset: 0; z-index: 100;
-  display: grid; place-items: center;
-  background: var(--bg);
-  transition: opacity .7s ease, visibility .7s;
-}
-.loader.done { opacity: 0; visibility: hidden; }
-.loader.instant { transition: none; }
-.loader-mark {
-  position: relative;
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(4.5rem, 16vw, 10rem); line-height: 1; letter-spacing: .04em;
-}
-.loader-mark span { display: block; }
-.loader-ghost { color: var(--fg-title); opacity: .13; }
-.loader-fill {
-  position: absolute; inset: 0; color: var(--accent);
-  clip-path: inset(calc(100% - var(--p, 0%)) 0 0 0);
-}
-body.loading { overflow: hidden; }
-
 /* Entrada de la portada: primero el nombre, después el resto */
 .js .opening-front h1 .line { display: block; overflow: hidden; padding-bottom: .04em; }
 .js .opening-front h1 .line > span { display: block; transform: translateY(110%); }
@@ -569,5 +549,4 @@ body.loading { overflow: hidden; }
   .doors { position: static; }
   .door { height: clamp(300px, 48vh, 460px); }
   .js .opening-front h1 .line > span { transform: none !important; }
-  .loader { display: none !important; }
 }
