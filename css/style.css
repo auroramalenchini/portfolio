@@ -159,14 +159,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .door-sub { font-size: .88rem; color: rgba(246,241,231,.82); max-width: 36ch; }
 .door-go {
-  margin-top: .7rem; display: flex; align-items: center; justify-content: center; gap: .7rem;
+  margin-top: .7rem;
   font-size: .7rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
 }
-.door-go::after {
-  content: ""; height: 2px; width: 26px; background: var(--on-media);
-  transition: width .45s cubic-bezier(.2,.7,.2,1);
-}
-.door:hover .door-go::after { width: 58px; }
 .door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 
 /* ---------- Intro de página ---------- */
