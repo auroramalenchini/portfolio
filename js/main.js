@@ -171,16 +171,14 @@
   }
 
   // Siempre directo: nada de recorrer la portada entera para llegar a una sección.
+  // El header se achica al scrollear, así que lo dejamos en ese estado ANTES de
+  // medir: la cuenta sale con el alto definitivo y no hace falta corregir después
+  // (esa corrección era el saltito).
   function irA(destino) {
+    var h = $(".site-header");
+    if (h) h.classList.add("scrolled");
     saltar(Math.max(0, Math.round(posicionDe(destino))));
-    // Ya ubicados, el header pasó a su versión chica: recalculamos una vez.
-    requestAnimationFrame(function () {
-      var h = $(".site-header");
-      if (h) h.classList.toggle("scrolled", (window.pageYOffset || 0) > 40);
-      pintarApertura();
-      var fino = Math.max(0, Math.round(posicionDe(destino)));
-      if (Math.abs(fino - (window.pageYOffset || 0)) > 2) saltar(fino);
-    });
+    pintarApertura();
   }
 
   // El navegador hace su propio salto al ancla cuando termina de cargar, y usa
