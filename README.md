@@ -28,15 +28,15 @@ cd portfolio && python3 -m http.server 8000
 Editá `js/data.js`.
 
 - **Página de video**: agregá un objeto a `VIDEO_WORK` con `title`, `client`,
-  `year`, `category`, `embed` (URL de embed de YouTube) y `thumb`
-  (URL de imagen). Poné `featured: true` en un ítem para que ocupe todo el
-  ancho en video.html.
-- **Página de foto**: agregá un objeto a `PHOTO_WORK` con `category`
-  (Restaurantes, Eventos, Espacios, o una nueva; se muestra como etiqueta de
-  la placa), `title`, `client` y además:
-  - `type: "photo"` con `src` (URL de imagen). Sumá `tall: true` para tomas
-    verticales.
-  - `type: "video"` con `embed` y `thumb`.
+  `category`, `embed` (URL de embed de YouTube), `thumb` (URL de imagen) y
+  `role`. Poné `featured: true` para que ocupe todo el ancho. Si el proyecto
+  tiene varias piezas, en vez de `embed` poné `grupo` (el título del bloque) y
+  `videos: [...]`: se dibuja como una sección con título y las piezas en fila.
+- **Página de foto**: cada objeto de `PHOTO_WORK` es un proyecto entero, con
+  `slug`, `titulo`, `categoria` y `fotos` (cuántas tiene). Las imágenes van en
+  `img/foto/<slug>/` numeradas `01.jpg`, `02.jpg`... en el orden en que se
+  muestran. Para sumar una foto: copiala con el número que sigue y subí el
+  contador. Para sumar un proyecto: carpeta nueva más una línea en la lista.
 
 Nombre, bajada, ubicación, mail, teléfono e Instagram están en `SITE`. Las dos
 imágenes grandes de la portada (las puertas a Video y a Foto) también salen de

@@ -24,7 +24,7 @@ const SITE = {
   // Las dos imágenes grandes de la portada, una por sección.
   doors: {
     video: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
-    photo: "https://picsum.photos/seed/doorphoto/1600/1200",
+    photo: "img/foto/vereda/01.jpg",
   },
 };
 
@@ -104,22 +104,23 @@ const VIDEO_WORK = [
   },
 ];
 
+/* =========================================================
+   FOTO
+   Un objeto por proyecto. Las fotos viven en img/foto/<slug>/
+   numeradas 01.jpg, 02.jpg... en el mismo orden de la galería;
+   `fotos` es cuántas hay. Para sumar una: copiala con el número
+   que sigue y subí ese contador.
+   ========================================================= */
 const PHOTO_WORK = [
-  // ---- Restaurantes ----
-  { type: "photo", category: "Restaurantes", title: "Cocina Abierta · Platos", client: "Restaurante Sur", src: "https://picsum.photos/seed/rest1/1600/1067" },
-  { type: "photo", category: "Restaurantes", title: "Barra · Noche", client: "Bar Central", src: "https://picsum.photos/seed/rest2/1067/1600", tall: true },
-  { type: "photo", category: "Restaurantes", title: "Panadería · Mañana", client: "Panadería Norte", src: "https://picsum.photos/seed/rest3/1600/1067" },
-  { type: "video", category: "Restaurantes", title: "Restaurante Sur · Reel", client: "Restaurante Sur", embed: "https://www.youtube-nocookie.com/embed/eRsGyueVLvQ", thumb: "https://picsum.photos/seed/rest4/1600/1067" },
-
-  // ---- Eventos ----
-  { type: "photo", category: "Eventos", title: "Lanzamiento de producto", client: "Marca X", src: "https://picsum.photos/seed/event1/1600/1067" },
-  { type: "video", category: "Eventos", title: "Festival · Aftermovie", client: "Festival Y", embed: "https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ", thumb: "https://picsum.photos/seed/event2/1600/1067" },
-  { type: "photo", category: "Eventos", title: "Conferencia anual", client: "Empresa Z", src: "https://picsum.photos/seed/event3/1067/1600", tall: true },
-  { type: "photo", category: "Eventos", title: "Casamiento · Ceremonia", client: "Privado", src: "https://picsum.photos/seed/event4/1600/1067" },
-
-  // ---- Espacios ----
-  { type: "photo", category: "Espacios", title: "Salón · Vista general", client: "Espacio Río", src: "https://picsum.photos/seed/venue1/1600/1067" },
-  { type: "photo", category: "Espacios", title: "Terraza · Atardecer", client: "Espacio Río", src: "https://picsum.photos/seed/venue2/1600/1067" },
-  { type: "video", category: "Espacios", title: "Espacio Río · Recorrido", client: "Espacio Río", embed: "https://www.youtube-nocookie.com/embed/YE7VzlLtp-4", thumb: "https://picsum.photos/seed/venue3/1600/1067" },
-  { type: "photo", category: "Espacios", title: "Galería · Montaje", client: "Galería Norte", src: "https://picsum.photos/seed/venue4/1067/1600", tall: true },
+  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 18 },
+  { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6 },
+  { slug: "apertura-bar",     titulo: "Fotografías para apertura de bar",            categoria: "Evento",     fotos: 19 },
+  { slug: "gramme",           titulo: "Fotografías para Gramme catering",            categoria: "Casamiento", fotos: 17 },
+  { slug: "marte",            titulo: "Fotografías para bar: Marte",                 categoria: "Restaurante", fotos: 15 },
+  { slug: "hackaton",         titulo: "Fotografía de evento: Hackaton YHAT",         categoria: "Evento",     fotos: 15 },
+  { slug: "vereda",           titulo: "Fotografías para bar: Vereda Adentro",        categoria: "Restaurante", fotos: 24 },
+  { slug: "feria-salvaje",    titulo: "Fotografías para evento: Feria Salvaje",      categoria: "Evento",     fotos: 16 },
+  { slug: "psicodear-charla", titulo: "Fotografías charla y fiesta PsicodeAr",       categoria: "Evento",     fotos: 10 },
+  { slug: "psicodear-retiro", titulo: "Fotografías retiro PsicoDeAr",                categoria: "Evento",     fotos: 13 },
+  { slug: "pasteleria",       titulo: "Fotografías para pastelería",                 categoria: "Restaurante", fotos: 6 },
 ];

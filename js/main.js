@@ -144,13 +144,34 @@
     });
   }
 
-  // ---- Página de foto ----
+  // ---- Página de foto: un bloque por proyecto ----
   if (page === "photo") {
     const grid = $("#grid");
-    items = PHOTO_WORK;
-    if (!items.length) { grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`; }
-    else { items.forEach((it, i) => grid.appendChild(card(it, i))); }
+    items = [];
+    PHOTO_WORK.forEach((pr) => {
+      const wrap = document.createElement("div");
+      wrap.className = "grupo";
+      const head = document.createElement("div");
+      head.className = "grupo-head";
+      head.innerHTML = `<h3>${esc(pr.titulo)}</h3><span>${esc(pr.categoria)}</span>`;
+      const fila = document.createElement("div");
+      fila.className = "grid-foto";
+      for (let n = 1; n <= pr.fotos; n++) {
+        const it = {
+          src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
+          title: pr.titulo,
+          client: pr.categoria,
+        };
+        items.push(it);
+        fila.appendChild(card(it, items.length - 1, "foto"));
+      }
+      wrap.appendChild(head);
+      wrap.appendChild(fila);
+      grid.appendChild(wrap);
+    });
+    if (!items.length) grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`;
   }
+
   // =======================================================
   //  MOVIMIENTO
   //  Precarga, entrada de la portada, apariciones al scrollear.
