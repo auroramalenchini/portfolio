@@ -65,10 +65,11 @@ placeholders de picsum.photos para que el sitio se vea sin ningún asset.
 - Fondo crema `#F3EDE1`, texto en marrón casi negro `#24211C`, títulos en
   marrón oscuro `#4A3527` y bordó `#7A2233` para el nombre de la portada y los
   detalles (líneas, subrayados, botón de contacto, hover).
-- Títulos en **Archivo** 800, siempre en mayúscula. Los textos largos (la bio y
-  la bajada de contacto) también van en **Archivo**, en 400. **Inter** queda
-  para la navegación, las etiquetas y los datos chicos, nada por debajo de 400.
-  Los tokens están arriba de todo en `css/style.css`.
+- Tres tipografías, cada una con su trabajo: **Archivo** 800 para los títulos,
+  siempre en mayúscula (`--font-display`); **Lora** 400 para los textos largos,
+  la bio y la bajada de contacto (`--font-read`); e **Inter** para la
+  navegación, las etiquetas y los datos chicos, nada por debajo de 400
+  (`--font-sans`). Los tokens están arriba de todo en `css/style.css`.
 
 ## Movimiento
 
