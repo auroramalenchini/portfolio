@@ -126,6 +126,8 @@ const VIDEO_WORK = [
     embed: "https://www.youtube.com/embed/ptVR8KVyf44",
     thumb: "https://i.ytimg.com/vi/ptVR8KVyf44/maxresdefault.jpg",
     role: "Dirección y edición",
+    stills: 6,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
   },
 ];
 
