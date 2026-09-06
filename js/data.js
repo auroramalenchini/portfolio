@@ -39,7 +39,7 @@ const VIDEO_WORK = [
     role: "Dirección y edición",
     featured: true,
     // Se muestra debajo de la categoría, en el bloque del proyecto.
-    premio: "Nominado a mejor coreografía en los BAMV",
+    premio: "Nominado a mejor coreografía en el BAMV (Buenos Aires Music Festival)",
     stills: 9,
     ar: [1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9],
   },
