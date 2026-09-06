@@ -100,6 +100,10 @@ funciones del final de `js/main.js`:
 - **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
   poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
   vecinas. En "Sobre mí" el escalonado va párrafo por párrafo.
+- **Volver a animar**: si tocás Sobre mí o Contacto en el menú, esa sección se
+  reinicia y vuelve a entrar aunque ya la hubieras visto de refilón al
+  scrollear. Al llegar desde otra página no hace falta: nunca se mostró, así
+  que la anima el observador.
 - **Scroll**: el header se achica al bajar.
 - **Las puertas**: al pasar el cursor, esa puerta se lleva más ancho y la imagen
   crece. La otra se achica, pero no se apaga.

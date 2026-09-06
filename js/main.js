@@ -185,7 +185,9 @@
   // El header se achica al scrollear, así que lo dejamos en ese estado ANTES de
   // medir: la cuenta sale con el alto definitivo y no hace falta corregir después
   // (esa corrección era el saltito).
-  function irA(destino) {
+  // `reanimando` solo para los clics del menú: al llegar de otra página la
+  // sección todavía no se mostró nunca y la anima el observador, sin reinicios.
+  function irA(destino, reanimando) {
     var h = $(".site-header");
     if (h) {
       // El achique del header está animado: sin cortar la transición mediríamos
@@ -196,6 +198,7 @@
     }
     saltar(Math.max(0, Math.round(posicionDe(destino))));
     pintarApertura();
+    if (reanimando) reanimar(destino);
     if (h) requestAnimationFrame(function () { h.style.transition = ""; });
   }
 
@@ -223,7 +226,7 @@
         try { destino = document.querySelector(ref); } catch (err) { return; }
         if (!destino) return;
         e.preventDefault();
-        irA(destino);
+        irA(destino, true);
         if (history.replaceState) history.replaceState(null, "", ref);
       });
     });
@@ -266,16 +269,49 @@
     })(performance.now());
   }
 
+  // El texto de "Sobre mí" entra de a un párrafo por vez.
+  function escalonarAbout() {
+    [].slice.call(document.querySelectorAll(".about h2, .about p")).forEach(function (el, i) {
+      el.style.transitionDelay = (i * 130) + "ms";
+    });
+  }
+
+  function limpiarDelays(els) {
+    setTimeout(function () {
+      els.forEach(function (el) { el.style.transitionDelay = ""; });
+    }, 1300);
+  }
+
+  // Al saltar a una sección la volvemos a animar: si ya se había revelado de
+  // refilón mientras scrolleabas, igual la ves entrar.
+  function reanimar(seccion) {
+    if (reduced || !seccion) return;
+    var els = [].slice.call(seccion.querySelectorAll(".reveal"));
+    if (!els.length) return;
+    // Volver al estado oculto sin animar: si no, lo que ya estaba visible se
+    // desvanecería de a poco en vez de arrancar de cero.
+    els.forEach(function (el) {
+      el.style.transition = "none";
+      el.style.transitionDelay = "";
+      el.classList.remove("in");
+    });
+    void seccion.offsetHeight;
+    els.forEach(function (el) { el.style.transition = ""; });
+    if (seccion.classList.contains("about")) escalonarAbout();
+    else els.forEach(function (el, i) { el.style.transitionDelay = (i * 90) + "ms"; });
+    requestAnimationFrame(function () {
+      els.forEach(function (el) { el.classList.add("in"); });
+      limpiarDelays(els);
+    });
+  }
+
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
     var sel = ".page-intro h1, .page-intro p, " +
               ".about img, .about h2, .about p, .contact h2, .contact-lead, .contact-links, .contact-place";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));
-    // El texto de "Sobre mí" entra de a un párrafo por vez.
-    [].slice.call(document.querySelectorAll(".about h2, .about p")).forEach(function (el, i) {
-      el.style.transitionDelay = (i * 130) + "ms";
-    });
+    escalonarAbout();
     bloques.forEach(function (el) { el.classList.add("reveal"); });
     placas.forEach(function (el, i) {
       el.classList.add("reveal");
