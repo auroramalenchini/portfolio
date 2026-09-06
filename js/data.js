@@ -147,7 +147,7 @@ const VIDEO_WORK = [
    en la página de Foto; si no, van las primeras.
    ========================================================= */
 const PHOTO_WORK = [
-  { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 34,
+  { slug: "oruga",            titulo: "Foto back de rodaje: Oruga x Galicia",                  categoria: "Rodaje",     fotos: 34,
     ar: [0.56, 0.56, 0.56, 0.56, 0.56, 1.78, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 1.78, 1.78, 0.56, 1.78, 1.78, 0.56, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56],
     previa: [26, 10, 5, 29, 24, 17] },
   { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6,
@@ -167,7 +167,7 @@ const PHOTO_WORK = [
     ar: [0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67] },
   { slug: "psicodear-charla", titulo: "Fotografías charla y fiesta PsicodeAr",       categoria: "Evento",     fotos: 10,
     ar: [1.5, 1.33, 0.67, 0.67, 1.5, 0.67, 0.67, 0.67, 0.67, 0.67] },
-  { slug: "hackaton",         titulo: "Fotografía de evento: Hackaton YHAT",         categoria: "Evento",     fotos: 15,
+  { slug: "hackaton",         titulo: "Fotografía de evento: Hackathon YHAT",         categoria: "Evento",     fotos: 15,
     ar: [1.5, 1.5, 1.5, 0.67, 0.75, 1.5, 0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 0.67, 0.67, 0.67] },
   { slug: "psicodear-retiro", titulo: "Fotografías retiro PsicoDeAr",                categoria: "Evento",     fotos: 13,
     ar: [1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
