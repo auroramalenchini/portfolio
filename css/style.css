@@ -365,6 +365,12 @@ body.loading { overflow: hidden; }
 .js body.tiene-apertura .nav .obra { display: none; }
 .js body.tiene-apertura .site-header.completo .nav .obra { display: block; animation: fade-in .5s ease both; }
 
+/* Pasaje entre páginas: la misma aparición suave que usan los links del menú */
+/* Sin `both` a propósito: si la animación se quedara al mando de la opacidad,
+   el apagado de salida sería un corte seco en vez de un fundido. */
+.js body { animation: fade-in .45s ease; }
+.js body.saliendo { animation: none; opacity: 0; transition: opacity .3s ease; }
+
 /* Visor */
 .lightbox { animation: lb-in .35s ease both; }
 .lightbox-stage img, .lightbox-stage .frame { animation: lb-zoom .55s cubic-bezier(.2,.7,.2,1) both; }

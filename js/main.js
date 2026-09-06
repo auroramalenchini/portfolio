@@ -216,6 +216,29 @@
     irA(destino);
   }
 
+  // ---- Pasaje entre páginas ----
+  // Al tocar una puerta (o Video/Foto en el menú) la página se apaga y recién
+  // ahí navega; la que llega entra con el mismo fundido.
+  function initTransicion() {
+    if (reduced) return;
+    document.querySelectorAll("a[href]").forEach(function (a) {
+      var ref = a.getAttribute("href") || "";
+      if (!ref || ref.charAt(0) === "#") return;
+      if (/^(mailto:|tel:|https?:)/i.test(ref)) return;
+      if (a.target === "_blank") return;
+      a.addEventListener("click", function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        document.body.classList.add("saliendo");
+        setTimeout(function () { window.location.href = a.href; }, 300);
+      });
+    });
+    // Si volvés con el botón "atrás", la página puede venir del caché apagada.
+    window.addEventListener("pageshow", function () {
+      document.body.classList.remove("saliendo");
+    });
+  }
+
   // Los links del menú de la misma página también van centrados.
   function initAnclas() {
     document.querySelectorAll('a[href^="#"]').forEach(function (a) {
@@ -428,6 +451,7 @@
   initReveals();
   initScroll();
   initAnclas();
+  initTransicion();
   irAlDestino();
   window.addEventListener("load", function () {
     irAlDestino();

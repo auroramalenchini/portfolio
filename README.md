@@ -107,6 +107,9 @@ funciones del final de `js/main.js`:
 - **Scroll**: el header se achica al bajar.
 - **Las puertas**: al pasar el cursor, esa puerta se lleva más ancho y la imagen
   crece. La otra se achica, pero no se apaga.
+- **Pasaje entre páginas**: al tocar una puerta o un link del menú, la página se
+  apaga en 0,3 s y recién ahí navega; la que llega entra con el mismo fundido.
+  Con movimiento reducido no se intercepta nada y la navegación es directa.
 
 Debajo de 800 px de ancho la apertura no se fija: primero el nombre, después
 las puertas apiladas. Todo esto cuelga de la clase `js` que se agrega en el `<head>`: sin JavaScript
