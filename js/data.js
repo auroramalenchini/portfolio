@@ -91,6 +91,8 @@ const VIDEO_WORK = [
     embed: "https://www.youtube.com/embed/xbZyZkbKvVo",
     thumb: "https://i.ytimg.com/vi/xbZyZkbKvVo/maxresdefault.jpg",
     role: "Dirección y edición",
+    stills: 7,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
   },
   {
     slug: "mi-alma",
