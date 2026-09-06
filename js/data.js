@@ -75,6 +75,8 @@ const VIDEO_WORK = [
     embed: "https://www.youtube.com/embed/TKjD4lZF9C4",
     thumb: "https://i.ytimg.com/vi/TKjD4lZF9C4/maxresdefault.jpg",
     role: "Dirección y edición",
+    stills: 7,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
   },
   {
     slug: "femenine-groove",

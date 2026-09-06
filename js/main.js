@@ -144,6 +144,9 @@
       const src = `img/video/${v.slug}/${String(n).padStart(2, "0")}.jpg`;
       const c = card({ ...v, thumb: src }, indice, "foto");
       c.style.setProperty("--ar", (v.ar && v.ar[n - 1]) || 1.78);
+      // El botón de play va sólo en el primer still: con uno alcanza para
+      // saber que son frames de un video y no se llena la pantalla de círculos.
+      if (n > 1) { const play = c.querySelector(".play"); if (play) play.remove(); }
       contenedor.appendChild(c);
     }
   }
@@ -168,7 +171,9 @@
       // entran una al lado de la otra en vez de una abajo de la otra.
       mosaico.dataset.alto = pr.videos
         ? "190"
-        : String(Math.min(430, Math.round(window.innerHeight * 0.46)));
+        : pr.stills
+          ? "250"
+          : String(Math.min(430, Math.round(window.innerHeight * 0.46)));
 
       if (pr.videos) {
         // Un proyecto de varias piezas: todas las piezas en el mismo mosaico
