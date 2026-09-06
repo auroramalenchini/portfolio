@@ -243,9 +243,13 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   padding: clamp(3rem, 8vw, 6rem) var(--pad); max-width: var(--max); margin: 0 auto; width: 100%;
   border-top: 1px solid var(--line);
 }
-/* Con el retrato acotado, la sección entra en una pantalla y el link del menú
-   la deja centrada sin que tengas que scrollear. */
-.about img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; max-height: 64vh; }
+/* Dos fotos mitad y mitad. Cada una con su propio recorte 3/4, así la sección
+   entra en una pantalla y el link del menú la deja centrada sin scrollear. */
+.about-fotos { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.about-fotos img {
+  width: 100%; aspect-ratio: 3 / 4; object-fit: cover; max-height: 64vh;
+  background: var(--bg-2);
+}
 .about h2 { font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.02; margin: 0 0 1.1rem; text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title); }
 .about p {
   color: var(--fg-muted); max-width: 52ch;
