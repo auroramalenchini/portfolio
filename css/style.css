@@ -212,7 +212,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title);
 }
 .grupo-head span {
-  font-size: .78rem; font-weight: 600; letter-spacing: .18em;
+  font-size: .78rem; font-weight: 600; letter-spacing: .18em; margin-right: -.18em;
   text-transform: uppercase; color: var(--fg-muted);
 }
 .grupo-fila { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
@@ -230,6 +230,10 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   display: flex; flex-direction: column; gap: .6rem;
 }
 .proyecto.der .proyecto-info { align-items: flex-end; }
+/* El interletrado agrega espacio también DESPUÉS de la última letra, así que
+   alineado a la derecha el texto queda corrido. Se compensa con margen negativo. */
+.proyecto.der .proyecto-cat { margin-right: -.1em; }
+.proyecto.der .ver-todas { margin-right: -.08em; }
 .proyecto-info h3 {
   margin: 0; font-family: var(--font-display); font-weight: 800;
   font-size: clamp(1.35rem, 2.6vw, 2.2rem); line-height: 1.05;
