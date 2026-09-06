@@ -268,7 +268,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
    Sale del flujo, así que no le roba espacio al título. */
 .page-intro .volver { position: fixed; right: var(--pad); bottom: 1.5rem; z-index: 30; margin: 0; max-width: none; }
 .volver a {
-  display: inline-block; padding: .7rem 1.1rem;
+  display: inline-block; padding: .7rem 1.1rem; white-space: nowrap;
   font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   color: var(--fg-title); background: rgba(243,237,225,.92); backdrop-filter: blur(8px);
   border: 1px solid var(--line); box-shadow: 0 10px 30px -18px rgba(36,33,28,.8);
