@@ -256,7 +256,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   /* Más angosta que el resto: así el texto llega hasta el borde de su columna y
      el margen de la derecha queda igual al de la izquierda. */
   padding: clamp(3rem, 8vw, 6rem) var(--pad);
-  max-width: min(var(--max), 1240px); margin: 0 auto; width: 100%;
+  max-width: min(var(--max), 1320px); margin: 0 auto; width: 100%;
   border-top: 1px solid var(--line);
 }
 /* Dos fotos horizontales, una arriba de la otra: juntas forman un cuadrado.
@@ -278,8 +278,8 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   color: var(--fg-muted); max-width: none;
   font-family: var(--font-read); font-weight: 400;
   font-size: 1.1em; line-height: 1.62;
-  /* Justificado, con corte de palabras para que no queden ríos de espacio. */
-  text-align: justify; hyphens: auto;
+  /* Justificado, pero sin cortar palabras: la columna es ancha y no hacen falta. */
+  text-align: justify; hyphens: none;
 }
 .about p + p { margin-top: 1.1rem; }
 
