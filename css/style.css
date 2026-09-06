@@ -182,6 +182,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
      y se lo pisaría. */
   scale: 1.25;
 }
+/* La foto de la página de foto ya viene recortada apaisada: no le hace falta
+   el zoom extra y se encuadra un poco a la derecha para no cortarla. */
+.intro-fotos.foto-camara img { scale: 1; object-position: 74% center; }
 .page-intro p {
   color: var(--fg-muted); max-width: 52ch; margin: 0;
   font-family: var(--font-read); font-weight: 400;
