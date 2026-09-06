@@ -31,7 +31,7 @@ const SITE = {
 const VIDEO_WORK = [
   {
     slug: "gusto-a-sal",
-    title: "GUSTO A SAL",
+    title: "Gusto a Sal",
     client: "Maqui",
     category: "Videoclip",
     embed: "https://www.youtube.com/embed/QOTH0P_PPqc",
@@ -46,7 +46,7 @@ const VIDEO_WORK = [
   {
     // Un proyecto con varias piezas: se muestra como un bloque con título.
     slug: "visualizers-gusto-a-sal",
-    grupo: "VISUALIZERS DEL EP GUSTO A SAL",
+    grupo: "Visualizers del EP Gusto a Sal",
     client: "Maqui",
     category: "Visualizers",
     role: "Dirección y edición",
@@ -56,19 +56,19 @@ const VIDEO_WORK = [
     videos: [
       {
         slug: "desenamorame",
-        title: "DESENAMORAME",
+        title: "Desenamorame",
         embed: "https://www.youtube.com/embed/lr7U2yjpUsk",
         thumb: "https://i.ytimg.com/vi/lr7U2yjpUsk/maxresdefault.jpg",
       },
       {
         slug: "nunca-te-lo-dije",
-        title: "NUNCA TE LO DIJE",
+        title: "Nunca te lo dije",
         embed: "https://www.youtube.com/embed/DdJpP_VcAN8",
         thumb: "https://i.ytimg.com/vi/DdJpP_VcAN8/maxresdefault.jpg",
       },
       {
         slug: "en-la-lluvia",
-        title: "EN LA LLUVIA",
+        title: "En la lluvia",
         embed: "https://www.youtube.com/embed/PBJ7VX3cNhs",
         thumb: "https://i.ytimg.com/vi/PBJ7VX3cNhs/maxresdefault.jpg",
       },
@@ -76,7 +76,7 @@ const VIDEO_WORK = [
   },
   {
     slug: "despues-de-apogeo",
-    title: "DESPUÉS DE APOGEO",
+    title: "Después de apogeo",
     client: "Swaggy J",
     category: "Fashion film",
     embed: "https://www.youtube.com/embed/TKjD4lZF9C4",
@@ -87,7 +87,7 @@ const VIDEO_WORK = [
   },
   {
     slug: "femenine-groove",
-    title: "FEMENINE GROOVE",
+    title: "Femenine Groove",
     client: "ROBERTA",
     category: "DJ set",
     embed: "https://www.youtube.com/embed/xbZyZkbKvVo",
@@ -98,7 +98,7 @@ const VIDEO_WORK = [
   },
   {
     slug: "mi-alma",
-    title: "MI ALMA",
+    title: "Mi alma",
     client: "FROSONO",
     category: "Videoclip",
     embed: "https://www.youtube.com/embed/tZqkLeCPrL0",
@@ -109,7 +109,7 @@ const VIDEO_WORK = [
   },
   {
     slug: "miel",
-    title: "MIEL",
+    title: "Miel",
     client: "Suriz",
     category: "Videoclip",
     embed: "https://www.youtube.com/embed/-dCleZ4a_lc",
@@ -120,7 +120,7 @@ const VIDEO_WORK = [
   },
   {
     slug: "dosis-de-recarga",
-    title: "DOSIS DE RECARGA",
+    title: "Dosis de recarga",
     client: "Suriz",
     category: "Videoclip",
     embed: "https://www.youtube.com/embed/ptVR8KVyf44",

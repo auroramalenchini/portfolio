@@ -48,7 +48,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
-.brand { font-size: 1.15rem; letter-spacing: .05em; text-transform: uppercase; color: var(--fg-title); }
+.brand { font-size: 1.2rem; letter-spacing: .04em; font-variant-caps: small-caps; color: var(--fg-title); }
 .brand small {
   display: block; font-family: var(--font-sans); font-weight: 500;
   font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-muted);
@@ -107,9 +107,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .opening-front h1 {
   margin: 0; max-width: 100%; overflow-wrap: break-word;
-  font-size: clamp(2.5rem, 9.5vw, 8rem);
-  line-height: .9; letter-spacing: -.02em;
-  text-transform: uppercase; color: var(--accent);
+  font-size: clamp(2.6rem, 10vw, 8.4rem);
+  line-height: .9; letter-spacing: -.01em;
+  font-variant-caps: small-caps; color: var(--accent);
 }
 .hero-role {
   margin: 0;
@@ -154,15 +154,15 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .door:hover .door-body { transform: translateY(-6px); }
 .door-label {
   font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.9rem, 4vw, 3.1rem); line-height: 1;
-  text-transform: uppercase; letter-spacing: -.005em;
+  font-size: clamp(2rem, 4.2vw, 3.3rem); line-height: 1;
+  font-variant-caps: small-caps; letter-spacing: 0;
 }
 .door-sub { font-size: .88rem; color: rgba(246,241,231,.82); max-width: 36ch; }
 .door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 
 /* ---------- Intro de página ---------- */
 .page-intro { padding: clamp(2.5rem, 7vw, 5rem) var(--pad) 1.5rem; max-width: var(--max); margin: 0 auto; width: 100%; }
-.page-intro h1 { font-size: clamp(2.1rem, 4.4vw, 3.6rem); line-height: .96; margin: 0 0 .9rem; text-transform: uppercase; letter-spacing: -.01em; color: var(--fg-title); }
+.page-intro h1 { font-size: clamp(2.2rem, 4.6vw, 3.8rem); line-height: .96; margin: 0 0 .9rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
 /* Variante con fotos al lado del texto (la usa video.html) */
 .page-intro.con-fotos {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -218,7 +218,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .proyecto-info h3 {
   margin: 0; font-family: var(--font-display); font-weight: 800;
   font-size: var(--titulo-fs); line-height: 1.05;
-  text-transform: uppercase; letter-spacing: -.01em; color: var(--fg-title);
+  font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
   text-wrap: balance;
 }
 .proyecto-cat {
@@ -376,7 +376,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 /* Escalonadas: la de arriba corrida a la izquierda, la de abajo a la derecha. */
 .about-fotos img:first-child { justify-self: start; }
 .about-fotos img:last-child { justify-self: end; }
-.about h2 { font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.02; margin: 0 0 1.1rem; text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title); }
+.about h2 { font-size: clamp(1.75rem, 3.2vw, 2.6rem); line-height: 1.02; margin: 0 0 1.1rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
 .about p {
   color: var(--fg-muted); max-width: none;
   font-family: var(--font-read); font-weight: 400;
@@ -394,8 +394,8 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   text-align: center;
 }
 .contact h2 {
-  font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.02; margin: 0 0 1rem;
-  text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title);
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem); line-height: 1.02; margin: 0 0 1rem;
+  font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
 }
 .contact-lead {
   color: var(--fg-muted); margin: 0 auto; max-width: 42ch;
