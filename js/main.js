@@ -111,37 +111,87 @@
     return btn;
   }
 
-  // Un proyecto de varias piezas: título arriba y las piezas en fila.
-  function bloqueGrupo(it, indices) {
-    const wrap = document.createElement("div");
-    wrap.className = "grupo";
-    const head = document.createElement("div");
-    head.className = "grupo-head";
-    head.innerHTML = `<h3>${esc(it.grupo)}</h3><span>${esc(it.client || "")}</span>`;
-    const fila = document.createElement("div");
-    fila.className = "grupo-fila";
-    it.videos.forEach((v, k) => fila.appendChild(card(v, indices[k])));
-    wrap.appendChild(head);
-    wrap.appendChild(fila);
-    return wrap;
+  // El id de YouTube sale de la url de embed, así armamos el link para ver
+  // el video en YouTube sin tener que escribirlo dos veces en data.js.
+  function idDeYoutube(embed) {
+    const m = /embed\/([^?&]+)/.exec(embed || "");
+    return m ? m[1] : "";
   }
 
-  // ---- Página de video ----
+  function linkYoutube(v, texto) {
+    const id = idDeYoutube(v.embed);
+    if (!id) return null;
+    const a = document.createElement("a");
+    a.className = "ver-todas";
+    a.href = "https://youtu.be/" + id;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = texto || "Ver en YouTube";
+    return a;
+  }
+
+  // Las placas de un video: si ya tiene stills van esos, y si no, la
+  // miniatura de YouTube. Toquen la que toquen, se abre el video.
+  function placasDeVideo(v, indice, contenedor) {
+    const cuantos = v.stills || 0;
+    if (!cuantos) {
+      const c = card(v, indice, "foto");
+      c.style.setProperty("--ar", 1.78);
+      contenedor.appendChild(c);
+      return;
+    }
+    for (let n = 1; n <= cuantos; n++) {
+      const src = `img/video/${v.slug}/${String(n).padStart(2, "0")}.jpg`;
+      const c = card({ ...v, thumb: src }, indice, "foto");
+      c.style.setProperty("--ar", (v.ar && v.ar[n - 1]) || 1.78);
+      contenedor.appendChild(c);
+    }
+  }
+
+  // ---- Página de video: un bloque por proyecto, igual que en foto ----
   if (page === "video") {
     const grid = $("#grid");
     items = [];
-    VIDEO_WORK.forEach((it) => {
-      if (it.videos) {
-        const indices = it.videos.map((v) => {
-          items.push({ ...v, client: it.client, category: it.category, role: it.role });
-          return items.length - 1;
+    VIDEO_WORK.forEach((pr, idx) => {
+      const art = document.createElement("article");
+      art.className = "proyecto" + (idx % 2 ? " der" : "");
+
+      const info = document.createElement("div");
+      info.className = "proyecto-info";
+      const bajada = [pr.category, pr.client].filter(Boolean).join(" · ");
+      info.innerHTML = `<h3>${esc(pr.grupo || pr.title)}</h3>` +
+        `<span class="proyecto-cat">${esc(bajada)}</span>`;
+
+      const mosaico = document.createElement("div");
+      mosaico.className = "mosaico";
+      // Un proyecto de varias piezas busca filas más bajas, así las tres
+      // entran una al lado de la otra en vez de una abajo de la otra.
+      mosaico.dataset.alto = pr.videos
+        ? "190"
+        : String(Math.min(430, Math.round(window.innerHeight * 0.46)));
+
+      if (pr.videos) {
+        // Un proyecto de varias piezas: todas las piezas en el mismo mosaico
+        // y un link por pieza en la columna del título.
+        pr.videos.forEach((v) => {
+          const pieza = { ...v, client: pr.client, category: pr.category, role: pr.role };
+          items.push(pieza);
+          placasDeVideo(pieza, items.length - 1, mosaico);
+          const a = linkYoutube(v, v.title);
+          if (a) info.appendChild(a);
         });
-        grid.appendChild(bloqueGrupo(it, indices));
       } else {
-        items.push(it);
-        grid.appendChild(card(it, items.length - 1));
+        items.push(pr);
+        placasDeVideo(pr, items.length - 1, mosaico);
+        const a = linkYoutube(pr);
+        if (a) info.appendChild(a);
       }
+
+      art.appendChild(info);
+      art.appendChild(mosaico);
+      grid.appendChild(art);
     });
+    if (!items.length) grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`;
   }
 
   // ---- Mosaico justificado ----

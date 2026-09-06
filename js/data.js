@@ -30,6 +30,7 @@ const SITE = {
 
 const VIDEO_WORK = [
   {
+    slug: "gusto-a-sal",
     title: "GUSTO A SAL",
     client: "Maqui",
     category: "Videoclip",
@@ -40,22 +41,26 @@ const VIDEO_WORK = [
   },
   {
     // Un proyecto con varias piezas: se muestra como un bloque con título.
-    grupo: "VISUALIZERS PARA EL EP",
+    slug: "visualizers-gusto-a-sal",
+    grupo: "VISUALIZERS DEL EP GUSTO A SAL",
     client: "Maqui",
     category: "Visualizers",
     role: "Dirección y edición",
     videos: [
       {
+        slug: "desenamorame",
         title: "DESENAMORAME",
         embed: "https://www.youtube.com/embed/lr7U2yjpUsk",
         thumb: "https://i.ytimg.com/vi/lr7U2yjpUsk/maxresdefault.jpg",
       },
       {
+        slug: "nunca-te-lo-dije",
         title: "NUNCA TE LO DIJE",
         embed: "https://www.youtube.com/embed/DdJpP_VcAN8",
         thumb: "https://i.ytimg.com/vi/DdJpP_VcAN8/maxresdefault.jpg",
       },
       {
+        slug: "en-la-lluvia",
         title: "EN LA LLUVIA",
         embed: "https://www.youtube.com/embed/PBJ7VX3cNhs",
         thumb: "https://i.ytimg.com/vi/PBJ7VX3cNhs/maxresdefault.jpg",
@@ -63,14 +68,7 @@ const VIDEO_WORK = [
     ],
   },
   {
-    title: "MI ALMA",
-    client: "FROSONO",
-    category: "Videoclip",
-    embed: "https://www.youtube.com/embed/tZqkLeCPrL0",
-    thumb: "https://i.ytimg.com/vi/tZqkLeCPrL0/maxresdefault.jpg",
-    role: "Dirección y edición",
-  },
-  {
+    slug: "despues-de-apogeo",
     title: "DESPUÉS DE APOGEO",
     client: "Swaggy J",
     category: "Fashion film",
@@ -79,6 +77,25 @@ const VIDEO_WORK = [
     role: "Dirección y edición",
   },
   {
+    slug: "femenine-groove",
+    title: "FEMENINE GROOVE",
+    client: "ROBERTA",
+    category: "DJ set",
+    embed: "https://www.youtube.com/embed/xbZyZkbKvVo",
+    thumb: "https://i.ytimg.com/vi/xbZyZkbKvVo/maxresdefault.jpg",
+    role: "Dirección y edición",
+  },
+  {
+    slug: "mi-alma",
+    title: "MI ALMA",
+    client: "FROSONO",
+    category: "Videoclip",
+    embed: "https://www.youtube.com/embed/tZqkLeCPrL0",
+    thumb: "https://i.ytimg.com/vi/tZqkLeCPrL0/maxresdefault.jpg",
+    role: "Dirección y edición",
+  },
+  {
+    slug: "miel",
     title: "MIEL",
     client: "Suriz",
     category: "Videoclip",
@@ -87,6 +104,7 @@ const VIDEO_WORK = [
     role: "Dirección y edición",
   },
   {
+    slug: "dosis-de-recarga",
     title: "DOSIS DE RECARGA",
     client: "Suriz",
     category: "Videoclip",
@@ -94,15 +112,13 @@ const VIDEO_WORK = [
     thumb: "https://i.ytimg.com/vi/ptVR8KVyf44/maxresdefault.jpg",
     role: "Dirección y edición",
   },
-  {
-    title: "FEMENINE GROOVE",
-    client: "ROBERTA",
-    category: "DJ set",
-    embed: "https://www.youtube.com/embed/xbZyZkbKvVo",
-    thumb: "https://i.ytimg.com/vi/xbZyZkbKvVo/maxresdefault.jpg",
-    role: "Dirección y edición",
-  },
 ];
+
+/* Los stills (frames) de cada video van en img/video/<slug>/ numerados
+   01.jpg, 02.jpg... Para que se muestren, agregale al proyecto:
+     stills: 4,                 // cuántos hay
+     ar: [1.78, 1.78, 1.78, 1.78]   // la forma de cada uno (ancho / alto)
+   Si un proyecto todavía no tiene stills, se muestra la miniatura de YouTube. */
 
 /* =========================================================
    FOTO
