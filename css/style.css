@@ -257,7 +257,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .card.foto .card-meta { display: none; }
 .grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
 
-.volver { margin: 0 0 1.5rem; }
+/* El botón arranca bien arriba y deja aire antes del título del proyecto. */
+body[data-page="proyecto"] .page-intro { padding-top: clamp(1.5rem, 3.5vw, 2.25rem); }
+.volver { margin: 0 0 clamp(2.25rem, 5vw, 3.5rem); }
 .volver a {
   display: inline-block; padding: .5rem .9rem;
   font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
