@@ -65,9 +65,10 @@ placeholders de picsum.photos para que el sitio se vea sin ningún asset.
 - Fondo crema `#F3EDE1`, texto en marrón casi negro `#24211C`, títulos en
   marrón oscuro `#4A3527` y bordó `#7A2233` para el nombre de la portada y los
   detalles (líneas, subrayados, botón de contacto, hover).
-- Títulos en **Archivo** 800, siempre en mayúscula, y textos en **Inter**
-  (nada por debajo de 400). Los tokens están arriba de todo en
-  `css/style.css`.
+- Títulos en **Archivo** 800, siempre en mayúscula. Los textos largos (la bio y
+  la bajada de contacto) también van en **Archivo**, en 400. **Inter** queda
+  para la navegación, las etiquetas y los datos chicos, nada por debajo de 400.
+  Los tokens están arriba de todo en `css/style.css`.
 
 ## Movimiento
 
@@ -87,7 +88,7 @@ funciones del final de `js/main.js`:
   puertas toman la pantalla (en el resto de las páginas está siempre).
 - **Apariciones**: los bloques y las placas aparecen desde el fondo (crecen un
   poco, no se deslizan) al entrar en pantalla, con un escalonado entre placas
-  vecinas.
+  vecinas. En "Sobre mí" el escalonado va párrafo por párrafo.
 - **Scroll**: el header se achica al bajar.
 - **Las puertas**: al pasar el cursor, esa puerta se lleva más ancho y la imagen
   crece. La otra se achica, pero no se apaga.

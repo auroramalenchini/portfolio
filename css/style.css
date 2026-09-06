@@ -242,7 +242,11 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .about img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
 .about h2 { font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.02; margin: 0 0 1.1rem; text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title); }
-.about p { color: var(--fg-muted); max-width: 56ch; font-size: 1.05em; line-height: 1.65; }
+.about p {
+  color: var(--fg-muted); max-width: 54ch;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.12em; line-height: 1.6; letter-spacing: -.003em;
+}
 .about p + p { margin-top: 1.1rem; }
 
 /* ---------- Contacto ---------- */
@@ -256,10 +260,14 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   font-size: clamp(2rem, 4.2vw, 3.2rem); line-height: 1.02; margin: 0 0 1rem;
   text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title);
 }
-.contact p { color: var(--fg-muted); margin: 0 auto; max-width: 46ch; font-size: 1.05em; }
+.contact-lead {
+  color: var(--fg-muted); margin: 0 auto; max-width: 44ch;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.12em; line-height: 1.6; letter-spacing: -.003em;
+}
 .contact-links {
   display: flex; flex-direction: column;
-  margin: clamp(2.5rem, 6vh, 4rem) auto 0; max-width: 27rem; width: 100%;
+  margin: clamp(2rem, 4vh, 2.75rem) auto 0; max-width: 27rem; width: 100%;
 }
 .contact-link {
   display: grid; gap: .3rem; padding: 1.2rem .75rem;
@@ -275,8 +283,8 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .contact-link:hover .cl-label { color: var(--accent); }
 .cl-value { font-size: .92rem; color: var(--fg-muted); }
 .contact-place {
-  margin: clamp(2rem, 5vh, 3rem) auto 0;
-  font-size: .74rem; font-weight: 600; letter-spacing: .22em;
+  margin: clamp(1.5rem, 3vh, 2rem) auto 0;
+  font-size: .66rem; font-weight: 600; letter-spacing: .2em;
   text-transform: uppercase; color: var(--fg-muted);
 }
 

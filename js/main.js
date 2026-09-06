@@ -174,9 +174,13 @@
   // ---- Aparición de bloques y placas al entrar en pantalla ----
   function initReveals() {
     var sel = ".page-intro h1, .page-intro p, " +
-              ".about img, .about > div, .contact h2, .contact p, .contact-links, .contact-place";
+              ".about img, .about h2, .about p, .contact h2, .contact-lead, .contact-links, .contact-place";
     var bloques = [].slice.call(document.querySelectorAll(sel));
     var placas = [].slice.call(document.querySelectorAll(".card"));
+    // El texto de "Sobre mí" entra de a un párrafo por vez.
+    [].slice.call(document.querySelectorAll(".about h2, .about p")).forEach(function (el, i) {
+      el.style.transitionDelay = (i * 130) + "ms";
+    });
     bloques.forEach(function (el) { el.classList.add("reveal"); });
     placas.forEach(function (el, i) {
       el.classList.add("reveal");
