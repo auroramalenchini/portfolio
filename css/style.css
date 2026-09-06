@@ -40,7 +40,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 /* La parte "minúscula" de las versalitas: más chica, pero más gruesa, para
    que el trazo mida lo mismo que el de las mayúsculas. */
-.vs { font-size: .82em; font-weight: 800; letter-spacing: .005em; }
+/* 730 no es un capricho: medido sobre la letra, a 82% del cuerpo el asta de
+   la versalita mide exactamente lo mismo que la de la mayúscula en 600. */
+.vs { font-size: .82em; font-weight: 730; letter-spacing: .005em; }
 .brand { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 
 /* ---------- Header ---------- */
