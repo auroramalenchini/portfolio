@@ -356,7 +356,9 @@ body.loading { overflow: hidden; }
 @media (max-width: 800px) {
   /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
   .opening { height: auto; }
-  .opening-stage { position: static; height: auto; display: block; overflow: visible; }
+  /* En el markup las puertas van primero (son el fondo). Acá el nombre va arriba. */
+  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; overflow: visible; }
+  .opening-front { order: -1; }
   .opening-back {
     position: static; transform: none; filter: none; opacity: 1; pointer-events: auto;
   }
@@ -390,10 +392,10 @@ body.loading { overflow: hidden; }
   .js .reveal, .js .card, .js .hero-role { opacity: 1 !important; --rev: 1 !important; transform: none !important; }
   .js body.tiene-apertura .site-header { transform: none !important; opacity: 1 !important; pointer-events: auto; }
   .opening { height: auto; }
-  .opening-stage { position: static; height: auto; display: block; overflow: visible; }
-  .opening-back { transform: none !important; filter: none !important; opacity: 1 !important; pointer-events: auto; }
+  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; overflow: visible; }
+  .opening-back { position: static; transform: none !important; filter: none !important; opacity: 1 !important; pointer-events: auto; }
   .opening-veil { display: none; }
-  .opening-front { opacity: 1 !important; filter: none !important; transform: none !important; padding: 5rem var(--pad) 3rem; }
+  .opening-front { order: -1; opacity: 1 !important; filter: none !important; transform: none !important; padding: 5rem var(--pad) 3rem; }
   .doors { position: static; }
   .door { height: clamp(300px, 48vh, 460px); }
   .js .opening-front h1 .line > span { transform: none !important; }
