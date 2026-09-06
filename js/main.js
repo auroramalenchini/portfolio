@@ -65,9 +65,10 @@
       img.alt = it.title;
       stage.appendChild(img);
     }
+    const [desde, hasta] = limitesDelGrupo(index);
     caption.innerHTML =
       `<span><strong>${esc(it.title)}</strong> · ${esc(it.client || "")}${it.role ? " · " + esc(it.role) : ""}</span>` +
-      `<span>${index + 1} / ${items.length}</span>`;
+      `<span>${index - desde + 1} / ${hasta - desde + 1}</span>`;
     if (lb.hidden) {
       lastFocus = document.activeElement;
       lb.hidden = false;
@@ -75,6 +76,25 @@
       $(".lb-close", lb).focus();
     }
   }
+  // Las flechas se mueven sólo dentro del mismo proyecto: al llegar al final
+  // se cierra el visor y volvés a la grilla, en vez de seguir con el proyecto
+  // siguiente, que hacía parecer que era todo un mismo trabajo.
+  function limitesDelGrupo(i) {
+    const g = items[i] && items[i].grupo;
+    let a = i, b = i;
+    while (a > 0 && items[a - 1].grupo === g) a--;
+    while (b < items.length - 1 && items[b + 1].grupo === g) b++;
+    return [a, b];
+  }
+
+  function pasar(paso) {
+    if (index < 0 || !items.length) return;
+    const [desde, hasta] = limitesDelGrupo(index);
+    const destino = index + paso;
+    if (destino < desde || destino > hasta) { close(); return; }
+    show(destino);
+  }
+
   function close() {
     if (!lb || lb.hidden) return;
     lb.hidden = true;
@@ -84,14 +104,14 @@
   }
   if (lb) {
     $(".lb-close", lb).addEventListener("click", close);
-    $(".lb-prev", lb).addEventListener("click", () => show(index - 1));
-    $(".lb-next", lb).addEventListener("click", () => show(index + 1));
+    $(".lb-prev", lb).addEventListener("click", () => pasar(-1));
+    $(".lb-next", lb).addEventListener("click", () => pasar(1));
     lb.addEventListener("click", (e) => { if (e.target === lb || e.target === stage) close(); });
     document.addEventListener("keydown", (e) => {
       if (lb.hidden) return;
       if (e.key === "Escape") close();
-      if (e.key === "ArrowLeft") show(index - 1);
-      if (e.key === "ArrowRight") show(index + 1);
+      if (e.key === "ArrowLeft") pasar(-1);
+      if (e.key === "ArrowRight") pasar(1);
     });
   }
 
@@ -146,7 +166,7 @@
       const src = `img/video/${v.slug}/${String(n).padStart(2, "0")}.jpg`;
       // Sin `embed`, el visor lo muestra como foto y se puede pasar de una
       // a la otra con las flechas.
-      const still = { src, title: v.title, client: v.category };
+      const still = { src, title: v.title, client: v.category, grupo: v.grupo || v.slug };
       items.push(still);
       const c = card(still, items.length - 1, "foto");
       c.style.setProperty("--ar", (v.ar && v.ar[n - 1]) || 1.78);
@@ -201,13 +221,14 @@
         // abre la primera pieza; si no, va la miniatura de cada una.
         const indices = [];
         pr.videos.forEach((v) => {
-          const pieza = { ...v, client: pr.client, category: pr.category, role: pr.role };
+          const pieza = { ...v, client: pr.client, category: pr.category, role: pr.role,
+            grupo: "pieza-" + v.slug };
           items.push(pieza);
           indices.push(items.length - 1);
         });
         if (pr.stills) {
           const portada = { ...pr.videos[0], slug: pr.slug, stills: pr.stills, ar: pr.ar,
-            title: pr.grupo, client: pr.client, category: pr.category };
+            title: pr.grupo, client: pr.client, category: pr.category, grupo: pr.slug };
           placasDeVideo(portada, indices[0], mosaico);
         } else {
           pr.videos.forEach((v, k) => placasDeVideo(items[indices[k]], indices[k], mosaico));
@@ -217,7 +238,7 @@
           if (a) info.appendChild(a);
         });
       } else {
-        items.push(pr);
+        items.push({ ...pr, grupo: "pieza-" + pr.slug });
         placasDeVideo(pr, items.length - 1, mosaico);
         const a = linkYoutube(pr);
         if (a) info.appendChild(a);
@@ -316,6 +337,7 @@
         src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
         title: pr.titulo,
         client: pr.categoria,
+        grupo: pr.slug,
       };
       items.push(it);
       const c = card(it, items.length - 1, "foto");
@@ -731,6 +753,29 @@
     window.addEventListener("load", acomodarTodos);
   }
 
+  // Flecha flotante para volver al principio: aparece recién cuando ya
+  // scrolleaste más de una pantalla y media.
+  function initArriba() {
+    if (page !== "photo" && page !== "video" && page !== "proyecto") return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "arriba";
+    b.setAttribute("aria-label", "Volver arriba");
+    b.addEventListener("click", function () {
+      const suave = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: suave ? "smooth" : "auto" });
+    });
+    document.body.appendChild(b);
+    let visible = false;
+    const revisar = function () {
+      const debe = window.scrollY > window.innerHeight * 1.5;
+      if (debe !== visible) { visible = debe; b.classList.toggle("se-ve", debe); }
+    };
+    revisar();
+    window.addEventListener("scroll", revisar, { passive: true });
+  }
+
+  initArriba();
   initLoader();
   initReveals();
   initScroll();
