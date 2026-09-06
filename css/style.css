@@ -10,6 +10,8 @@
   --on-media: #F6F1E7;    /* texto sobre fotos */
   --max: 1400px;
   --pad: clamp(1rem, 4vw, 3rem);
+  /* Grosor de los títulos: 800 es el más gordo, 500 el más liviano. */
+  --peso-titulo: 600;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-read: "Lora", Georgia, "Times New Roman", serif;   /* textos largos */
@@ -35,8 +37,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Display: Archivo, siempre con peso. Nunca fina. */
-h1, h2 { font-family: var(--font-display); font-weight: 800; }
-.brand { font-family: var(--font-display); font-weight: 700; }
+h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
+.brand { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 
 /* ---------- Header ---------- */
 .site-header {
@@ -48,7 +50,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--line);
 }
-.brand { font-size: 1.2rem; letter-spacing: .04em; font-variant-caps: small-caps; color: var(--fg-title); }
+.brand { font-size: 1.26rem; letter-spacing: .04em; font-variant-caps: small-caps; color: var(--fg-title); }
 .brand small {
   display: block; font-family: var(--font-sans); font-weight: 500;
   font-size: .68rem; letter-spacing: .2em; text-transform: uppercase; color: var(--fg-muted);
@@ -107,7 +109,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .opening-front h1 {
   margin: 0; max-width: 100%; overflow-wrap: break-word;
-  font-size: clamp(2.6rem, 10vw, 8.4rem);
+  font-size: clamp(2.8rem, 10.6vw, 9rem);
   line-height: .9; letter-spacing: -.01em;
   font-variant-caps: small-caps; color: var(--accent);
 }
@@ -153,8 +155,8 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .door:hover .door-body { transform: translateY(-6px); }
 .door-label {
-  font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(2rem, 4.2vw, 3.3rem); line-height: 1;
+  font-family: var(--font-display); font-weight: var(--peso-titulo);
+  font-size: clamp(2.15rem, 4.5vw, 3.5rem); line-height: 1;
   font-variant-caps: small-caps; letter-spacing: 0;
 }
 .door-sub { font-size: .88rem; color: rgba(246,241,231,.82); max-width: 36ch; }
@@ -162,7 +164,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 
 /* ---------- Intro de página ---------- */
 .page-intro { padding: clamp(2.5rem, 7vw, 5rem) var(--pad) 1.5rem; max-width: var(--max); margin: 0 auto; width: 100%; }
-.page-intro h1 { font-size: clamp(2.2rem, 4.6vw, 3.8rem); line-height: .96; margin: 0 0 .9rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
+.page-intro h1 { font-size: clamp(2.35rem, 5vw, 4rem); line-height: .96; margin: 0 0 .9rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
 /* Variante con fotos al lado del texto (la usa video.html) */
 .page-intro.con-fotos {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -214,9 +216,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
    Del lado derecho no hace falta: ahí ya quedan parejos solos. */
 .proyecto:not(.der) .proyecto-cat { margin-left: calc(var(--titulo-fs) * .071 - .063em); }
 .proyecto:not(.der) .ver-todas { margin-left: calc(var(--titulo-fs) * .071 - .021em); }
-.proyecto-info { --titulo-fs: clamp(1.35rem, 2.6vw, 2.2rem); }
+.proyecto-info { --titulo-fs: clamp(1.45rem, 2.8vw, 2.35rem); }
 .proyecto-info h3 {
-  margin: 0; font-family: var(--font-display); font-weight: 800;
+  margin: 0; font-family: var(--font-display); font-weight: var(--peso-titulo);
   font-size: var(--titulo-fs); line-height: 1.05;
   font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
   text-wrap: balance;
@@ -376,7 +378,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 /* Escalonadas: la de arriba corrida a la izquierda, la de abajo a la derecha. */
 .about-fotos img:first-child { justify-self: start; }
 .about-fotos img:last-child { justify-self: end; }
-.about h2 { font-size: clamp(1.75rem, 3.2vw, 2.6rem); line-height: 1.02; margin: 0 0 1.1rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
+.about h2 { font-size: clamp(1.85rem, 3.4vw, 2.75rem); line-height: 1.02; margin: 0 0 1.1rem; font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title); }
 .about p {
   color: var(--fg-muted); max-width: none;
   font-family: var(--font-read); font-weight: 400;
@@ -394,7 +396,7 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   text-align: center;
 }
 .contact h2 {
-  font-size: clamp(2.1rem, 4.4vw, 3.4rem); line-height: 1.02; margin: 0 0 1rem;
+  font-size: clamp(2.25rem, 4.7vw, 3.6rem); line-height: 1.02; margin: 0 0 1rem;
   font-variant-caps: small-caps; letter-spacing: 0; color: var(--fg-title);
 }
 .contact-lead {
