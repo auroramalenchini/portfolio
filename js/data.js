@@ -38,6 +38,8 @@ const VIDEO_WORK = [
     thumb: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
     role: "Dirección y edición",
     featured: true,
+    // Se muestra debajo de la categoría, en el bloque del proyecto.
+    premio: "Nominado a mejor coreografía en los BAMV",
     stills: 9,
     ar: [1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9],
   },

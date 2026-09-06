@@ -163,7 +163,8 @@
       info.className = "proyecto-info";
       const bajada = [pr.category, pr.client].filter(Boolean).join(" · ");
       info.innerHTML = `<h3>${esc(pr.grupo || pr.title)}</h3>` +
-        `<span class="proyecto-cat">${esc(bajada)}</span>`;
+        `<span class="proyecto-cat">${esc(bajada)}</span>` +
+        (pr.premio ? `<span class="proyecto-premio">${esc(pr.premio)}</span>` : "");
 
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";

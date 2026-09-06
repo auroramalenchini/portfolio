@@ -228,6 +228,13 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   font-size: .74rem; font-weight: 600; letter-spacing: .2em;
   text-transform: uppercase; color: var(--fg-muted);
 }
+/* Distinción o premio del proyecto: va debajo de la categoría, en la
+   tipografía de lectura y en bordó para que se note sin gritar. */
+.proyecto-premio {
+  font-family: var(--font-read); font-weight: 400; font-style: italic;
+  font-size: .92rem; line-height: 1.4; color: var(--accent); max-width: 22ch;
+}
+.proyecto.der .proyecto-premio { text-align: right; }
 .ver-todas {
   align-self: start; margin-top: .5rem; padding-bottom: .15rem;
   font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
