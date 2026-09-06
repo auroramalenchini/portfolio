@@ -174,10 +174,13 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 /* La foto se recorta al alto exacto del título más la bajada: va absoluta para
    no empujar la fila, si no sería ella la que manda el alto. */
-.intro-fotos { position: relative; background: var(--bg-2); }
+.intro-fotos { position: relative; overflow: hidden; background: var(--bg-2); }
 .intro-fotos img {
   position: absolute; inset: 0;
   width: 100%; height: 100%; display: block; object-fit: cover;
+  /* Propiedad `scale` y no `transform`: la animación de aparición usa transform
+     y se lo pisaría. */
+  scale: 1.25;
 }
 .page-intro p {
   color: var(--fg-muted); max-width: 52ch; margin: 0;
