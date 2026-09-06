@@ -16,7 +16,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; scrollbar-gutter: stable; }   /* el ancho no cambia al aparecer la barra */
 /* el header es sticky: que los anclajes no queden tapados */
 [id] { scroll-margin-top: 110px; }
 body {
@@ -249,20 +249,11 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 .proyecto.der .ver-todas { align-self: end; }
 .ver-todas:hover { color: var(--fg-title); border-color: var(--fg-title); }
 
-/* Mosaico justificado: cada fila llena el ancho y todas las fotos de una fila
-   comparten alto. El ancho de cada una sale de su forma (--ar), sin recortes. */
-.mosaico { display: flex; flex-wrap: wrap; gap: .5rem; }
+/* Mosaico justificado: las medidas de cada placa las calcula js (acomodarMosaico)
+   según el ancho real del contenedor, para que cada fila lo llene entero. */
+.mosaico { display: flex; flex-wrap: wrap; gap: .5rem; align-items: flex-start; }
 .mosaico[hidden] { display: none; }
-.mosaico .card {
-  flex: var(--ar, 1.5) 1 calc(var(--ar, 1.5) * clamp(150px, 22vh, 270px));
-  aspect-ratio: var(--ar, 1.5); height: auto; min-width: 0;
-}
-/* En la página del proyecto no hay columna de título: las fotos van más grandes */
-body[data-page="proyecto"] .mosaico .card {
-  flex-basis: calc(var(--ar, 1.5) * clamp(200px, 30vh, 360px));
-}
-/* Absorbe el sobrante de la última fila para que no se estire de más */
-.mosaico::after { content: ""; flex-grow: 999999; }
+.mosaico .card { flex: 0 0 auto; }
 .card.foto .card-meta { display: none; }
 .grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
 
@@ -318,7 +309,9 @@ body[data-page="proyecto"] .mosaico .card {
   /* minmax(0,1fr): si no, la foto estira la fila y se sale de la pantalla */
   display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 3.5rem var(--pad) 1.5rem;
 }
-.lightbox-stage { display: grid; place-items: center; min-height: 0; }
+/* La fila necesita alto definido: si no, el "max-height: 100%" de la foto no
+   tiene contra qué calcularse y la imagen sale a tamaño natural. */
+.lightbox-stage { display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; min-height: 0; }
 .lightbox-stage img { max-height: 100%; max-width: 100%; width: auto; height: auto; object-fit: contain; }
 .lightbox-stage .frame { width: min(100%, calc((100vh - 9rem) * 16 / 9)); aspect-ratio: 16 / 9; background: var(--fg); }
 .lightbox-stage .frame iframe { width: 100%; height: 100%; border: 0; }

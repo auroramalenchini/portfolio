@@ -144,6 +144,54 @@
     });
   }
 
+  // ---- Mosaico justificado ----
+  // Agrupa las fotos en filas que llenan el ancho completo. El alto de cada
+  // fila sale de las formas que le tocaron, así que unas quedan más grandes
+  // que otras y ninguna se recorta. Es lo que hacen Behance o Flickr.
+  function acomodarMosaico(cont) {
+    const placas = [].slice.call(cont.children).filter((e) => e.classList.contains("card"));
+    if (!placas.length) return;
+    // Un pelo menos que el ancho real: si nos pasamos por un píxel, la fila se
+    // parte y las fotos quedan chicas.
+    const ancho = Math.floor(cont.getBoundingClientRect().width) - 1;
+    if (ancho <= 0) return;
+    const gap = parseFloat(getComputedStyle(cont).gap) || 8;
+    const objetivo = parseFloat(cont.dataset.alto) || 400;
+
+    const ars = placas.map((p) => parseFloat(p.style.getPropertyValue("--ar")) || 1.5);
+    let i = 0;
+    while (i < placas.length) {
+      let suma = 0, n = 0, alto = 0, altoPrevio = 0;
+      // sumamos fotos hasta pasarnos del alto buscado
+      while (i + n < placas.length) {
+        altoPrevio = alto;
+        suma += ars[i + n];
+        n++;
+        alto = (ancho - gap * (n - 1)) / suma;
+        if (alto <= objetivo) break;
+      }
+      // ¿queda más cerca del objetivo con esta foto o sin ella?
+      if (n > 1 && Math.abs(altoPrevio - objetivo) < Math.abs(alto - objetivo)) {
+        suma -= ars[i + n - 1]; n--;
+        alto = (ancho - gap * (n - 1)) / suma;
+      }
+      // La última fila también llena el ancho, salvo que quede desproporcionada.
+      const ultima = i + n >= placas.length;
+      if (ultima && alto > objetivo * 1.45) alto = objetivo * 1.45;
+      const h = Math.floor(alto);
+      for (let k = 0; k < n; k++) {
+        const p = placas[i + k];
+        p.style.height = h + "px";
+        p.style.width = Math.floor(h * ars[i + k]) + "px";
+      }
+      i += n;
+    }
+  }
+
+  function acomodarTodos() {
+    document.querySelectorAll(".mosaico").forEach(acomodarMosaico);
+  }
+
   // Arma las placas de un proyecto de foto dentro de un contenedor.
   function fotosDe(pr, desde, hasta, contenedor) {
     for (let n = desde; n <= hasta; n++) {
@@ -181,6 +229,7 @@
 
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";
+      mosaico.dataset.alto = String(Math.min(430, Math.round(window.innerHeight * 0.46)));
 
       // Los proyectos cortos se muestran enteros, sin botón.
       const previa = pr.fotos <= 6 ? pr.fotos : cuantasEnLaPrevia(pr);
@@ -210,13 +259,14 @@
     const pr = PHOTO_WORK.filter((x) => x.slug === slug)[0];
     if (!pr) {
       $(".page-intro h1").textContent = "Proyecto";
-      $(".page-intro p").textContent = "No encontramos ese proyecto.";
+      $(".proyecto-bajada").textContent = "No encontramos ese proyecto.";
     } else {
       document.title = pr.titulo + " · " + SITE.name;
       $(".page-intro h1").textContent = pr.titulo;
-      $(".page-intro p").textContent = pr.categoria + " · " + pr.fotos + " fotos";
+      $(".proyecto-bajada").textContent = pr.categoria + " · " + pr.fotos + " fotos";
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";
+      mosaico.dataset.alto = String(Math.min(560, Math.round(window.innerHeight * 0.6)));
       fotosDe(pr, 1, pr.fotos, mosaico);
       grid.appendChild(mosaico);
     }
@@ -542,6 +592,17 @@
     }, { passive: true });
     window.addEventListener("resize", update, { passive: true });
     update();
+  }
+
+  // El mosaico se calcula con el ancho real, así que se rehace al cambiar de tamaño.
+  if (document.querySelector(".mosaico")) {
+    acomodarTodos();
+    let t;
+    window.addEventListener("resize", function () {
+      clearTimeout(t);
+      t = setTimeout(acomodarTodos, 120);
+    });
+    window.addEventListener("load", acomodarTodos);
   }
 
   initLoader();
