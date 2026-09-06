@@ -30,6 +30,17 @@ const SITE = {
 
 const VIDEO_WORK = [
   {
+    // TODO: poné el título real y el artista. No pude leerlos desde YouTube.
+    title: "Videoclip",
+    client: "Artista",
+    year: 2025,
+    category: "Videoclip",
+    embed: "https://www.youtube-nocookie.com/embed/QOTH0P_PPqc",
+    thumb: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
+    role: "Dirección y edición",
+    featured: true,
+  },
+  {
     title: "Luz de Neón",
     client: "Videoclip · Artista",
     year: 2025,
@@ -37,7 +48,6 @@ const VIDEO_WORK = [
     embed: "https://www.youtube-nocookie.com/embed/aqz-KE-bpKQ",
     thumb: "https://i.ytimg.com/vi/aqz-KE-bpKQ/hqdefault.jpg",
     role: "Dirección, cámara, edición",
-    featured: true,
   },
   {
     title: "Ciudad Dormida",
