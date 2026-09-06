@@ -241,7 +241,9 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   padding: clamp(3rem, 8vw, 6rem) var(--pad); max-width: var(--max); margin: 0 auto; width: 100%;
   border-top: 1px solid var(--line);
 }
-.about img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; }
+/* Con el retrato acotado, la sección entra en una pantalla y el link del menú
+   la deja centrada sin que tengas que scrollear. */
+.about img { aspect-ratio: 4 / 5; object-fit: cover; width: 100%; max-height: 64vh; }
 .about h2 { font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.02; margin: 0 0 1.1rem; text-transform: uppercase; letter-spacing: -.005em; color: var(--fg-title); }
 .about p {
   color: var(--fg-muted); max-width: 52ch;

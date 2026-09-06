@@ -142,15 +142,62 @@
     try { return document.querySelector(h); } catch (e) { return null; }
   }
 
+  // Cuánto ocupa el header una vez que la página está scrolleada (ahí se achica).
+  function altoHeader() {
+    var h = $(".site-header");
+    if (!h) return 0;
+    var alto = h.getBoundingClientRect().height;
+    return h.classList.contains("scrolled") ? alto : Math.max(0, alto - 13);
+  }
+
+  // Una sección que entra entera entra centrada; una más alta que la pantalla
+  // arranca justo debajo del header, sin dejar ver la sección anterior.
+  function posicionDe(destino) {
+    var caja = destino.getBoundingClientRect();
+    var arriba = window.pageYOffset + caja.top;
+    var header = altoHeader();
+    var libre = window.innerHeight - header;
+    if (caja.height < libre) return arriba - header - (libre - caja.height) / 2;
+    return arriba - header;
+  }
+
+  function irA(destino, suave) {
+    var top = Math.max(0, Math.round(posicionDe(destino)));
+    try {
+      window.scrollTo({ top: top, behavior: suave ? "smooth" : "auto" });
+    } catch (e) {
+      window.scrollTo(0, top);
+    }
+  }
+
+  // El navegador hace su propio salto al ancla cuando termina de cargar, y usa
+  // scroll-margin-top. Repetimos el nuestro después, salvo que ya te hayas movido.
+  var usuarioMovio = false;
+  ["wheel", "touchstart", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, function () { usuarioMovio = true; }, { passive: true, once: true });
+  });
+
   function irAlDestino() {
+    if (usuarioMovio) return;
     var destino = destinoDeLaUrl();
     if (!destino) return;
-    var previo = document.documentElement.style.scrollBehavior;
-    document.documentElement.style.scrollBehavior = "auto";  // sin viaje animado
-    destino.scrollIntoView();                                // respeta scroll-margin-top
-    requestAnimationFrame(function () {
-      document.documentElement.style.scrollBehavior = previo;
-      pintarApertura();
+    irA(destino, false);
+    requestAnimationFrame(pintarApertura);
+  }
+
+  // Los links del menú de la misma página también van centrados.
+  function initAnclas() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      var ref = a.getAttribute("href");
+      if (!ref || ref.length < 2) return;
+      a.addEventListener("click", function (e) {
+        var destino;
+        try { destino = document.querySelector(ref); } catch (err) { return; }
+        if (!destino) return;
+        e.preventDefault();
+        irA(destino, !reduced);
+        if (history.replaceState) history.replaceState(null, "", ref);
+      });
     });
   }
 
@@ -300,5 +347,8 @@
   initLoader();
   initReveals();
   initScroll();
+  initAnclas();
   irAlDestino();
+  window.addEventListener("load", irAlDestino);
+  setTimeout(irAlDestino, 150);
 })();
