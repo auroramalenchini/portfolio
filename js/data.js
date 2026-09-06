@@ -23,7 +23,7 @@ const SITE = {
   instagram: "https://www.instagram.com/auromalenchini/",
   // Las dos imágenes grandes de la portada, una por sección.
   doors: {
-    video: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
+    video: "img/video/gusto-a-sal/09.jpg",
     photo: "img/foto/vereda/03.jpg",
   },
 };
