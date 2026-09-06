@@ -313,6 +313,20 @@
     else header.classList.remove("visible");
   }
 
+  // ¿Las puertas ya dejaron de ocupar la pantalla? Recién ahí tiene sentido
+  // ofrecer Video y Foto también arriba. El corte es cuando queda menos de
+  // media pantalla de apertura, así al caer centrado en Sobre mí ya está.
+  function aperturaAtras() {
+    if (!apertura || !header) return true;
+    return apertura.getBoundingClientRect().bottom <= window.innerHeight * 0.45;
+  }
+
+  function menuCompleto() {
+    if (!header) return;
+    if (aperturaAtras()) header.classList.add("completo");
+    else header.classList.remove("completo");
+  }
+
   function aperturaFija() {
     // En pantallas chicas y con movimiento reducido no se fija nada: se apila.
     return apertura && escenario && !reduced && window.innerWidth > 800;
@@ -329,6 +343,7 @@
       // Apilado: el header entra cuando pasaste la pantalla del nombre.
       var y = window.pageYOffset || document.documentElement.scrollTop || 0;
       mostrarHeader(reduced || y > window.innerHeight * 0.55);
+      menuCompleto();
       return;
     }
     var caja = apertura.getBoundingClientRect();
@@ -349,6 +364,7 @@
     if (t > 0.55) escenario.classList.add("enfoque");
     else escenario.classList.remove("enfoque");
     mostrarHeader(t > 0.5);
+    menuCompleto();
   }
 
   // ---- Efectos ligados al scroll ----

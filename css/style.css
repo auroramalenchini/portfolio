@@ -360,6 +360,10 @@ body.loading { overflow: hidden; }
   transition: transform .55s cubic-bezier(.2,.7,.2,1), opacity .4s ease, padding .35s cubic-bezier(.2,.7,.2,1);
 }
 .js body.tiene-apertura .site-header.visible { transform: none; opacity: 1; pointer-events: auto; }
+/* Mientras las puertas están en pantalla, el header no repite Video y Foto:
+   los botones grandes ya están ahí. Aparecen al llegar a Sobre mí. */
+.js body.tiene-apertura .nav .obra { display: none; }
+.js body.tiene-apertura .site-header.completo .nav .obra { display: block; animation: fade-in .5s ease both; }
 
 /* Visor */
 .lightbox { animation: lb-in .35s ease both; }

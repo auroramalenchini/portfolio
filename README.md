@@ -86,7 +86,9 @@ funciones del final de `js/main.js`:
   `--back-*`, `--front-*` y `--veil` las mueve `pintarApertura()` en `main.js`.
   Las puertas recién se pueden clickear cuando están casi nítidas.
 - **El header**: en la portada no está desde el arranque. Entra cuando las
-  puertas toman la pantalla (en el resto de las páginas está siempre).
+  puertas toman la pantalla, y ahí muestra solo Sobre mí y Contacto: Video y
+  Foto se suman recién cuando las puertas dejan de estar en pantalla, o sea al
+  llegar a Sobre mí. En video.html y photo.html el menú está siempre completo.
 - **Llegar a una sección**: si la URL trae ancla (`index.html#about`, por
   ejemplo, que es lo que usan los links de video.html y photo.html), la portada
   saltea la precarga y la apertura y arranca directo ahí. Un script en el
