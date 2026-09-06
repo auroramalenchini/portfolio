@@ -35,7 +35,7 @@ const VIDEO_WORK = [
     client: "Artista",
     year: 2025,
     category: "Videoclip",
-    embed: "https://www.youtube-nocookie.com/embed/QOTH0P_PPqc",
+    embed: "https://www.youtube.com/embed/QOTH0P_PPqc",
     thumb: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
     role: "Dirección y edición",
     featured: true,

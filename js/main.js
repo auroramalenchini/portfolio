@@ -53,7 +53,7 @@
       const frame = document.createElement("div");
       frame.className = "frame";
       const iframe = document.createElement("iframe");
-      iframe.src = it.embed + (it.embed.includes("?") ? "&" : "?") + "autoplay=1&rel=0";
+      iframe.src = it.embed + (it.embed.includes("?") ? "&" : "?") + "autoplay=1&rel=0&playsinline=1";
       iframe.allow = "autoplay; fullscreen; picture-in-picture";
       iframe.allowFullscreen = true;
       iframe.title = it.title;
