@@ -144,58 +144,82 @@
     });
   }
 
-  // ---- Página de foto: un bloque por proyecto, con previa y despliegue ----
+  // Arma las placas de un proyecto de foto dentro de un contenedor.
+  function fotosDe(pr, desde, hasta, contenedor) {
+    for (let n = desde; n <= hasta; n++) {
+      const it = {
+        src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
+        title: pr.titulo,
+        client: pr.categoria,
+      };
+      items.push(it);
+      const c = card(it, items.length - 1, "foto");
+      c.style.setProperty("--ar", (pr.ar && pr.ar[n - 1]) || 1.5);
+      contenedor.appendChild(c);
+    }
+  }
+
+  // Cuántas fotos entran en una previa de dos filas: las horizontales ocupan
+  // más ancho que las verticales, así que se cuenta por forma y no por cantidad.
+  function cuantasEnLaPrevia(pr) {
+    let suma = 0, n = 0;
+    while (n < pr.fotos && suma < 5.2) { suma += (pr.ar && pr.ar[n]) || 1.5; n++; }
+    return Math.max(3, Math.min(n, 8));
+  }
+
+  // ---- Página de foto: un bloque por proyecto ----
   if (page === "photo") {
     const grid = $("#grid");
     items = [];
-    const PREVIA = 5;
-
     PHOTO_WORK.forEach((pr, idx) => {
-      const wrap = document.createElement("div");
-      wrap.className = "grupo proyecto" + (idx % 2 ? " der" : "");
+      const art = document.createElement("article");
+      art.className = "proyecto" + (idx % 2 ? " der" : "");
 
-      const head = document.createElement("div");
-      head.className = "grupo-head";
-      head.innerHTML = `<h3>${esc(pr.titulo)}</h3><span>${esc(pr.categoria)}</span>`;
+      const info = document.createElement("div");
+      info.className = "proyecto-info";
+      info.innerHTML = `<h3>${esc(pr.titulo)}</h3><span class="proyecto-cat">${esc(pr.categoria)}</span>`;
 
-      const previa = document.createElement("div");
-      previa.className = "mosaico";
-      const todas = document.createElement("div");
-      todas.className = "mosaico";
-      todas.hidden = true;
+      const mosaico = document.createElement("div");
+      mosaico.className = "mosaico";
 
-      for (let n = 1; n <= pr.fotos; n++) {
-        const it = {
-          src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
-          title: pr.titulo,
-          client: pr.categoria,
-        };
-        items.push(it);
-        const c = card(it, items.length - 1, "foto");
-        c.style.setProperty("--ar", (pr.ar && pr.ar[n - 1]) || 1.5);
-        (n <= PREVIA ? previa : todas).appendChild(c);
+      // Los proyectos cortos se muestran enteros, sin botón.
+      const previa = pr.fotos <= 6 ? pr.fotos : cuantasEnLaPrevia(pr);
+      fotosDe(pr, 1, previa, mosaico);
+
+      if (previa < pr.fotos) {
+        const a = document.createElement("a");
+        a.className = "ver-todas";
+        a.href = `proyecto.html?p=${encodeURIComponent(pr.slug)}`;
+        a.textContent = `Ver las ${pr.fotos} fotos`;
+        info.appendChild(a);
       }
 
-      wrap.appendChild(head);
-      wrap.appendChild(previa);
-      if (pr.fotos > PREVIA) {
-        wrap.appendChild(todas);
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "ver-todas";
-        const abrir = `Ver las ${pr.fotos} fotos`;
-        btn.textContent = abrir;
-        btn.addEventListener("click", () => {
-          todas.hidden = !todas.hidden;
-          btn.textContent = todas.hidden ? abrir : "Ver menos";
-          if (todas.hidden) wrap.scrollIntoView({ block: "nearest" });
-        });
-        wrap.appendChild(btn);
-      }
-      grid.appendChild(wrap);
+      art.appendChild(info);
+      art.appendChild(mosaico);
+      grid.appendChild(art);
     });
-
     if (!items.length) grid.innerHTML = `<p class="empty">Todavía no hay nada acá.</p>`;
+  }
+
+  // ---- Página de un proyecto: todas sus fotos ----
+  if (page === "proyecto") {
+    const grid = $("#grid");
+    items = [];
+    let slug = "";
+    try { slug = new URLSearchParams(location.search).get("p") || ""; } catch (e) {}
+    const pr = PHOTO_WORK.filter((x) => x.slug === slug)[0];
+    if (!pr) {
+      $(".page-intro h1").textContent = "Proyecto";
+      $(".page-intro p").textContent = "No encontramos ese proyecto.";
+    } else {
+      document.title = pr.titulo + " · " + SITE.name;
+      $(".page-intro h1").textContent = pr.titulo;
+      $(".page-intro p").textContent = pr.categoria + " · " + pr.fotos + " fotos";
+      const mosaico = document.createElement("div");
+      mosaico.className = "mosaico";
+      fotosDe(pr, 1, pr.fotos, mosaico);
+      grid.appendChild(mosaico);
+    }
   }
 
   // =======================================================

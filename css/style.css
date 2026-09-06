@@ -216,30 +216,62 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   text-transform: uppercase; color: var(--fg-muted);
 }
 .grupo-fila { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
-/* Mosaico de foto: todas con la misma altura de fila y el ancho que les toca
-   según su forma, así ninguna se recorta. --ar lo pone js desde los datos. */
-.mosaico { display: flex; flex-wrap: wrap; gap: .55rem; }
-.mosaico[hidden] { display: none; }
-.mosaico .card {
-  flex: 0 0 auto; height: clamp(140px, 21vh, 240px);
-  aspect-ratio: var(--ar, 1.5); width: auto; max-width: 100%;
+/* ---------- Proyectos de foto ---------- */
+/* Título de un lado, mosaico del otro, y se alternan de proyecto a proyecto. */
+.proyecto {
+  display: grid; grid-template-columns: minmax(170px, 1fr) 3fr;
+  gap: clamp(1.25rem, 3vw, 2.75rem); align-items: start;
 }
-.card.foto .card-meta { display: none; }
-.grid > .grupo + .grupo { margin-top: clamp(2.5rem, 6vw, 4.5rem); }
+.proyecto.der { grid-template-columns: 3fr minmax(170px, 1fr); }
+.proyecto.der .proyecto-info { order: 2; text-align: right; }
 
-/* El botón para desplegar el proyecto entero */
+.proyecto-info {
+  position: sticky; top: clamp(5rem, 12vh, 7rem);
+  display: flex; flex-direction: column; gap: .6rem;
+}
+.proyecto.der .proyecto-info { align-items: flex-end; }
+.proyecto-info h3 {
+  margin: 0; font-family: var(--font-display); font-weight: 800;
+  font-size: clamp(1.35rem, 2.6vw, 2.2rem); line-height: 1.05;
+  text-transform: uppercase; letter-spacing: -.01em; color: var(--fg-title);
+  text-wrap: balance;
+}
+.proyecto-cat {
+  font-size: .74rem; font-weight: 600; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--fg-muted);
+}
 .ver-todas {
-  justify-self: start; margin-top: .3rem; padding: 0 0 .15rem;
+  align-self: start; margin-top: .5rem; padding-bottom: .15rem;
   font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
   color: var(--accent); border-bottom: 2px solid var(--accent);
   transition: color .2s, border-color .2s;
 }
+.proyecto.der .ver-todas { align-self: end; }
 .ver-todas:hover { color: var(--fg-title); border-color: var(--fg-title); }
 
-/* Un proyecto a la izquierda, el siguiente a la derecha, y así */
-.proyecto.der .grupo-head { flex-direction: row-reverse; }
-.proyecto.der .mosaico { justify-content: flex-end; }
-.proyecto.der .ver-todas { justify-self: end; }
+/* Mosaico justificado: cada fila llena el ancho y todas las fotos de una fila
+   comparten alto. El ancho de cada una sale de su forma (--ar), sin recortes. */
+.mosaico { display: flex; flex-wrap: wrap; gap: .5rem; }
+.mosaico[hidden] { display: none; }
+.mosaico .card {
+  flex: var(--ar, 1.5) 1 calc(var(--ar, 1.5) * clamp(150px, 22vh, 270px));
+  aspect-ratio: var(--ar, 1.5); height: auto; min-width: 0;
+}
+/* En la página del proyecto no hay columna de título: las fotos van más grandes */
+body[data-page="proyecto"] .mosaico .card {
+  flex-basis: calc(var(--ar, 1.5) * clamp(200px, 30vh, 360px));
+}
+/* Absorbe el sobrante de la última fila para que no se estire de más */
+.mosaico::after { content: ""; flex-grow: 999999; }
+.card.foto .card-meta { display: none; }
+.grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
+
+.volver { margin: 0 0 1.25rem; }
+.volver a {
+  font-size: .74rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--fg-muted); transition: color .2s;
+}
+.volver a:hover { color: var(--accent); }
 .grupo-fila .card { aspect-ratio: 16 / 9; }
 
 .card {
@@ -453,6 +485,10 @@ body.loading { overflow: hidden; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 800px) {
+  .proyecto, .proyecto.der { grid-template-columns: 1fr; }
+  .proyecto.der .proyecto-info { order: 0; text-align: left; align-items: flex-start; }
+  .proyecto.der .mosaico { justify-content: flex-start; }
+  .proyecto-info { position: static; }
   .grupo-fila { grid-template-columns: 1fr; }
   /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
   .opening { height: auto; }
