@@ -169,19 +169,30 @@
       mosaico.className = "mosaico";
       // Un proyecto de varias piezas busca filas más bajas, así las tres
       // entran una al lado de la otra en vez de una abajo de la otra.
-      mosaico.dataset.alto = pr.videos
-        ? "190"
-        : pr.stills
-          ? "250"
+      mosaico.dataset.alto = pr.stills
+        ? "250"
+        : pr.videos
+          ? "190"
           : String(Math.min(430, Math.round(window.innerHeight * 0.46)));
 
       if (pr.videos) {
-        // Un proyecto de varias piezas: todas las piezas en el mismo mosaico
-        // y un link por pieza en la columna del título.
+        // Un proyecto de varias piezas: un link por pieza en la columna del
+        // título. Si el proyecto trae stills propios, se muestran esos y se
+        // abre la primera pieza; si no, va la miniatura de cada una.
+        const indices = [];
         pr.videos.forEach((v) => {
           const pieza = { ...v, client: pr.client, category: pr.category, role: pr.role };
           items.push(pieza);
-          placasDeVideo(pieza, items.length - 1, mosaico);
+          indices.push(items.length - 1);
+        });
+        if (pr.stills) {
+          const portada = { ...pr.videos[0], slug: pr.slug, stills: pr.stills, ar: pr.ar,
+            title: pr.grupo, client: pr.client, category: pr.category };
+          placasDeVideo(portada, indices[0], mosaico);
+        } else {
+          pr.videos.forEach((v, k) => placasDeVideo(items[indices[k]], indices[k], mosaico));
+        }
+        pr.videos.forEach((v) => {
           const a = linkYoutube(v, v.title);
           if (a) info.appendChild(a);
         });

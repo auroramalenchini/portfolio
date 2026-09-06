@@ -48,6 +48,9 @@ const VIDEO_WORK = [
     client: "Maqui",
     category: "Visualizers",
     role: "Dirección y edición",
+    // Stills del proyecto entero: viven en img/video/visualizers-gusto-a-sal/
+    stills: 13,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
     videos: [
       {
         slug: "desenamorame",
