@@ -38,6 +38,8 @@ const VIDEO_WORK = [
     thumb: "https://i.ytimg.com/vi/QOTH0P_PPqc/maxresdefault.jpg",
     role: "Dirección y edición",
     featured: true,
+    stills: 9,
+    ar: [1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9, 1.9],
   },
   {
     // Un proyecto con varias piezas: se muestra como un bloque con título.
