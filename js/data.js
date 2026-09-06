@@ -108,6 +108,8 @@ const VIDEO_WORK = [
     embed: "https://www.youtube.com/embed/-dCleZ4a_lc",
     thumb: "https://i.ytimg.com/vi/-dCleZ4a_lc/maxresdefault.jpg",
     role: "Dirección y edición",
+    stills: 8,
+    ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
   },
   {
     slug: "dosis-de-recarga",
