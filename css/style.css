@@ -230,14 +230,16 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
   display: flex; flex-direction: column; gap: .6rem;
 }
 .proyecto.der .proyecto-info { align-items: flex-end; }
-/* El interletrado agrega espacio también DESPUÉS de la última letra, así que
-   alineado a la derecha el texto queda corrido a la izquierda. Se compensa con
-   un margen negativo: subilo si querés correrlos más a la derecha. */
-.proyecto.der .proyecto-cat { margin-right: -.32em; }
-.proyecto.der .ver-todas { margin-right: -.26em; }
+/* El título grande tiene más aire a la izquierda de la primera letra que el
+   texto chico, así que alineados a la izquierda la categoría y el "ver todas"
+   sobresalen. Se compensa con un margen proporcional al cuerpo del título.
+   Del lado derecho no hace falta: ahí ya quedan parejos solos. */
+.proyecto:not(.der) .proyecto-cat { margin-left: calc(var(--titulo-fs) * .071 - .063em); }
+.proyecto:not(.der) .ver-todas { margin-left: calc(var(--titulo-fs) * .071 - .021em); }
+.proyecto-info { --titulo-fs: clamp(1.35rem, 2.6vw, 2.2rem); }
 .proyecto-info h3 {
   margin: 0; font-family: var(--font-display); font-weight: 800;
-  font-size: clamp(1.35rem, 2.6vw, 2.2rem); line-height: 1.05;
+  font-size: var(--titulo-fs); line-height: 1.05;
   text-transform: uppercase; letter-spacing: -.01em; color: var(--fg-title);
   text-wrap: balance;
 }
@@ -498,6 +500,9 @@ body.loading { overflow: hidden; }
 @media (max-width: 800px) {
   .proyecto, .proyecto.der { grid-template-columns: 1fr; }
   .proyecto.der .proyecto-info { order: 0; text-align: left; align-items: flex-start; }
+  /* En vertical todo va alineado a la izquierda, así que la compensación también. */
+  .proyecto.der .proyecto-cat { margin-left: calc(var(--titulo-fs) * .071 - .063em); }
+  .proyecto.der .ver-todas { margin-left: calc(var(--titulo-fs) * .071 - .021em); }
   .proyecto.der .mosaico { justify-content: flex-start; }
   .proyecto-info { position: static; }
   .grupo-fila { grid-template-columns: 1fr; }
