@@ -231,9 +231,10 @@ h1, h2 { font-family: var(--font-display); font-weight: 800; }
 }
 .proyecto.der .proyecto-info { align-items: flex-end; }
 /* El interletrado agrega espacio también DESPUÉS de la última letra, así que
-   alineado a la derecha el texto queda corrido. Se compensa con margen negativo. */
-.proyecto.der .proyecto-cat { margin-right: -.25em; }
-.proyecto.der .ver-todas { margin-right: -.2em; }
+   alineado a la derecha el texto queda corrido a la izquierda. Se compensa con
+   un margen negativo: subilo si querés correrlos más a la derecha. */
+.proyecto.der .proyecto-cat { margin-right: -.32em; }
+.proyecto.der .ver-todas { margin-right: -.26em; }
 .proyecto-info h3 {
   margin: 0; font-family: var(--font-display); font-weight: 800;
   font-size: clamp(1.35rem, 2.6vw, 2.2rem); line-height: 1.05;

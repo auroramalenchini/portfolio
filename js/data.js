@@ -110,20 +110,26 @@ const VIDEO_WORK = [
    numeradas 01.jpg, 02.jpg... en el mismo orden de la galería;
    `fotos` es cuántas hay y `ar` la relación de aspecto de cada una
    (ancho dividido alto), que el mosaico usa para no recortarlas.
+   `previa` es opcional: si está, esas son las fotos que se muestran
+   en la página de Foto; si no, van las primeras.
    ========================================================= */
 const PHOTO_WORK = [
   { slug: "oruga",            titulo: "Foto BACK de rodaje: ORUGA",                  categoria: "Rodaje",     fotos: 34,
-    ar: [0.56, 0.56, 0.56, 0.56, 0.56, 1.78, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 1.78, 1.78, 0.56, 1.78, 1.78, 0.56, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56] },
+    ar: [0.56, 0.56, 0.56, 0.56, 0.56, 1.78, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 0.56, 1.78, 1.78, 1.78, 0.56, 1.78, 1.78, 0.56, 1.78, 1.78, 1.78, 1.78, 0.56, 1.78, 0.56],
+    previa: [26, 10, 5, 29, 24, 17] },
   { slug: "anantara",         titulo: "Fotografías para hotel: Anantara",            categoria: "Hotel",      fotos: 6,
     ar: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5] },
   { slug: "apertura-bar",     titulo: "Fotografías para apertura de bar",            categoria: "Evento",     fotos: 19,
-    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67] },
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67],
+    previa: [1, 5, 7, 12, 11, 17] },
   { slug: "gramme",           titulo: "Fotografías para Gramme catering",            categoria: "Casamiento", fotos: 17,
     ar: [0.67, 1.5, 1.5, 0.67, 1.5, 1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 0.67, 1.5, 0.67, 1.5, 0.67] },
   { slug: "marte",            titulo: "Fotografías para bar: Marte",                 categoria: "Restaurante", fotos: 15,
-    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 1.5, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67] },
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 1.5, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67],
+    previa: [1, 8, 4, 11, 15, 9] },
   { slug: "vereda",           titulo: "Fotografías para bar: Vereda Adentro",        categoria: "Restaurante", fotos: 24,
-    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.56, 0.67, 0.67, 0.67, 0.56, 0.56, 1.5, 0.56, 0.56, 0.56, 0.56, 0.56] },
+    ar: [0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.67, 0.56, 0.67, 0.67, 0.67, 0.56, 0.56, 1.5, 0.56, 0.56, 0.56, 0.56, 0.56],
+    previa: [3, 5, 19, 11, 15, 8] },
   { slug: "feria-salvaje",    titulo: "Fotografías para evento: Feria Salvaje",      categoria: "Evento",     fotos: 16,
     ar: [0.67, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67, 1.5, 1.5, 0.67, 0.67, 1.5, 1.5, 1.5, 0.67] },
   { slug: "psicodear-charla", titulo: "Fotografías charla y fiesta PsicodeAr",       categoria: "Evento",     fotos: 10,

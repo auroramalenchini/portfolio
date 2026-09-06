@@ -224,8 +224,8 @@
   }
 
   // Arma las placas de un proyecto de foto dentro de un contenedor.
-  function fotosDe(pr, desde, hasta, contenedor) {
-    for (let n = desde; n <= hasta; n++) {
+  function fotosDe(pr, numeros, contenedor) {
+    numeros.forEach((n) => {
       const it = {
         src: `img/foto/${pr.slug}/${String(n).padStart(2, "0")}.jpg`,
         title: pr.titulo,
@@ -235,7 +235,13 @@
       const c = card(it, items.length - 1, "foto");
       c.style.setProperty("--ar", (pr.ar && pr.ar[n - 1]) || 1.5);
       contenedor.appendChild(c);
-    }
+    });
+  }
+
+  function rango(desde, hasta) {
+    const v = [];
+    for (let n = desde; n <= hasta; n++) v.push(n);
+    return v;
   }
 
   // Cuántas fotos entran en una previa de dos filas: las horizontales ocupan
@@ -262,11 +268,14 @@
       mosaico.className = "mosaico";
       mosaico.dataset.alto = String(Math.min(430, Math.round(window.innerHeight * 0.46)));
 
-      // Los proyectos cortos se muestran enteros, sin botón.
-      const previa = pr.fotos <= 6 ? pr.fotos : cuantasEnLaPrevia(pr);
-      fotosDe(pr, 1, previa, mosaico);
+      // Los proyectos cortos se muestran enteros. Si el proyecto trae una lista
+      // `previa`, esas son las fotos elegidas; si no, van las primeras.
+      const elegidas = pr.previa && pr.previa.length
+        ? pr.previa
+        : rango(1, pr.fotos <= 6 ? pr.fotos : cuantasEnLaPrevia(pr));
+      fotosDe(pr, elegidas, mosaico);
 
-      if (previa < pr.fotos) {
+      if (elegidas.length < pr.fotos) {
         const a = document.createElement("a");
         a.className = "ver-todas";
         a.href = `proyecto.html?p=${encodeURIComponent(pr.slug)}`;
@@ -298,7 +307,7 @@
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";
       mosaico.dataset.alto = String(Math.min(560, Math.round(window.innerHeight * 0.6)));
-      fotosDe(pr, 1, pr.fotos, mosaico);
+      fotosDe(pr, rango(1, pr.fotos), mosaico);
       grid.appendChild(mosaico);
     }
   }
