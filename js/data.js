@@ -27,13 +27,15 @@ const SITE = {
   // Video lo reproduce en loop en vez de mostrar las fotos.
   doors: {
     video: [
+      "img/video/portada-gusto-a-sal.jpg",
       "img/video/gusto-a-sal/09.jpg",
       "img/video/gusto-a-sal/01.jpg",
       "img/video/gusto-a-sal/05.jpg",
       "img/video/despues-de-apogeo/03.jpg",
       "img/video/miel/01.jpg",
     ],
-    videoClip: "",
+    videoClip: "img/video/portada-gusto-a-sal.mp4",
+    videoClipWebm: "img/video/portada-gusto-a-sal.webm",
     photo: [
       "img/foto/anantara/01.jpg",
       "img/foto/vereda/03.jpg",

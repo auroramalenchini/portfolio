@@ -41,11 +41,18 @@
 
     if (cual === "video" && puertas.videoClip) {
       var vid = document.createElement("video");
-      vid.src = puertas.videoClip;
       vid.muted = true; vid.loop = true; vid.autoplay = true;
       vid.playsInline = true; vid.setAttribute("playsinline", "");
       vid.preload = "auto";
       if (lista[0]) vid.poster = lista[0];
+      // El mismo recorte en dos formatos: el navegador toma el que entiende.
+      [puertas.videoClipWebm, puertas.videoClip].forEach(function (u) {
+        if (!u) return;
+        var s = document.createElement("source");
+        s.src = u;
+        s.type = /\.webm$/i.test(u) ? "video/webm" : "video/mp4";
+        vid.appendChild(s);
+      });
       el.parentNode.insertBefore(vid, el);
       el.remove();
       vid.play().catch(function () {});
