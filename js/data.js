@@ -49,6 +49,11 @@ const SITE = {
 const VIDEO_WORK = [
   {
     slug: "gusto-a-sal",
+    equipo: {
+      direccion: "Aurora Malenchini",
+      fotografia: "Charo Martínez",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     title: "Gusto a Sal",
     client: "Maqui",
     category: "Videoclip",
@@ -64,6 +69,11 @@ const VIDEO_WORK = [
   {
     // Un proyecto con varias piezas: se muestra como un bloque con título.
     slug: "visualizers-gusto-a-sal",
+    equipo: {
+      direccion: "Aurora Malenchini",
+      fotografia: "Aurora Malenchini",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     grupo: "Visualizers del EP Gusto a Sal",
     client: "Maqui",
     category: "Visualizers",
@@ -94,6 +104,11 @@ const VIDEO_WORK = [
   },
   {
     slug: "despues-de-apogeo",
+    equipo: {
+      direccion: "Aurora Malenchini",
+      fotografia: "Martina Scaricabarozzi",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     title: "Después de apogeo",
     client: "Swaggy J",
     category: "Fashion film",
@@ -105,6 +120,11 @@ const VIDEO_WORK = [
   },
   {
     slug: "femenine-groove",
+    equipo: {
+      direccion: "Aurora Malenchini",
+      fotografia: "Francisca Allassia",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     title: "Femenine Groove",
     client: "ROBERTA",
     category: "DJ set",
@@ -116,6 +136,11 @@ const VIDEO_WORK = [
   },
   {
     slug: "mi-alma",
+    equipo: {
+      direccion: "Aurora Malenchini y Francisca Allassia",
+      fotografia: "Charo Martínez",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     title: "Mi alma",
     client: "FROSONO",
     category: "Videoclip",
@@ -127,6 +152,11 @@ const VIDEO_WORK = [
   },
   {
     slug: "miel",
+    equipo: {
+      direccion: "Aurora Malenchini y Francisca Allassia",
+      fotografia: "Charo Martínez",
+      arte: "Carmela Allassia",
+    },
     title: "Miel",
     client: "Suriz",
     category: "Videoclip",
@@ -138,6 +168,11 @@ const VIDEO_WORK = [
   },
   {
     slug: "dosis-de-recarga",
+    equipo: {
+      direccion: "Aurora Malenchini y Francisca Allassia",
+      fotografia: "Francisco Macia",
+      arte: "Ludmila Muñoz Catovsky",
+    },
     title: "Dosis de recarga",
     client: "Suriz",
     category: "Videoclip",

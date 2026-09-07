@@ -278,9 +278,19 @@
       const info = document.createElement("div");
       info.className = "proyecto-info";
       const bajada = [pr.category, pr.client].filter(Boolean).join(" · ");
+      const eq = pr.equipo || {};
+      const creditos = [
+        ["Dirección", eq.direccion],
+        ["Dirección de fotografía", eq.fotografia],
+        ["Dirección de arte", eq.arte],
+      ].filter((c) => c[1]);
       info.innerHTML = `<h3>${versalitas(pr.grupo || pr.title)}</h3>` +
         `<span class="proyecto-cat">${esc(bajada)}</span>` +
-        (pr.premio ? `<span class="proyecto-premio">${esc(pr.premio)}</span>` : "");
+        (pr.premio ? `<span class="proyecto-premio">${esc(pr.premio)}</span>` : "") +
+        (creditos.length
+          ? `<span class="creditos">` + creditos.map((c) =>
+              `<span><em>${esc(c[0])}</em>${esc(c[1])}</span>`).join("") + `</span>`
+          : "");
 
       const mosaico = document.createElement("div");
       mosaico.className = "mosaico";

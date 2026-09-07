@@ -243,6 +243,20 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   font-size: .74rem; font-weight: 600; letter-spacing: .2em;
   text-transform: uppercase; color: var(--fg-muted);
 }
+/* Créditos del equipo: chiquitos, para no competir con el título. */
+.creditos {
+  display: flex; flex-direction: column; gap: .5rem;
+  margin-top: .3rem; font-family: var(--font-sans); color: var(--fg-muted);
+  font-size: .78rem; line-height: 1.35;
+}
+.creditos > span { display: block; }
+.creditos em {
+  display: block; font-style: normal; font-weight: 600;
+  font-size: .62rem; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--fg-muted); opacity: .75; margin-bottom: .1rem;
+}
+.proyecto.der .creditos { align-items: flex-end; }
+
 /* Distinción o premio del proyecto: va debajo de la categoría, en la
    tipografía de lectura y en bordó para que se note sin gritar. */
 .proyecto-premio {
