@@ -31,9 +31,55 @@
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
 
   // ---- Imágenes de las dos puertas de la portada ----
+  // Cada puerta puede llevar varias fotos: se van pasando con un fundido.
+  // La de Video, además, puede llevar un mp4 corto y mudo en lugar de fotos.
   document.querySelectorAll("img[data-door]").forEach((el) => {
-    var url = SITE.doors && SITE.doors[el.dataset.door];
-    if (url) el.src = url;
+    var puertas = SITE.doors || {};
+    var cual = el.dataset.door;
+    var fuente = puertas[cual];
+    var lista = [].concat(fuente || []).filter(Boolean);
+
+    if (cual === "video" && puertas.videoClip) {
+      var vid = document.createElement("video");
+      vid.src = puertas.videoClip;
+      vid.muted = true; vid.loop = true; vid.autoplay = true;
+      vid.playsInline = true; vid.setAttribute("playsinline", "");
+      vid.preload = "auto";
+      if (lista[0]) vid.poster = lista[0];
+      el.parentNode.insertBefore(vid, el);
+      el.remove();
+      vid.play().catch(function () {});
+      return;
+    }
+
+    if (!lista.length) return;
+    el.src = lista[0];
+    if (lista.length === 1 || reduced) return;
+
+    // Se precargan para que el cambio no muestre un hueco.
+    lista.slice(1).forEach(function (u) { var i = new Image(); i.src = u; });
+
+    var n = 0, reloj = null;
+    function pasar() {
+      n = (n + 1) % lista.length;
+      var proxima = lista[n];
+      el.classList.add("cambiando");
+      setTimeout(function () {
+        el.src = proxima;
+        el.classList.remove("cambiando");
+      }, 700);
+    }
+    function arrancar() { if (!reloj) reloj = setInterval(pasar, 5000); }
+    function parar() { clearInterval(reloj); reloj = null; }
+
+    // Sólo mientras la portada está a la vista y la pestaña activa.
+    var mirando = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { e.isIntersecting ? arrancar() : parar(); });
+    }, { threshold: 0.05 });
+    mirando.observe(el.closest(".door") || el);
+    document.addEventListener("visibilitychange", function () {
+      document.hidden ? parar() : arrancar();
+    });
   });
 
   // ---- Visor ----

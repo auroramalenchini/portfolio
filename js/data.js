@@ -21,10 +21,26 @@ const SITE = {
   // El teléfono se renderiza como link directo a WhatsApp (wa.me).
   phone: "+54 9 11 2367 9398",
   instagram: "https://www.instagram.com/auromalenchini/",
-  // Las dos imágenes grandes de la portada, una por sección.
+  // Las imágenes grandes de la portada, una lista por sección: van rotando
+  // con un fundido cada unos segundos. Si ponés una sola, queda fija.
+  // `videoClip` es opcional: si apuntás a un mp4 corto y mudo, la puerta de
+  // Video lo reproduce en loop en vez de mostrar las fotos.
   doors: {
-    video: "img/video/gusto-a-sal/09.jpg",
-    photo: "img/foto/anantara/01.jpg",
+    video: [
+      "img/video/gusto-a-sal/09.jpg",
+      "img/video/gusto-a-sal/01.jpg",
+      "img/video/gusto-a-sal/05.jpg",
+      "img/video/despues-de-apogeo/03.jpg",
+      "img/video/miel/01.jpg",
+    ],
+    videoClip: "",
+    photo: [
+      "img/foto/anantara/01.jpg",
+      "img/foto/vereda/03.jpg",
+      "img/foto/marte/08.jpg",
+      "img/foto/anantara/06.jpg",
+      "img/foto/oruga/17.jpg",
+    ],
   },
 };
 

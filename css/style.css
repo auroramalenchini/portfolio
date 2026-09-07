@@ -136,7 +136,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   height: 100%; background: var(--bg-2);
   transition: opacity .5s ease;
 }
-.door img {
+.door img, .door video {
   width: 100%; height: 100%; object-fit: cover;
   transform: scale(1.02);
   transition: transform 1.1s cubic-bezier(.2,.7,.2,1);
@@ -168,6 +168,10 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 }
 .door-sub { font-size: .88rem; color: rgba(246,241,231,.82); max-width: 36ch; }
 .door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
+/* Las fotos de cada puerta se van pasando con un fundido. */
+.door img { transition: opacity .7s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
+.door img.cambiando { opacity: 0; }
+.door video { display: block; pointer-events: none; }
 
 /* ---------- Intro de página ---------- */
 .page-intro { padding: clamp(1.5rem, 3.6vw, 2.6rem) var(--pad) 1.5rem; max-width: var(--max); margin: 0 auto; width: 100%; }
