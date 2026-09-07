@@ -24,7 +24,7 @@ const SITE = {
   // Las dos imágenes grandes de la portada, una por sección.
   doors: {
     video: "img/video/gusto-a-sal/09.jpg",
-    photo: "img/foto/vereda/03.jpg",
+    photo: "img/foto/anantara/01.jpg",
   },
 };
 
