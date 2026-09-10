@@ -167,7 +167,11 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
    dos columnas igual, el objetivo se corría de abajo del dedo y el clic se
    perdía. De ahí que hubiera que tocar dos veces. Todo lo que mueve el layout
    vive acá adentro; afuera queda sólo el contorno, que no corre nada. */
-@media (hover: hover) and (pointer: fine) {
+/* El min-width no es decorativo: con las puertas apiladas, el :has() de acá
+   pesa 0,4,0 y le gana al grid-template-columns de una columna del bloque
+   apilado, que pesa 0,1,0. En una ventana angosta con mouse, pasar el cursor
+   por una puerta las devolvía a las dos al lado de la otra. */
+@media (hover: hover) and (pointer: fine) and (min-width: 801px) {
   .door:hover img, .door:focus-visible img { transform: scale(1.09); }
   .doors:has(.door:first-child:hover), .doors:has(.door:first-child:focus-visible) { grid-template-columns: 1.28fr .72fr; }
   .doors:has(.door:last-child:hover), .doors:has(.door:last-child:focus-visible) { grid-template-columns: .72fr 1.28fr; }
