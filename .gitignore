@@ -3,3 +3,10 @@ Thumbs.db
 node_modules/
 *.log
 _miniaturas/
+
+# Material de trabajo que vive en la carpeta pero no va al sitio publicado.
+# Las otras fotos de "Fotos mias" y los otros .command sí están en el repo,
+# así que se nombran estos tres y no las carpetas enteras.
+Claude outputs/
+Fotos mias/0397b0aa-cbe4-49cb-99e1-68bb590f4d27.jpg
+SUBIR A GITHUB.command
