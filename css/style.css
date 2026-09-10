@@ -149,18 +149,17 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(28,25,20,.8), rgba(28,25,20,.04) 60%);
 }
-.door:focus-visible img { transform: scale(1.09); }
-/* La que mirás se lleva más ancho; la otra se achica, pero no se apaga. */
 .doors { transition: grid-template-columns .7s cubic-bezier(.2,.7,.2,1); }
-.doors:has(.door:first-child:focus-visible) { grid-template-columns: 1.28fr .72fr; }
-.doors:has(.door:last-child:focus-visible) { grid-template-columns: .72fr 1.28fr; }
-/* Ensanchar la puerta que mirás es cosa de mouse. En una pantalla táctil el
-   primer toque disparaba :hover, la portada se reacomodaba a dos columnas y
-   recién el segundo toque abría la página. Con hover:hover el toque va derecho. */
+/* Ensanchar la puerta que mirás es cosa de mouse y de teclado, nunca del dedo.
+   En táctil el toque enfoca el ancla: como :has() pesa más que el
+   grid-template-columns de una columna del media query, la portada se abría a
+   dos columnas igual, el objetivo se corría de abajo del dedo y el clic se
+   perdía. De ahí que hubiera que tocar dos veces. Todo lo que mueve el layout
+   vive acá adentro; afuera queda sólo el contorno, que no corre nada. */
 @media (hover: hover) and (pointer: fine) {
-  .door:hover img { transform: scale(1.09); }
-  .doors:has(.door:first-child:hover) { grid-template-columns: 1.28fr .72fr; }
-  .doors:has(.door:last-child:hover) { grid-template-columns: .72fr 1.28fr; }
+  .door:hover img, .door:focus-visible img { transform: scale(1.09); }
+  .doors:has(.door:first-child:hover), .doors:has(.door:first-child:focus-visible) { grid-template-columns: 1.28fr .72fr; }
+  .doors:has(.door:last-child:hover), .doors:has(.door:last-child:focus-visible) { grid-template-columns: .72fr 1.28fr; }
   .door:hover .door-body { transform: translateY(-6px); }
 }
 /* Centrado: al ensancharse una puerta, los dos textos se corren lo mismo y
@@ -528,11 +527,14 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 /* ---------- Responsive ---------- */
 @media (max-width: 800px) {
   .proyecto, .proyecto.der { grid-template-columns: 1fr; }
-  .proyecto.der .proyecto-info { order: 0; text-align: left; align-items: flex-start; }
-  /* En vertical todo va alineado a la izquierda, así que la compensación también. */
-  .proyecto.der .proyecto-cat { margin-left: calc(var(--titulo-fs) * .071 - .063em); }
-  .proyecto.der .ver-todas { margin-left: calc(var(--titulo-fs) * .071 - .021em); }
-  .proyecto.der .mosaico { justify-content: flex-start; }
+  /* En vertical se mantiene el uno y uno: el primer proyecto alineado a la
+     izquierda con sus créditos, el siguiente entero a la derecha. Lo único que
+     cambia es que el título va arriba del mosaico y no al costado.
+     Antes acá se forzaba todo a la izquierda, pero los créditos, el premio y
+     los links se quedaban con el alineado a la derecha del bloque de
+     escritorio: el título iba para un lado y el resto para el otro. */
+  .proyecto.der .proyecto-info { order: 0; }
+  .proyecto.der .mosaico { justify-content: flex-end; }
   .proyecto-info { position: static; }
   /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
   .opening { height: auto; }
@@ -551,9 +553,9 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
      para que respire y para que asome la primera puerta. */
   .opening-front {
     opacity: 1; filter: none; transform: none; pointer-events: auto;
-    min-height: 58vh; min-height: 58svh;
+    min-height: 40vh; min-height: 40svh;
     align-content: center;
-    padding: 3rem var(--pad);
+    padding: 1.9rem var(--pad);
   }
   .doors { position: static; grid-template-columns: 1fr; gap: .6rem; padding: 0 var(--pad) 1rem; }
   .door { height: clamp(300px, 46vh, 420px); }
