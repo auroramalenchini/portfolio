@@ -296,6 +296,7 @@
       mosaico.className = "mosaico";
       // Un proyecto de varias piezas busca filas más bajas, así las tres
       // entran una al lado de la otra en vez de una abajo de la otra.
+      if (pr.maxMovil) mosaico.dataset.maxMovil = pr.maxMovil;
       mosaico.dataset.alto = pr.stills
         ? "250"
         : pr.videos
@@ -343,7 +344,20 @@
   // fila sale de las formas que le tocaron, así que unas quedan más grandes
   // que otras y ninguna se recorta. Es lo que hacen Behance o Flickr.
   function acomodarMosaico(cont) {
-    const placas = [].slice.call(cont.children).filter((e) => e.classList.contains("card"));
+    const todas = [].slice.call(cont.children).filter((e) => e.classList.contains("card"));
+    if (!todas.length) return;
+    // Algunos proyectos traen muchos stills y en el teléfono el bloque quedaba
+    // larguísimo. Los que declaran un tope muestran los primeros y esconden el
+    // resto; en pantalla grande van todos. Se recalcula al cambiar de tamaño,
+    // así que girar el teléfono o agrandar la ventana los devuelve.
+    const topeMovil = parseInt(cont.dataset.maxMovil, 10);
+    if (topeMovil > 0) {
+      const angosto = window.innerWidth <= 800;
+      todas.forEach((p, k) => { p.hidden = angosto && k >= topeMovil; });
+    }
+    // Las escondidas no entran en el cálculo: si entraran, el JS les daría
+    // medidas y las filas quedarían con huecos.
+    const placas = todas.filter((p) => !p.hidden);
     if (!placas.length) return;
     // Un pelo menos que el ancho real: si nos pasamos por un píxel, la fila se
     // parte y las fotos quedan chicas.

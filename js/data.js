@@ -80,6 +80,9 @@ const VIDEO_WORK = [
     role: "Dirección y edición",
     // Stills del proyecto entero: viven en img/video/visualizers-gusto-a-sal/
     stills: 13,
+    // Son muchos y en el teléfono el bloque quedaba larguísimo: ahí se muestran
+    // los primeros seis. En pantalla grande siguen apareciendo los trece.
+    maxMovil: 6,
     ar: [1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78, 1.78],
     videos: [
       {

@@ -65,21 +65,28 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 }
 .nav { display: flex; align-items: center; gap: 1.5rem; font-size: .82rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; }
 .nav a { position: relative; color: var(--fg-muted); padding-bottom: .2rem; transition: color .2s; }
-.nav a:hover, .nav a[aria-current="page"] { color: var(--fg); }
+.nav a[aria-current="page"] { color: var(--fg); }
+@media (hover: hover) and (pointer: fine) { .nav a:hover { color: var(--fg); } }
 .nav a:not(.cta)::after {
   content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
   background: var(--accent); transform: scaleX(0); transform-origin: left;
   transition: transform .35s cubic-bezier(.2,.7,.2,1);
 }
-.nav a:not(.cta):hover::after, .nav a[aria-current="page"]:not(.cta)::after { transform: scaleX(1); }
+.nav a[aria-current="page"]:not(.cta)::after { transform: scaleX(1); }
+@media (hover: hover) and (pointer: fine) { .nav a:not(.cta):hover::after { transform: scaleX(1); } }
 /* Botón de contacto: vive en el header sticky, así que se ve siempre */
 .nav a.cta {
   padding: .55rem 1rem; margin-left: .25rem;
   background: var(--accent); color: var(--on-media);
   transition: background .25s ease, transform .25s cubic-bezier(.2,.7,.2,1);
 }
-.nav a.cta:hover { transform: translateY(-2px); }
-.nav a.cta:hover, .nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); border-color: transparent; }
+.nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); border-color: transparent; }
+@media (hover: hover) and (pointer: fine) {
+  /* Levantar el botón 2px al pasar el mouse. En el dedo eso era un salto
+     visible con el primer toque, y el navegador se comía ese toque. */
+  .nav a.cta:hover { transform: translateY(-2px); }
+  .nav a.cta:hover { background: var(--fg); color: var(--on-media); border-color: transparent; }
+}
 
 /* ---------- Apertura: el nombre adelante, Video y Foto atrás ----------
    La sección mide más que la pantalla y el escenario queda pegado arriba:
@@ -278,13 +285,17 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   transition: color .2s, border-color .2s;
 }
 .proyecto.der .ver-todas { align-self: end; }
-.ver-todas:hover { color: var(--fg-title); border-color: var(--fg-title); }
+@media (hover: hover) and (pointer: fine) {
+  .ver-todas:hover { color: var(--fg-title); border-color: var(--fg-title); }
+}
 
 /* Mosaico justificado: las medidas de cada placa las calcula js (acomodarMosaico)
    según el ancho real del contenedor, para que cada fila lo llene entero. */
 .mosaico { display: flex; flex-wrap: wrap; gap: .5rem; align-items: flex-start; }
 .mosaico[hidden] { display: none; }
 .mosaico .card { flex: 0 0 auto; }
+/* .card trae su propio display, que le gana al [hidden] del navegador. */
+.mosaico .card[hidden] { display: none; }
 .card.foto .card-meta { display: none; }
 .grid > .proyecto + .proyecto { margin-top: clamp(3rem, 8vw, 6rem); }
 
@@ -298,9 +309,11 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   border: 1px solid var(--line); box-shadow: 0 10px 30px -18px rgba(36,33,28,.8);
   transition: color .2s, background .2s, border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1);
 }
-.volver a:hover {
-  color: var(--on-media); background: var(--accent); border-color: var(--accent);
-  transform: translateY(-2px);
+@media (hover: hover) and (pointer: fine) {
+  .volver a:hover {
+    color: var(--on-media); background: var(--accent); border-color: var(--accent);
+    transform: translateY(-2px);
+  }
 }
 .js .volver { opacity: 0; animation: fade-in .6s ease .5s both; }
 @media (max-width: 560px) {
@@ -313,9 +326,13 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   transform: translateY(var(--lift, 0px));
   transition: transform .5s cubic-bezier(.2,.7,.2,1), box-shadow .5s ease;
 }
-.card:hover { --lift: -6px; box-shadow: 0 22px 44px -28px rgba(36,33,28,.65); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { --lift: -6px; box-shadow: 0 22px 44px -28px rgba(36,33,28,.65); }
+}
 .card img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s cubic-bezier(.2,.7,.2,1), opacity .4s; }
-.card:hover img { transform: scale(1.07); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover img { transform: scale(1.07); }
+}
 .card-meta {
   position: absolute; inset: auto 0 0 0; padding: 1rem;
   background: linear-gradient(to top, rgba(28,25,20,.92), transparent);
@@ -323,7 +340,8 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem;
   opacity: 0; transform: translateY(6px); transition: opacity .3s, transform .3s;
 }
-.card:hover .card-meta, .card:focus-visible .card-meta { opacity: 1; transform: none; }
+.card:focus-visible .card-meta { opacity: 1; transform: none; }
+@media (hover: hover) and (pointer: fine) { .card:hover .card-meta { opacity: 1; transform: none; } }
 .card-meta strong { display: block; font-weight: 600; }
 .card-meta span { color: rgba(246,241,231,.75); font-size: .82rem; }
 .card-meta em { font-style: normal; font-weight: 600; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: #E2B3A8; white-space: nowrap; }
@@ -335,12 +353,16 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   transition: background .2s, transform .2s;
 }
 .play::before { content: ""; border-left: 15px solid var(--fg); border-top: 9px solid transparent; border-bottom: 9px solid transparent; margin-left: 4px; }
-.card:hover .play { background: var(--accent); transform: translate(-50%, -50%) scale(1.06); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .play { background: var(--accent); transform: translate(-50%, -50%) scale(1.06); }
+}
 /* El play del primer still es su propio botón: la placa abre la foto y el
    círculo abre el video. */
 .play-boton { cursor: pointer; }
 .play-boton:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.card:hover .play::before { border-left-color: var(--on-media); }
+@media (hover: hover) and (pointer: fine) {
+  .card:hover .play::before { border-left-color: var(--on-media); }
+}
 .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .empty { grid-column: 1 / -1; color: var(--fg-muted); text-align: center; padding: 3rem 0; }
 
@@ -360,8 +382,10 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   border-left: 2px solid var(--fg-title); border-top: 2px solid var(--fg-title);
   transform: rotate(45deg);
 }
-.arriba:hover { background: var(--accent); border-color: var(--accent); }
-.arriba:hover::before { border-color: var(--on-media); }
+@media (hover: hover) and (pointer: fine) {
+  .arriba:hover { background: var(--accent); border-color: var(--accent); }
+  .arriba:hover::before { border-color: var(--on-media); }
+}
 /* En la página de un proyecto convive con el botón de volver: va más arriba. */
 [data-page="proyecto"] .arriba { bottom: 5.2rem; }
 @media (max-width: 560px) {
@@ -386,7 +410,9 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 .lightbox-caption { display: flex; justify-content: space-between; gap: 1rem; padding-top: 1rem; color: var(--fg-muted); font-size: .85rem; }
 .lightbox-caption strong { color: var(--fg); font-weight: 600; }
 .lb-btn { position: absolute; width: 48px; height: 48px; display: grid; place-items: center; font-size: 1.6rem; color: var(--fg-muted); border-radius: 50%; transition: color .2s, background .2s; }
-.lb-btn:hover { color: var(--on-media); background: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .lb-btn:hover { color: var(--on-media); background: var(--accent); }
+}
 .lb-close { top: .75rem; right: .75rem; }
 .lb-prev { left: .5rem; top: 50%; transform: translateY(-50%); }
 .lb-next { right: .5rem; top: 50%; transform: translateY(-50%); }
@@ -451,12 +477,16 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   transition: background .25s ease;
 }
 .contact-link:first-child { border-top: 1px solid var(--line); }
-.contact-link:hover { background: var(--bg-2); }
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover { background: var(--bg-2); }
+}
 .cl-label {
   font-size: .8rem; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
   color: var(--fg-title); transition: color .25s ease;
 }
-.contact-link:hover .cl-label { color: var(--accent); }
+@media (hover: hover) and (pointer: fine) {
+  .contact-link:hover .cl-label { color: var(--accent); }
+}
 .cl-value { font-size: .92rem; color: var(--fg-muted); }
 .contact-place {
   margin: clamp(1.5rem, 3vh, 2rem) auto 0;
