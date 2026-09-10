@@ -437,7 +437,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
    llega hasta las flechas, pero la pantalla mide más de 800 y se quedaba con
    el botón sin fondo de la computadora. Con hover:none entra cualquier
    pantalla táctil, y el que tiene mouse conserva el botón limpio. */
-@media (max-width: 800px), (hover: none) {
+@media (max-width: 800px), (any-pointer: coarse) {
   .lb-btn {
     background: rgba(36,33,28,.62); color: var(--on-media);
     backdrop-filter: blur(4px);
@@ -600,7 +600,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
    scrollear y arrancan sin poder tocarse. Con hover:none cualquier pantalla
    táctil recibe el nombre arriba y Video y Foto una sobre la otra, como en el
    teléfono. El resto del sitio sigue con el corte por ancho. */
-@media (max-width: 800px), (hover: none) {
+@media (max-width: 800px), (any-pointer: coarse) {
   /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
   .opening { height: auto; }
   /* En el markup las puertas van primero (son el fondo). Acá el nombre va arriba. */
@@ -623,6 +623,15 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
     padding: 1.9rem var(--pad);
   }
   .doors { position: static; grid-template-columns: 1fr; gap: .6rem; padding: 0 var(--pad) 1rem; }
+  /* Un iPad con trackpad dice que tiene mouse, así que el :has() del ensanchado
+     puede llegar a aplicarse acá. Pesa 0,4,0 y le ganaría al 1fr de arriba, que
+     pesa 0,1,0. Estas repiten la misma especificidad y van más abajo en el
+     archivo, así que con la portada apilada nada la vuelve a poner en dos
+     columnas, tenga mouse o no. */
+  .doors:has(.door:first-child:hover), .doors:has(.door:last-child:hover),
+  .doors:has(.door:first-child:focus-visible), .doors:has(.door:last-child:focus-visible) {
+    grid-template-columns: 1fr;
+  }
   .door { height: clamp(300px, 46vh, 420px); }
   /* El texto va al medio de la placa, como el nombre de arriba. */
   .door-body { inset: 0; justify-content: center; }
