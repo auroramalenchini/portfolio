@@ -80,12 +80,16 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   background: var(--accent); color: var(--on-media);
   transition: background .25s ease, transform .25s cubic-bezier(.2,.7,.2,1);
 }
-.nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); border-color: transparent; }
+/* Con el dedo, el foco sólo dibuja un contorno: era el único botón que además
+   se daba vuelta de color al tocarlo, y ese cambio de aspecto hacía que el
+   navegador se comiera el primer toque. Los links de contacto no tenían regla
+   de foco y por eso ya andaban con un toque. */
+.nav a.cta:focus-visible { outline: 2px solid var(--fg-title); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) {
   /* Levantar el botón 2px al pasar el mouse. En el dedo eso era un salto
      visible con el primer toque, y el navegador se comía ese toque. */
   .nav a.cta:hover { transform: translateY(-2px); }
-  .nav a.cta:hover { background: var(--fg); color: var(--on-media); border-color: transparent; }
+  .nav a.cta:hover, .nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); border-color: transparent; }
 }
 
 /* ---------- Apertura: el nombre adelante, Video y Foto atrás ----------
