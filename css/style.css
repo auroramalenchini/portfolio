@@ -529,7 +529,10 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   /* Sin escenario fijo: primero el nombre, después las puertas, una arriba de la otra. */
   .opening { height: auto; }
   /* En el markup las puertas van primero (son el fondo). Acá el nombre va arriba. */
-  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; overflow: visible; }
+  /* place-items:center del escenario de escritorio, en un flex de columna,
+     encoge las puertas a su contenido (ancho 0). Acá el eje transversal es
+     el horizontal: van estiradas a todo el ancho. */
+  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; align-items: stretch; justify-items: stretch; overflow: visible; }
   .opening-front { order: -1; }
   .opening-back {
     position: static; transform: none; filter: none; opacity: 1; pointer-events: auto;
@@ -565,7 +568,7 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   .js .reveal, .js .card, .js .hero-role { opacity: 1 !important; --rev: 1 !important; transform: none !important; }
   .js body.tiene-apertura .site-header { transform: none !important; opacity: 1 !important; pointer-events: auto; }
   .opening { height: auto; }
-  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; overflow: visible; }
+  .opening-stage { position: static; height: auto; display: flex; flex-direction: column; align-items: stretch; justify-items: stretch; overflow: visible; }
   .opening-back { position: static; transform: none !important; filter: none !important; opacity: 1 !important; pointer-events: auto; }
   .opening-veil { display: none; }
   .opening-front { order: -1; opacity: 1 !important; filter: none !important; transform: none !important; padding: 5rem var(--pad) 3rem; }
