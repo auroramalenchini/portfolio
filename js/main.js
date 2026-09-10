@@ -167,11 +167,44 @@
       if (deslizo) { deslizo = false; return; }
       if (e.target === lb || e.target === stage) close();
     });
-    let x0 = null, y0 = 0, t0 = 0;
+    let x0 = null, y0 = 0, t0 = 0, arrastrando = false;
+
+    // La foto acompaña al dedo. La animación de entrada fija transform con
+    // fill "both", y una animación le gana al estilo en línea, así que hay que
+    // apagarla antes de poder mover la pieza a mano.
+    function mover(dx, suave) {
+      const el = stage.firstElementChild;
+      if (!el) return;
+      el.style.animation = "none";
+      el.style.transition = suave
+        ? "transform .28s cubic-bezier(.2,.7,.2,1), opacity .28s ease"
+        : "none";
+      el.style.transform = "translateX(" + dx + "px)";
+      el.style.opacity = String(Math.max(0.3, 1 - Math.abs(dx) / 420));
+    }
+
     lb.addEventListener("touchstart", (e) => {
       if (e.touches.length !== 1) { x0 = null; return; }
       x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+      arrastrando = false;
     }, { passive: true });
+
+    lb.addEventListener("touchmove", (e) => {
+      if (x0 === null || e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+      if (!arrastrando) {
+        if (Math.abs(dx) < 10) return;            // todavía no se sabe
+        if (Math.abs(dx) < Math.abs(dy)) { x0 = null; return; }   // es vertical
+        arrastrando = true;
+      }
+      mover(dx, false);
+    }, { passive: true });
+
+    lb.addEventListener("touchcancel", () => {
+      if (arrastrando) mover(0, true);
+      x0 = null; arrastrando = false;
+    }, { passive: true });
+
     lb.addEventListener("touchend", (e) => {
       if (x0 === null) return;
       const t = e.changedTouches[0];
@@ -181,11 +214,26 @@
       // para cerrar o un gesto vertical. El tope de tiempo es holgado a
       // propósito: un deslizamiento lento y deliberado sigue siendo válido, y
       // lo único que descarta es el dedo apoyado un rato largo.
-      if (Math.abs(dx) < 45) return;
-      if (Math.abs(dx) < Math.abs(dy) * 1.4) return;
-      if (Date.now() - t0 > 2000) return;
+      const vale = Math.abs(dx) >= 45
+        && Math.abs(dx) >= Math.abs(dy) * 1.4
+        && Date.now() - t0 <= 2000;
+      if (!vale) {
+        // No alcanzó: la foto vuelve a su lugar en vez de quedar corrida.
+        if (arrastrando) mover(0, true);
+        arrastrando = false;
+        return;
+      }
       deslizo = true;
-      pasar(dx < 0 ? 1 : -1);
+      arrastrando = false;
+      const paso = dx < 0 ? 1 : -1;
+      const el = stage.firstElementChild;
+      if (!el) { pasar(paso); return; }
+      // Termina de salir para el lado del dedo y recién ahí entra la siguiente.
+      el.style.animation = "none";
+      el.style.transition = "transform .2s ease-out, opacity .2s ease-out";
+      el.style.transform = "translateX(" + (paso > 0 ? -stage.clientWidth : stage.clientWidth) + "px)";
+      el.style.opacity = "0";
+      setTimeout(() => pasar(paso), 190);
     }, { passive: true });
     document.addEventListener("keydown", (e) => {
       if (lb.hidden) return;
