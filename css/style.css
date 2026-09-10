@@ -620,13 +620,13 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
      recortadas. Escalonadas una arriba de la otra formaban un cuadrado del
      ancho de la pantalla y empujaban el texto casi una pantalla más abajo.
      En la computadora sigue el mosaico escalonado. */
-  .about { grid-template-columns: 1fr; gap: 2.5rem; padding-top: 2.25rem; }
+  .about { grid-template-columns: 1fr; gap: 2.5rem; padding-top: 3.5rem; }
   /* Apaisadas y bien recortadas: con la caja alta el recorte era de unos pocos
      píxeles y las fotos se veían casi enteras, sin el acercamiento que tienen
      en la computadora. */
   .about-fotos {
     grid-template-rows: 1fr; grid-template-columns: 1fr 1fr;
-    aspect-ratio: auto; height: clamp(115px, 16vh, 150px); gap: .5rem;
+    aspect-ratio: auto; height: clamp(132px, 18.5vh, 172px); gap: .5rem;
   }
   .about-fotos img { width: 100%; justify-self: stretch; }
   /* Ella y la cámara viven en la franja izquierda del cuadro: centrado al
