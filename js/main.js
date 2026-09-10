@@ -159,7 +159,34 @@
     $(".lb-close", lb).addEventListener("click", close);
     $(".lb-prev", lb).addEventListener("click", () => pasar(-1));
     $(".lb-next", lb).addEventListener("click", () => pasar(1));
-    lb.addEventListener("click", (e) => { if (e.target === lb || e.target === stage) close(); });
+    // Deslizar para pasar de una foto a otra. El toque que termina en el fondo
+    // también dispara el click que cierra el visor, así que un deslizamiento
+    // deja marca y ese click se descarta.
+    let deslizo = false;
+    lb.addEventListener("click", (e) => {
+      if (deslizo) { deslizo = false; return; }
+      if (e.target === lb || e.target === stage) close();
+    });
+    let x0 = null, y0 = 0, t0 = 0;
+    lb.addEventListener("touchstart", (e) => {
+      if (e.touches.length !== 1) { x0 = null; return; }
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+    }, { passive: true });
+    lb.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - x0, dy = t.clientY - y0;
+      x0 = null;
+      // Tiene que ser largo y más horizontal que vertical: si no, era un toque
+      // para cerrar o un gesto vertical. El tope de tiempo es holgado a
+      // propósito: un deslizamiento lento y deliberado sigue siendo válido, y
+      // lo único que descarta es el dedo apoyado un rato largo.
+      if (Math.abs(dx) < 45) return;
+      if (Math.abs(dx) < Math.abs(dy) * 1.4) return;
+      if (Date.now() - t0 > 2000) return;
+      deslizo = true;
+      pasar(dx < 0 ? 1 : -1);
+    }, { passive: true });
     document.addEventListener("keydown", (e) => {
       if (lb.hidden) return;
       if (e.key === "Escape") close();

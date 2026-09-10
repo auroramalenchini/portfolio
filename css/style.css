@@ -420,6 +420,18 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 .lb-close { top: .75rem; right: .75rem; }
 .lb-prev { left: .5rem; top: 50%; transform: translateY(-50%); }
 .lb-next { right: .5rem; top: 50%; transform: translateY(-50%); }
+/* En el teléfono una foto horizontal ocupa todo el ancho y las flechas quedan
+   encima: sin fondo, la flecha gris sobre la foto no se ve. En la computadora
+   sobra crema a los costados y se ven bien, así que ahí no cambia nada. */
+@media (max-width: 800px) {
+  /* Círculo oscuro con la flecha clara: el fondo del visor ya es crema, así que
+     un botón crema se camufla contra él, y uno claro se pierde sobre la foto.
+     Oscuro se lee sobre las dos cosas. */
+  .lb-btn {
+    background: rgba(36,33,28,.62); color: var(--on-media);
+    backdrop-filter: blur(4px);
+  }
+}
 
 /* ---------- Sobre mí ---------- */
 .about {
@@ -601,7 +613,19 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
 @media (max-width: 800px) {
   .page-intro.con-fotos { grid-template-columns: 1fr; gap: 1.75rem; }
   .intro-fotos { height: clamp(160px, 24vh, 240px); }
-  .about { grid-template-columns: 1fr; gap: 2rem; }
+  /* En vertical las dos fotos van en fila, del mismo tamaño y un poco
+     recortadas. Escalonadas una arriba de la otra formaban un cuadrado del
+     ancho de la pantalla y empujaban el texto casi una pantalla más abajo.
+     En la computadora sigue el mosaico escalonado. */
+  .about { grid-template-columns: 1fr; gap: 1.25rem; padding-top: 2.25rem; }
+  .about-fotos {
+    grid-template-rows: 1fr; grid-template-columns: 1fr 1fr;
+    aspect-ratio: auto; height: clamp(170px, 27vh, 250px); gap: .5rem;
+  }
+  .about-fotos img { width: 100%; justify-self: stretch; }
+  /* Ella y la cámara viven en la franja izquierda del cuadro: centrado al
+     medio, el recorte le come la cara. */
+  .about-fotos img:last-child { object-position: 32% center; }
   .grid-photo { grid-auto-rows: 200px; }
   .card-meta { opacity: 1; transform: none; }
   .nav { gap: 1rem; font-size: .74rem; }
