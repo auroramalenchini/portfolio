@@ -149,11 +149,20 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   content: ""; position: absolute; inset: 0;
   background: linear-gradient(to top, rgba(28,25,20,.8), rgba(28,25,20,.04) 60%);
 }
-.door:hover img, .door:focus-visible img { transform: scale(1.09); }
+.door:focus-visible img { transform: scale(1.09); }
 /* La que mirás se lleva más ancho; la otra se achica, pero no se apaga. */
 .doors { transition: grid-template-columns .7s cubic-bezier(.2,.7,.2,1); }
-.doors:has(.door:first-child:hover), .doors:has(.door:first-child:focus-visible) { grid-template-columns: 1.28fr .72fr; }
-.doors:has(.door:last-child:hover), .doors:has(.door:last-child:focus-visible) { grid-template-columns: .72fr 1.28fr; }
+.doors:has(.door:first-child:focus-visible) { grid-template-columns: 1.28fr .72fr; }
+.doors:has(.door:last-child:focus-visible) { grid-template-columns: .72fr 1.28fr; }
+/* Ensanchar la puerta que mirás es cosa de mouse. En una pantalla táctil el
+   primer toque disparaba :hover, la portada se reacomodaba a dos columnas y
+   recién el segundo toque abría la página. Con hover:hover el toque va derecho. */
+@media (hover: hover) and (pointer: fine) {
+  .door:hover img { transform: scale(1.09); }
+  .doors:has(.door:first-child:hover) { grid-template-columns: 1.28fr .72fr; }
+  .doors:has(.door:last-child:hover) { grid-template-columns: .72fr 1.28fr; }
+  .door:hover .door-body { transform: translateY(-6px); }
+}
 /* Centrado: al ensancharse una puerta, los dos textos se corren lo mismo y
    poco, en vez de quedarse uno clavado contra el borde izquierdo. */
 .door-body {
@@ -164,7 +173,6 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   color: var(--on-media);
   transition: transform .5s cubic-bezier(.2,.7,.2,1);
 }
-.door:hover .door-body { transform: translateY(-6px); }
 .door-label {
   font-family: var(--font-display); font-weight: var(--peso-titulo);
   font-size: clamp(2.15rem, 4.5vw, 3.5rem); line-height: 1;
@@ -538,14 +546,21 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
     position: static; transform: none; filter: none; opacity: 1; pointer-events: auto;
   }
   .opening-veil { display: none; }
+  /* El nombre ocupaba la pantalla entera: quedaba un pantallazo de crema vacía
+     y las puertas caían fuera de la vista. Con algo más de la mitad alcanza
+     para que respire y para que asome la primera puerta. */
   .opening-front {
     opacity: 1; filter: none; transform: none; pointer-events: auto;
-    min-height: 100vh; min-height: 100svh;
+    min-height: 58vh; min-height: 58svh;
     align-content: center;
-    padding: 0 var(--pad);
+    padding: 3rem var(--pad);
   }
   .doors { position: static; grid-template-columns: 1fr; gap: .6rem; padding: 0 var(--pad) 1rem; }
-  .door { height: clamp(300px, 48vh, 440px); }
+  .door { height: clamp(300px, 46vh, 420px); }
+  /* El texto va al medio de la placa, como el nombre de arriba. */
+  .door-body { inset: 0; justify-content: center; }
+  /* Centrado sobre la foto necesita un velo parejo, no un degradado del piso. */
+  .door::after { background: linear-gradient(to top, rgba(28,25,20,.72), rgba(28,25,20,.42)); }
 }
 @media (max-width: 800px) {
   .page-intro.con-fotos { grid-template-columns: 1fr; gap: 1.75rem; }
@@ -555,11 +570,19 @@ h1, h2 { font-family: var(--font-display); font-weight: var(--peso-titulo); }
   .card-meta { opacity: 1; transform: none; }
   .nav { gap: 1rem; font-size: .74rem; }
   .brand { font-size: 1rem; white-space: nowrap; }
+  /* En escritorio Video y Foto aparecen recién pasada la portada. En celular
+     eso hacía que el menú saltara de dos ítems a cuatro y se reacomodara: acá
+     están siempre, así el header no se mueve. */
+  .js body.tiene-apertura .nav .obra { display: block; }
 }
 @media (max-width: 560px) {
-  .site-header { flex-wrap: wrap; gap: .6rem 1rem; padding-bottom: .75rem; }
-  .nav { width: 100%; gap: 1rem; }
-  .nav a.cta { margin-left: auto; }
+  /* El nombre quedaba pegado al techo y el menú caía lejos, abajo. Ahora el
+     aire de arriba, el de entre el nombre y el menú y el de abajo son el mismo. */
+  .site-header { flex-wrap: wrap; gap: .95rem; padding: .95rem var(--pad); }
+  /* Contacto se iba al borde derecho con margin-left:auto y dejaba un hueco de
+     casi media pantalla en el medio. Los cuatro van con la misma separación. */
+  .nav { width: 100%; gap: .95rem; align-items: center; }
+  .nav a.cta { margin-left: 0; padding: .42rem .8rem; }
   .brand small { display: none; }
 }
 
