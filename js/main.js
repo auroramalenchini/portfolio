@@ -821,9 +821,15 @@
     else header.classList.remove("completo");
   }
 
+  // La misma condición que usa el css para apilar la apertura. Si las dos no
+  // coinciden, el css apila las puertas mientras el js les sigue moviendo las
+  // variables del escenario fijo, y la portada queda a mitad de camino.
+  var APILADA = "(max-width: 800px), (hover: none)";
+
   function aperturaFija() {
-    // En pantallas chicas y con movimiento reducido no se fija nada: se apila.
-    return apertura && escenario && !reduced && window.innerWidth > 800;
+    // Con movimiento reducido, en pantallas chicas y en las táctiles no se fija
+    // nada: se apila.
+    return apertura && escenario && !reduced && !window.matchMedia(APILADA).matches;
   }
 
   function pintarApertura() {
