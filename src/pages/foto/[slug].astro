@@ -103,4 +103,15 @@ const ogImage = await ogImagePath(items[0].image);
     .back { right: var(--s-4); bottom: var(--s-4); }
     .back a { padding: var(--s-2) var(--s-3); font-size: var(--t-credit-label); }
   }
+
+  /* Los 44px del dedo. Es el único destino que de verdad crece —de 34 a 44 en
+     el teléfono—: tiene borde y fondo propios, así que el truco del borde
+     transparente le cambiaría la píldora. */
+  @media (any-pointer: coarse) {
+    .back a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
 </style>

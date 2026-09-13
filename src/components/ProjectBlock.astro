@@ -116,6 +116,16 @@ const { title, category, side } = Astro.props;
     .project-info :global(.see-all:hover) { color: var(--fg-title); border-color: var(--fg-title); }
   }
 
+  /* Los 44px del dedo. Acá la caja crece sólo para arriba: abajo está el
+     subrayado bordó, que es un border-bottom, y cualquier relleno de ese lado
+     lo separaría del texto. */
+  @media (any-pointer: coarse) {
+    .project-info :global(.see-all) {
+      border-top: 20px solid transparent;
+      margin-top: -20px;
+    }
+  }
+
   @media (max-width: 800px) {
     /* En vertical se mantiene el uno y uno: un proyecto alineado a la
        izquierda, el siguiente entero a la derecha. Lo único que cambia es que

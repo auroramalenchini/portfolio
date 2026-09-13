@@ -129,4 +129,18 @@ function esActual(href: string): boolean {
     .nav a.cta { margin-left: 0; padding: var(--s-1) var(--s-3); }
     .brand small { display: none; }
   }
+
+  /* Con el dedo cada destino necesita 44px de alto, y el menú mide 25. La
+     caja crece con un borde transparente y el margen negativo se lo descuenta
+     al header, así no se mueve nada: el texto queda donde estaba, el subrayado
+     cuelga de la caja de relleno (que el borde no toca) y la píldora bordó de
+     Contacto se recorta también a la caja de relleno. */
+  @media (any-pointer: coarse) {
+    .brand { border-block: 11px solid transparent; margin-block: -11px; }
+    .nav a {
+      border-block: 10px solid transparent;
+      margin-block: -10px;
+      background-clip: padding-box;
+    }
+  }
 </style>

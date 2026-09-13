@@ -62,6 +62,30 @@ for (const p of PAGES) {
   });
 }
 
+// Destinos táctiles: con el dedo ninguno baja de los 40px de alto. El botón
+// de "Volver a todo en Foto" lleva la clase .back, no .volver.
+const TOCABLES = '.site-header a, .site-header button, .see-all, .back a, .contact-link';
+
+test('en el teléfono ningún destino táctil queda chico', async ({ page }, info) => {
+  test.skip(info.project.name !== 'phone', 'se mide con el dedo');
+
+  for (const ruta of ['/', '/video/', '/foto/', '/foto/anantara/']) {
+    await page.goto(ruta, { waitUntil: 'load' });
+    await page.evaluate(() => document.fonts.ready);
+
+    const chicos = await page.evaluate((sel) => {
+      return [...document.querySelectorAll<HTMLElement>(sel)]
+        .map((el) => {
+          const caja = el.getBoundingClientRect();
+          return { alto: Math.round(caja.height), texto: (el.textContent ?? '').trim().slice(0, 24) };
+        })
+        .filter((x) => x.alto < 40);
+    }, TOCABLES);
+
+    expect(chicos, `destinos chicos en ${ruta}`).toEqual([]);
+  }
+});
+
 test('el header marca la página actual', async ({ page }) => {
   await page.goto('/video/');
   await expect(page.locator('.nav a[aria-current="page"]')).toHaveText('Video');
