@@ -1,0 +1,27 @@
+{
+  "name": "Aurora Malenchini",
+  "tagline": "Directora · Fotógrafa · Creativa",
+  "location": "Buenos Aires, Capital Federal",
+  "email": "auroramalenchini@gmail.com",
+  "phone": "+54 9 11 2367 9398",
+  "instagram": "https://www.instagram.com/auromalenchini/",
+  "doors": {
+    "video": [
+      "doors/portada-gusto-a-sal.jpg",
+      "video/gusto-a-sal/09",
+      "video/gusto-a-sal/01",
+      "video/gusto-a-sal/05",
+      "video/despues-de-apogeo/03",
+      "video/miel/01"
+    ],
+    "videoClip": "doors/portada-gusto-a-sal.mp4",
+    "videoClipWebm": "doors/portada-gusto-a-sal.webm",
+    "photo": [
+      "foto/anantara/01",
+      "foto/vereda/03",
+      "foto/marte/08",
+      "foto/anantara/06",
+      "foto/oruga/17"
+    ]
+  }
+}
