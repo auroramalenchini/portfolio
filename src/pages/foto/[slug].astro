@@ -1,0 +1,99 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SmallCaps from '../../components/SmallCaps.astro';
+import Mosaic from '../../components/Mosaic.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import { projectImages } from '../../lib/images';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const projects = await getCollection('foto');
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+};
+
+interface Props {
+  project: CollectionEntry<'foto'>;
+}
+
+const { project } = Astro.props;
+const { title, category } = project.data;
+
+const items = projectImages('foto', project.id).map(({ image, n }) => ({
+  image,
+  alt: `${title} — foto ${n}`,
+  lb: { group: project.id, title, sub: category },
+}));
+---
+
+<Base
+  title={`${title} · Aurora Malenchini`}
+  description={`${title}. ${category}, ${items.length} fotos.`}
+  page="proyecto"
+>
+  <section class="intro wrap">
+    <p class="back"><a href="/foto/">← Volver a todo en Foto</a></p>
+    <h1><SmallCaps text={title} /></h1>
+    <p class="sub">{category} · {items.length} fotos</p>
+  </section>
+
+  <section class="photos wrap" aria-label={`Fotos de ${title}`}>
+    <Mosaic items={items} row="360px" sizes="(max-width: 800px) 90vw, 40vw" />
+  </section>
+
+  <BackToTop />
+</Base>
+
+<style>
+  .intro { padding-block: var(--s-7) var(--s-5); }
+  h1 { font-size: var(--t-page); line-height: .96; margin-bottom: var(--s-4); }
+  .sub {
+    color: var(--fg-muted);
+    font-family: var(--font-read);
+    font-size: var(--t-4);
+    max-width: 52ch;
+  }
+
+  .photos { padding-block: var(--s-5) var(--s-8); }
+
+  /* Botón flotante: queda a mano estés donde estés dentro del proyecto. Sale
+     del flujo, así que no le roba espacio al título. */
+  .back {
+    position: fixed;
+    right: var(--pad);
+    bottom: var(--s-5);
+    z-index: 30;
+    margin: 0;
+  }
+  .back a {
+    display: inline-block;
+    padding: var(--s-3) var(--s-4);
+    white-space: nowrap;
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--fg-title);
+    /* El mismo velo crema translúcido del header. */
+    background: rgba(243, 237, 225, .92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px -18px rgba(36, 33, 28, .8);
+    transition: color .2s, background .2s, border-color .2s, transform .25s var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .back a:hover {
+      color: var(--on-media);
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+  }
+  @media (max-width: 560px) {
+    .back { right: var(--s-4); bottom: var(--s-4); }
+    .back a { padding: var(--s-2) var(--s-3); font-size: var(--t-credit-label); }
+  }
+</style>

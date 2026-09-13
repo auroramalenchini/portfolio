@@ -1,0 +1,129 @@
+---
+// Un proyecto: el título de un lado, el mosaico del otro, y se alternan de
+// proyecto a proyecto. La alternancia la decide la página (por índice), no
+// este componente.
+import SmallCaps from './SmallCaps.astro';
+
+interface Props {
+  title: string;
+  category: string;
+  side: 'left' | 'right';
+}
+
+const { title, category, side } = Astro.props;
+---
+
+<article class:list={['project', { right: side === 'right' }]}>
+  <div class="project-info">
+    <h3><SmallCaps text={title} /></h3>
+    <span class="project-cat">{category}</span>
+    <slot name="info" />
+  </div>
+  <slot />
+</article>
+
+<style>
+  .project {
+    display: grid;
+    grid-template-columns: minmax(170px, 1fr) 3fr;
+    gap: var(--s-6);
+    align-items: start;
+  }
+  .project.right { grid-template-columns: 3fr minmax(170px, 1fr); }
+  .project.right .project-info { order: 2; text-align: right; align-items: flex-end; }
+
+  .project + .project { margin-top: var(--s-8); }
+
+  .project-info {
+    /* Pegado arriba mientras el mosaico pasa al lado, con aire bajo el header. */
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-5));
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .project-info h3 {
+    font-size: var(--t-project);
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  /* El título grande tiene más aire a la izquierda de la primera letra que el
+     texto chico: alineados a la izquierda, la categoría y el "ver todas"
+     sobresalen. Se compensa con un margen proporcional al cuerpo del título.
+     Del lado derecho no hace falta: ahí quedan parejos solos. */
+  .project:not(.right) .project-cat { margin-left: calc(var(--t-project) * .071 - .063em); }
+  .project:not(.right) .project-info :global(.see-all) {
+    margin-left: calc(var(--t-project) * .071 - .021em);
+  }
+
+  .project-cat {
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+
+  /* Distinción o premio: debajo de la categoría, en la tipografía de lectura
+     y en bordó, para que se note sin gritar. */
+  .project-info :global(.award) {
+    font-family: var(--font-read);
+    font-style: italic;
+    font-size: var(--t-award);
+    line-height: 1.4;
+    color: var(--accent);
+    max-width: 22ch;
+  }
+
+  /* Créditos del equipo: chiquitos, para no competir con el título. */
+  .project-info :global(.credits) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+    color: var(--fg-muted);
+    font-size: var(--t-credit);
+    line-height: 1.35;
+  }
+  .project-info :global(.credits > span) { display: block; }
+  .project-info :global(.credits em) {
+    display: block;
+    font-style: normal;
+    font-weight: 600;
+    font-size: var(--t-credit-label);
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    opacity: .75;
+    margin-bottom: var(--s-1);
+  }
+  .project.right .project-info :global(.credits) { align-items: flex-end; }
+
+  /* El link de "ver todas" y los de YouTube comparten el subrayado bordó. */
+  .project-info :global(.see-all) {
+    align-self: start;
+    padding-bottom: var(--s-1);
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    transition: color .2s, border-color .2s;
+  }
+  .project.right .project-info :global(.see-all) { align-self: end; }
+  @media (hover: hover) and (pointer: fine) {
+    .project-info :global(.see-all:hover) { color: var(--fg-title); border-color: var(--fg-title); }
+  }
+
+  @media (max-width: 800px) {
+    /* En vertical se mantiene el uno y uno: un proyecto alineado a la
+       izquierda, el siguiente entero a la derecha. Lo único que cambia es que
+       el título va arriba del mosaico y no al costado. */
+    .project,
+    .project.right { grid-template-columns: 1fr; }
+    .project.right .project-info { order: 0; }
+    .project.right :global(.mosaic) { justify-content: flex-end; }
+    .project-info { position: static; }
+  }
+</style>

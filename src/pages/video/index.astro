@@ -1,8 +1,48 @@
 ---
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import SmallCaps from '../../components/SmallCaps.astro';
+import Mosaic from '../../components/Mosaic.astro';
+import ProjectBlock from '../../components/ProjectBlock.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import { projectImages } from '../../lib/images';
+import claqueta from '../../assets/about/claqueta.jpg';
 
-// Provisorio: los proyectos de video llegan en la fase 3.
+// Un bloque por proyecto, igual que en foto: los fotogramas hacen de mosaico
+// y el círculo de play sobre el primero abre el video en el visor.
+const projects = (await getCollection('video')).sort((a, b) => a.data.order - b.data.order);
+
+const blocks = projects.map((project) => {
+  const { title, client, category, youtube, pieces } = project.data;
+  const sub = [category, client].filter(Boolean).join(' · ');
+  // Un proyecto de varias piezas sin video propio abre la primera pieza.
+  const play = youtube ?? pieces?.[0]?.youtube;
+  const links = pieces?.length
+    ? pieces.map((piece) => ({ id: piece.youtube, text: piece.title }))
+    : youtube
+      ? [{ id: youtube, text: 'Ver en YouTube' }]
+      : [];
+  const credits = [
+    ['Dirección', project.data.credits?.direccion],
+    ['Dirección de fotografía', project.data.credits?.fotografia],
+    ['Dirección de arte', project.data.credits?.arte],
+  ].filter((credit): credit is [string, string] => Boolean(credit[1]));
+
+  return {
+    slug: project.id,
+    data: project.data,
+    sub,
+    play,
+    links,
+    credits,
+    items: projectImages('video', project.id).map(({ image, n }) => ({
+      image,
+      alt: `${title} — fotograma ${n}`,
+      lb: { group: `stills:${project.id}`, title, sub },
+    })),
+  };
+});
 ---
 
 <Base
@@ -10,17 +50,154 @@ import SmallCaps from '../../components/SmallCaps.astro';
   description="Videoclips, sesiones en vivo, cortometrajes y fashion films."
   page="video"
 >
-  <section class="intro wrap">
-    <h1><SmallCaps text="Video" /></h1>
-    <p>
-      Dirección creativa, realización y edición de videoclips, visualizers,
-      fashion films y sesiones musicales.
-    </p>
+  <section class="intro intro-media wrap">
+    <div class="intro-text">
+      <h1><SmallCaps text="Video" /></h1>
+      <p>
+        Dirección creativa, realización y edición de videoclips, visualizers,
+        fashion films y sesiones musicales.
+      </p>
+    </div>
+    <div class="intro-photo">
+      <Image
+        src={claqueta}
+        alt="Claqueta en un rodaje"
+        widths={[480, 960]}
+        sizes="(max-width: 800px) 100vw, 50vw"
+        loading="eager"
+      />
+    </div>
   </section>
+
+  <section class="projects wrap" aria-label="Trabajos audiovisuales">
+    {
+      blocks.map((block, i) => (
+        <ProjectBlock title={block.data.title} category={block.sub} side={i % 2 ? 'right' : 'left'}>
+          <Fragment slot="info">
+            {block.data.award && <span class="award">{block.data.award}</span>}
+            {block.credits.length > 0 && (
+              <div class="credits">
+                {block.credits.map(([label, name]) => (
+                  <span>
+                    <em>{label}</em>
+                    {name}
+                  </span>
+                ))}
+              </div>
+            )}
+            {block.links.map((link) => (
+              <a
+                class="see-all"
+                href={`https://youtu.be/${link.id}`}
+                target="_blank"
+                rel="noopener"
+                aria-label={`Ver en YouTube: ${link.text}`}
+              >
+                {link.text}
+              </a>
+            ))}
+          </Fragment>
+
+          <Mosaic
+            items={block.items}
+            row="250px"
+            sizes="(max-width: 800px) 50vw, 26vw"
+            mobileLimit={block.data.mobileLimit}
+          >
+            {block.play && (
+              <button
+                slot="play"
+                type="button"
+                class="play"
+                data-lb={`video:${block.slug}:${block.play}`}
+                data-lb-youtube={block.play}
+                data-lb-title={block.data.title}
+                data-lb-sub={block.sub}
+                aria-label={`Ver el video: ${block.data.title}`}
+              />
+            )}
+          </Mosaic>
+        </ProjectBlock>
+      ))
+    }
+  </section>
+
+  <BackToTop />
 </Base>
 
 <style>
-  .intro { padding-block: var(--s-7) var(--s-8); }
-  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
-  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+  .intro { padding-block: var(--s-7) var(--s-5); }
+  h1 { font-size: var(--t-page); line-height: .96; margin-bottom: var(--s-4); }
+  .intro p {
+    color: var(--fg-muted);
+    font-family: var(--font-read);
+    font-size: var(--t-4);
+    line-height: 1.62;
+    max-width: 52ch;
+  }
+
+  /* Bajada y foto lado a lado. La foto se recorta al alto exacto del título
+     más la bajada: va absoluta para no empujar la fila, si no sería ella la
+     que manda el alto. */
+  .intro-media {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-6);
+    align-items: stretch;
+  }
+  .intro-photo {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .intro-photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    scale: 1.25;
+  }
+
+  .projects { padding-block: var(--s-7) var(--s-8); }
+
+  /* El círculo de play: es hermano de la placa, no hijo, así la foto abre el
+     fotograma y el círculo abre el video. */
+  .play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    transform: translate(-50%, -50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    /* El mismo velo crema translúcido del header. */
+    background: rgba(243, 237, 225, .9);
+    border: 1px solid rgba(36, 33, 28, .15);
+    display: grid;
+    place-items: center;
+    backdrop-filter: blur(4px);
+    transition: background .2s, transform .2s;
+  }
+  .play::before {
+    content: "";
+    border-left: 15px solid var(--fg);
+    border-top: 9px solid transparent;
+    border-bottom: 9px solid transparent;
+    margin-left: 4px;
+  }
+  .play:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  @media (hover: hover) and (pointer: fine) {
+    :global(.card-wrap):hover .play {
+      background: var(--accent);
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+    :global(.card-wrap):hover .play::before { border-left-color: var(--on-media); }
+  }
+
+  @media (max-width: 800px) {
+    .intro-media { grid-template-columns: 1fr; gap: var(--s-5); }
+    .intro-photo { height: var(--h-intro-media); }
+  }
 </style>

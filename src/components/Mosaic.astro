@@ -1,0 +1,172 @@
+---
+// El mosaico justificado, ahora sin JavaScript: cada placa crece en
+// proporción a su forma, así que las filas llenan el ancho solas y ninguna
+// foto se recorta. La última fila queda en su tamaño natural (la rellena el
+// ::after), que es la única diferencia visible con la versión anterior.
+import { Picture, getImage } from 'astro:assets';
+
+export interface MosaicItem {
+  image: ImageMetadata;
+  alt: string;
+  /** Lo que necesita el visor: grupo de flechas, título y bajada. */
+  lb: { group: string; title: string; sub: string };
+}
+
+interface Props {
+  items: MosaicItem[];
+  /** Alto al que apunta cada fila. */
+  row?: string;
+  /** El `sizes` del `<img>`: cuánto de la pantalla ocupa una placa. */
+  sizes: string;
+  /** Opcional: cuántas placas se ven abajo de 800px. */
+  mobileLimit?: number;
+}
+
+const { items, row = '260px', sizes, mobileLimit } = Astro.props;
+
+const ANCHOS = [480, 960, 1600];
+const ANCHO_VISOR = 1600;
+
+// Se sirven dos formatos: avif en <source> y jpeg en el <img> de respaldo.
+// El jpeg va sólo como respaldo y no además como <source>, porque serían los
+// mismos archivos dos veces: eran 70 MB y 700 conversiones al aire.
+
+const placas = await Promise.all(
+  items.map(async (item, i) => {
+    const { image } = item;
+    // Nunca pedimos un ancho mayor que el del archivo: agrandar no suma
+    // definición, sólo bytes.
+    const tope = Math.min(ANCHO_VISOR, image.width);
+    const widths = [...new Set([...ANCHOS.filter((w) => w < image.width), tope])];
+    // 'jpg' y no 'jpeg': es el formato del <img> de respaldo, así el visor
+    // reusa el archivo que ya generó <Picture> en vez de encodear otro igual.
+    const full = await getImage({ src: image, width: tope, format: 'jpg' });
+    return {
+      ...item,
+      widths,
+      ar: image.width / image.height,
+      src: full.src,
+      w: tope,
+      h: Math.round((tope * image.height) / image.width),
+      // Las dos primeras entran en la primera pantalla: van sin diferir.
+      eager: i < 2,
+    };
+  })
+);
+---
+
+<div class="mosaic" style={`--row: ${row}`} data-mobile-limit={mobileLimit}>
+  {
+    placas.map((placa, i) => (
+      <div class="card-wrap" style={`--ar: ${placa.ar}`}>
+        <button
+          type="button"
+          class="card"
+          style={`--ar: ${placa.ar}`}
+          data-lb={placa.lb.group}
+          data-lb-src={placa.src}
+          data-lb-w={placa.w}
+          data-lb-h={placa.h}
+          data-lb-title={placa.lb.title}
+          data-lb-sub={placa.lb.sub}
+        >
+          <Picture
+            src={placa.image}
+            widths={placa.widths}
+            formats={['avif']}
+            fallbackFormat="jpg"
+            sizes={sizes}
+            alt={placa.alt}
+            loading={placa.eager ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </button>
+        {i === 0 && <slot name="play" />}
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .mosaic {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    align-items: flex-start;
+  }
+
+  /* El crecimiento proporcional a la forma es lo que justifica la fila: si el
+     ancho sobra, cada placa se lleva una parte proporcional a lo apaisada que
+     es, así todas terminan con el mismo alto.
+
+     El .95 del tamaño de partida es lo que hace que entren las que tienen que
+     entrar. Dos fotogramas 16:9 a 250px de alto miden 956px con la separación
+     en el medio, y la columna mide 948: por 8px se iba uno a la fila
+     siguiente y quedaba solo, al doble de alto. Con el tamaño de partida un
+     poco más chico que el alto buscado entran los dos y después crecen hasta
+     llenar la fila, que es de donde sale el alto final. */
+  .mosaic > .card-wrap {
+    position: relative;
+    flex: calc(var(--ar) * 1000) 1 calc(var(--ar) * var(--row) * .95);
+    aspect-ratio: var(--ar);
+    min-width: 0;
+  }
+
+  /* Relleno invisible: se come el sobrante de la última fila para que sus
+     placas queden en su tamaño natural en vez de estirarse. */
+  .mosaic::after {
+    content: "";
+    flex: 1000000 1 0;
+  }
+
+  .card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: var(--bg-2);
+    text-align: left;
+    transform: translateY(var(--lift, 0px));
+    transition: transform .5s var(--ease), box-shadow .5s ease;
+  }
+  /* La foto la dibuja <Picture>, que es otro componente: de ahí los :global. */
+  .card :global(picture) { display: block; width: 100%; height: 100%; }
+  .card :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .9s var(--ease), opacity .4s;
+  }
+  .card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover { --lift: -6px; box-shadow: 0 22px 44px -28px rgba(36, 33, 28, .65); }
+    .card:hover :global(img) { transform: scale(1.07); }
+  }
+
+  /* Tope de placas en pantalla angosta, sin JavaScript: los proyectos con
+     muchos fotogramas dejaban un bloque larguísimo en el teléfono. Una regla
+     por tope posible, porque nth-child no acepta variables. */
+  @media (max-width: 800px) {
+    .mosaic[data-mobile-limit="1"] > .card-wrap:nth-child(n + 2),
+    .mosaic[data-mobile-limit="2"] > .card-wrap:nth-child(n + 3),
+    .mosaic[data-mobile-limit="3"] > .card-wrap:nth-child(n + 4),
+    .mosaic[data-mobile-limit="4"] > .card-wrap:nth-child(n + 5),
+    .mosaic[data-mobile-limit="5"] > .card-wrap:nth-child(n + 6),
+    .mosaic[data-mobile-limit="6"] > .card-wrap:nth-child(n + 7),
+    .mosaic[data-mobile-limit="7"] > .card-wrap:nth-child(n + 8),
+    .mosaic[data-mobile-limit="8"] > .card-wrap:nth-child(n + 9),
+    .mosaic[data-mobile-limit="9"] > .card-wrap:nth-child(n + 10),
+    .mosaic[data-mobile-limit="10"] > .card-wrap:nth-child(n + 11),
+    .mosaic[data-mobile-limit="11"] > .card-wrap:nth-child(n + 12),
+    .mosaic[data-mobile-limit="12"] > .card-wrap:nth-child(n + 13),
+    .mosaic[data-mobile-limit="13"] > .card-wrap:nth-child(n + 14),
+    .mosaic[data-mobile-limit="14"] > .card-wrap:nth-child(n + 15),
+    .mosaic[data-mobile-limit="15"] > .card-wrap:nth-child(n + 16),
+    .mosaic[data-mobile-limit="16"] > .card-wrap:nth-child(n + 17) {
+      display: none;
+    }
+  }
+</style>

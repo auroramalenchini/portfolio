@@ -1,0 +1,68 @@
+---
+// Flecha flotante para volver al principio: aparece recién cuando ya
+// scrolleaste más de una pantalla y media, como en el sitio anterior.
+---
+
+<button type="button" class="back-top" aria-label="Volver arriba"></button>
+
+<script>
+  const boton = document.querySelector<HTMLButtonElement>('.back-top');
+  if (boton) {
+    const revisar = () => {
+      boton.classList.toggle('visible', window.scrollY > window.innerHeight * 1.5);
+    };
+    revisar();
+    window.addEventListener('scroll', revisar, { passive: true });
+    boton.addEventListener('click', () => {
+      const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: suave ? 'smooth' : 'auto' });
+    });
+  }
+</script>
+
+<style>
+  .back-top {
+    position: fixed;
+    right: var(--pad);
+    bottom: var(--s-5);
+    z-index: 30;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    /* El mismo velo crema translúcido del header. */
+    background: rgba(243, 237, 225, .92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line);
+    box-shadow: 0 10px 30px -18px rgba(36, 33, 28, .8);
+    display: grid;
+    place-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity .3s, transform .3s var(--ease), background .2s, border-color .2s, visibility .3s;
+  }
+  .back-top.visible { opacity: 1; visibility: visible; transform: none; }
+
+  .back-top::before {
+    content: "";
+    width: 11px;
+    height: 11px;
+    margin-top: 4px;
+    border-left: 2px solid var(--fg-title);
+    border-top: 2px solid var(--fg-title);
+    transform: rotate(45deg);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .back-top:hover { background: var(--accent); border-color: var(--accent); }
+    .back-top:hover::before { border-color: var(--on-media); }
+  }
+
+  /* En la página de un proyecto convive con el botón de volver: va más arriba. */
+  :global(body[data-page="proyecto"]) .back-top { bottom: 5.2rem; }
+
+  @media (max-width: 560px) {
+    .back-top { right: var(--s-4); bottom: var(--s-4); }
+    :global(body[data-page="proyecto"]) .back-top { bottom: 4.4rem; }
+  }
+</style>
