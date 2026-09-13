@@ -1,0 +1,177 @@
+---
+import SmallCaps from './SmallCaps.astro';
+import Doors from './Doors.astro';
+import { site } from '../lib/site';
+
+// La apertura. Lo que está escrito primero es la versión apilada: el nombre
+// arriba y las dos puertas abajo, una sobre la otra. Eso es lo que ve el dedo,
+// la pantalla angosta, el navegador sin animaciones de scroll y quien pidió
+// menos movimiento. El escenario fijo con el nombre adelante y las puertas
+// enfocándose al scrollear es lo que se suma abajo, y sólo con mouse.
+---
+
+<section class="opening" aria-label="Presentación">
+  <div class="opening-stage">
+    <div class="opening-front">
+      <h1>
+        <span class="linea"><SmallCaps text="Aurora" /></span>
+        <span class="linea"><SmallCaps text="Malenchini" /></span>
+      </h1>
+      <p class="hero-role">{site.tagline}</p>
+    </div>
+    <div class="opening-veil" aria-hidden="true"></div>
+    <div class="opening-back">
+      <Doors />
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ---------- Base: apilada ---------- */
+  .opening { position: relative; }
+
+  .opening-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .opening-front {
+    display: grid;
+    align-content: center;
+    gap: var(--s-5);
+    text-align: center;
+    padding: var(--s-6) var(--pad);
+    /* Con la pantalla entera quedaba un pantallazo de crema vacía y las
+       puertas caían fuera de la vista. Con algo más de un tercio alcanza para
+       que el nombre respire y para que asome la primera puerta. */
+    min-height: 40vh;
+    min-height: 40svh;
+  }
+  .opening-front h1 {
+    margin: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    font-size: var(--t-6);
+    line-height: .9;
+    letter-spacing: -.01em;
+    color: var(--accent);
+  }
+  .opening-front h1 .linea { display: block; }
+
+  .hero-role {
+    margin: 0;
+    font-size: var(--t-1);
+    font-weight: 600;
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    color: var(--fg-title);
+  }
+
+  /* Apilada no hay nada que velar: el velo es del escenario fijo. */
+  .opening-veil { display: none; }
+
+  /* ---------- Escritorio con mouse: el escenario fijo ----------
+     La sección mide más que la pantalla y el escenario queda pegado arriba:
+     ese tramo de scroll es el que enfoca las puertas y desenfoca el nombre.
+     Sin un solo listener de scroll: las tres coreografías cuelgan de la línea
+     de tiempo de la propia sección. El @supports deja afuera a los
+     navegadores que todavía no las tienen (Firefox), que se quedan con la
+     versión apilada, que es completa y no un resto. */
+  @media (hover: hover) and (pointer: fine) and (min-width: 801px) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .opening {
+        height: 220vh;
+        /* La línea de tiempo la publica la sección y la leen sus
+           descendientes. El tramo "contain" de una sección más alta que la
+           pantalla va justo de "su techo toca el techo de la pantalla" a "su
+           piso toca el piso de la pantalla": el mismo recorrido que medía a
+           mano el sitio viejo. */
+        view-timeline-name: --apertura;
+        view-timeline-axis: block;
+      }
+
+      .opening-stage {
+        position: sticky;
+        top: 0;
+        height: 100svh;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+      }
+
+      .opening-back {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        animation: puertas-se-enfocan linear both;
+        animation-timeline: --apertura;
+        /* Termina antes del final para que quede un tramo con las puertas
+           nítidas y ya clickeables. */
+        animation-range: contain 0% contain 72%;
+        will-change: transform, filter, opacity;
+      }
+
+      .opening-veil {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: var(--bg);
+        animation: velo-se-abre linear both;
+        animation-timeline: --apertura;
+        animation-range: contain 0% contain 72%;
+      }
+
+      .opening-front {
+        position: relative;
+        z-index: 2;
+        /* El nombre no se toca: los clics pasan a las puertas de atrás. */
+        pointer-events: none;
+        min-height: 0;
+        padding: 0 var(--pad);
+        animation: nombre-se-va linear both;
+        animation-timeline: --apertura;
+        animation-range: contain 0% contain 60%;
+        will-change: transform, filter, opacity;
+      }
+    }
+  }
+
+  /* Las puertas vienen del fondo. */
+  @keyframes puertas-se-enfocan {
+    from {
+      transform: scale(.8);
+      filter: blur(18px);
+      opacity: .5;
+      pointer-events: none;
+    }
+    /* Recién cuando están casi nítidas se pueden clickear. */
+    55% { pointer-events: auto; }
+    to {
+      transform: scale(1);
+      filter: blur(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  @keyframes velo-se-abre {
+    from { opacity: .72; }
+    to { opacity: 0; }
+  }
+
+  @keyframes nombre-se-va {
+    from {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      filter: blur(11px);
+      transform: scale(.93);
+    }
+  }
+</style>
