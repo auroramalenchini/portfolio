@@ -156,6 +156,32 @@ test('el header no se transparenta a través del visor', async ({ page }) => {
   await expect(page.locator('.site-header')).toBeVisible();
 });
 
+// Los hosts que arrastra el reproductor de YouTube y nada más. Sin abrir un
+// video el sitio no pide nada a nadie: eso lo cuida smoke.spec.ts. Al abrirlo
+// entra el iframe, y con él sus propias dependencias: las siete que listó el
+// QA de la fase 7 —googlevideo, ytimg, ggpht, google, gstatic, googleapis y
+// fonts.gstatic— más el dominio del propio embed.
+const HOSTS_DEL_REPRODUCTOR =
+  /(^|\.)(youtube-nocookie\.com|youtube\.com|ytimg\.com|ggpht\.com|googlevideo\.com|googleapis\.com|gstatic\.com|google\.com|doubleclick\.net)$/;
+
+test('al abrir un video no entra ningún host ajeno al reproductor', async ({ page }) => {
+  const ajenos: string[] = [];
+  page.on('request', (req) => {
+    if (!/^https?:/.test(req.url())) return;
+    const host = new URL(req.url()).hostname;
+    if (host === 'localhost' || host === '127.0.0.1') return;
+    if (!HOSTS_DEL_REPRODUCTOR.test(host)) ajenos.push(host);
+  });
+
+  await page.goto(OBJETIVO.video, { waitUntil: 'load' });
+  await tarjetas(page, OBJETIVO.grupoVideo).first().click();
+  await expect(page.locator(`${VISOR} .stage iframe`)).toHaveCount(1);
+  // El reproductor sigue pidiendo cosas después de aparecer.
+  await page.waitForTimeout(4000);
+
+  expect([...new Set(ajenos)].sort()).toEqual([]);
+});
+
 test('el cuerpo no scrollea mientras el visor está abierto', async ({ page }) => {
   await abrirPrimera(page);
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');

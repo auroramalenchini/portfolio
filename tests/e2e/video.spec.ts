@@ -113,14 +113,32 @@ test.describe('/video/', () => {
     }
   });
 
-  test('el tope de pantalla angosta esconde fotogramas y los devuelve', async ({ page }, testInfo) => {
+  /** Los proyectos que declaran un tope, con su índice en la página. */
+  const CON_TOPE = PROYECTOS.map((p, i) => ({ ...p, i })).filter((p) => p.mobileLimit);
+
+  test('el tope de pantalla angosta esconde fotogramas', async ({ page }, testInfo) => {
+    // A 1024 el tope no corre: la regla es de 800px para abajo.
+    test.skip(testInfo.project.name === 'tablet-touch', 'el tope es de 800px para abajo');
+    expect(CON_TOPE.length, 'nadie declara mobileLimit').toBeGreaterThan(0);
+
+    const ancho = page.viewportSize()!.width;
+    const angosto = ancho <= 800;
+    await page.goto('/video/', { waitUntil: 'load' });
+
+    for (const proyecto of CON_TOPE) {
+      await expect(
+        page.locator('.project').nth(proyecto.i).locator('.card:visible'),
+        `${proyecto.slug} a ${ancho}px`
+      ).toHaveCount(angosto ? proyecto.mobileLimit! : proyecto.stills);
+    }
+  });
+
+  test('y los devuelve al agrandar la ventana', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'desktop', 'cambia el ancho a mano');
-    const conTope = PROYECTOS.map((p, i) => ({ ...p, i })).filter((p) => p.mobileLimit);
-    expect(conTope.length, 'nadie declara mobileLimit').toBeGreaterThan(0);
 
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/video/', { waitUntil: 'load' });
-    for (const proyecto of conTope) {
+    for (const proyecto of CON_TOPE) {
       await expect(
         page.locator('.project').nth(proyecto.i).locator('.card:visible'),
         `${proyecto.slug} en 390px`
@@ -128,7 +146,7 @@ test.describe('/video/', () => {
     }
 
     await page.setViewportSize({ width: 1440, height: 900 });
-    for (const proyecto of conTope) {
+    for (const proyecto of CON_TOPE) {
       await expect(
         page.locator('.project').nth(proyecto.i).locator('.card:visible'),
         `${proyecto.slug} en 1440px`

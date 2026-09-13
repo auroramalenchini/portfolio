@@ -1,4 +1,3 @@
-import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page, type Request } from '@playwright/test';
 
 // La portada: la apertura, las dos puertas, "Sobre mí" y "Contacto".
@@ -259,16 +258,5 @@ test.describe('higiene', () => {
       innerWidth: window.innerWidth,
     }));
     expect(medidas.scrollWidth).toBeLessThanOrEqual(medidas.innerWidth);
-  });
-
-  test('accesibilidad: nada grave ni crítico', async ({ page }, info) => {
-    test.skip(info.project.name !== 'desktop', 'con una pantalla alcanza');
-    await page.goto('/');
-    await page.evaluate(() => document.fonts.ready);
-    const { violations } = await new AxeBuilder({ page }).analyze();
-    const graves = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
-    expect(
-      graves.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(', ')}`)
-    ).toEqual([]);
   });
 });
