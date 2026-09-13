@@ -194,11 +194,15 @@ async function revisarMosaico(page: Page, ruta: string, ancho: number) {
         expect(fila.ancho, `${cual}: la última se pasa`).toBeLessThanOrEqual(col + 2);
       }
 
-      // De 1024 para arriba las apaisadas van de a dos o más: una sola
-      // apaisada estirada al ancho entero es justo el defecto.
-      if (ancho >= 1024 && !ultima && fila.ars.every((ar) => ar >= APAISADA)) {
-        expect(fila.n, `${cual}: apaisada sola, ars=${fila.ars.join(' ')}`)
-          .toBeGreaterThanOrEqual(2);
+      // En /video/, de 1024 para arriba, los fotogramas apaisados van de a dos
+      // o más: uno solo estirado al ancho entero es justo el defecto. En las
+      // páginas de foto no se pide, al contrario: ahí la apaisada va sola a
+      // propósito, como en el sitio viejo (lo cuida la prueba de más abajo).
+      if (ruta === '/video/' && ancho >= 1024 && !ultima) {
+        if (fila.ars.every((ar) => ar >= APAISADA)) {
+          expect(fila.n, `${cual}: apaisada sola, ars=${fila.ars.join(' ')}`)
+            .toBeGreaterThanOrEqual(2);
+        }
       }
 
       // En el teléfono ninguna placa se pasa de la columna.
@@ -226,6 +230,23 @@ test.describe('el mosaico', () => {
         await revisarMosaico(page, ruta, ancho);
       }
     }
+  });
+
+  test('en /foto/ la apaisada de la vista de conjunto va sola y grande', async ({ page }, info) => {
+    test.skip(info.project.name !== 'desktop', 'se mide a 1440');
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/foto/', { waitUntil: 'load' });
+
+    // El motor viejo daba 527px a la primera foto de Oruga en la columna de
+    // 948: una sola apaisada por fila, no dos chicas.
+    const alto = await page
+      .locator('.project')
+      .first()
+      .locator('.card-wrap')
+      .first()
+      .evaluate((el) => el.getBoundingClientRect().height);
+    expect(Math.round(alto), `la primera placa de la previa mide ${Math.round(alto)}px`)
+      .toBeGreaterThanOrEqual(480);
   });
 
   test('/video/ a 1024 no se estira a lo largo', async ({ page }, info) => {
