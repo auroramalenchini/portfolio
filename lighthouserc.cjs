@@ -24,6 +24,9 @@ module.exports = {
       numberOfRuns: 3,
     },
     assert: {
+      // Por defecto lhci se queda con la mejor de las tres corridas, que es
+      // como no medir: acá vale la mediana.
+      aggregationMethod: 'median',
       // Cada patrón que coincide suma sus reglas: las comunes van a todas y el
       // presupuesto de imágenes cambia según la página.
       assertMatrix: [
