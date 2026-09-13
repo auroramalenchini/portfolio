@@ -34,6 +34,11 @@ jobs:
       - name: Correr todas las pruebas
         run: npm test
 
+      # Aparte de npm test porque tarda minutos. Corre sobre el dist que dejó
+      # el paso anterior.
+      - name: Lighthouse y presupuestos
+        run: npm run test:lh
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
