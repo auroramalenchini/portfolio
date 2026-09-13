@@ -6,7 +6,7 @@ import SmallCaps from '../../components/SmallCaps.astro';
 import Mosaic from '../../components/Mosaic.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { projectImages } from '../../lib/images';
+import { ogImagePath, projectImages } from '../../lib/images';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const projects = await getCollection('foto');
@@ -28,12 +28,16 @@ const items = projectImages('foto', project.id).map(({ image, n }) => ({
   alt: `${title} — foto ${n}`,
   lb: { group: project.id, title, sub: category },
 }));
+
+// Para compartir, la primera foto del proyecto.
+const ogImage = await ogImagePath(items[0].image);
 ---
 
 <Base
   title={`${title} · Aurora Malenchini`}
   description={`${title}. ${category}, ${items.length} fotos.`}
   page="proyecto"
+  image={ogImage}
 >
   <section class="intro wrap">
     <p class="back"><a href="/foto/">← Volver a todo en Foto</a></p>

@@ -7,12 +7,15 @@ import Mosaic from '../../components/Mosaic.astro';
 import ProjectBlock from '../../components/ProjectBlock.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { projectImages } from '../../lib/images';
+import { ogImagePath, projectImages } from '../../lib/images';
 import claqueta from '../../assets/about/claqueta.jpg';
 
 // Un bloque por proyecto, igual que en foto: los fotogramas hacen de mosaico
 // y el círculo de play sobre el primero abre el video en el visor.
 const projects = (await getCollection('video')).sort((a, b) => a.data.order - b.data.order);
+
+// Para compartir, el primer fotograma del primer proyecto.
+const ogImage = await ogImagePath(projectImages('video', projects[0].id)[0].image);
 
 const blocks = projects.map((project) => {
   const { title, client, category, youtube, pieces } = project.data;
@@ -50,6 +53,7 @@ const blocks = projects.map((project) => {
   title="Video · Aurora Malenchini"
   description="Videoclips, sesiones en vivo, cortometrajes y fashion films."
   page="video"
+  image={ogImage}
 >
   <section class="intro intro-media wrap">
     <div class="intro-text">

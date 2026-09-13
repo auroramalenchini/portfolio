@@ -2,6 +2,8 @@
 // el orden es el de los nombres (01.jpg, 02.jpg, ...) y el ancho, el alto y
 // la proporción los lee el build de cada archivo.
 
+import { getImage } from 'astro:assets';
+
 export type Collection = 'foto' | 'video';
 
 export interface ProjectImage {
@@ -57,4 +59,14 @@ export function previewOf(project: PreviewProject): ProjectImage[] {
   return elegidas
     .map((n) => todasLasFotos.find((foto) => foto.n === n))
     .filter((foto): foto is ProjectImage => Boolean(foto));
+}
+
+/**
+ * La imagen para compartir de una página: 1200 px de ancho en jpeg, que es lo
+ * que piden WhatsApp, Instagram y las tarjetas de Twitter. Devuelve la ruta
+ * dentro del sitio; `Seo.astro` la convierte en absoluta.
+ */
+export async function ogImagePath(image: ImageMetadata): Promise<string> {
+  const { src } = await getImage({ src: image, width: 1200, format: 'jpeg' });
+  return src;
 }

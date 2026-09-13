@@ -6,12 +6,15 @@ import Mosaic from '../../components/Mosaic.astro';
 import ProjectBlock from '../../components/ProjectBlock.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
-import { previewOf, projectImages } from '../../lib/images';
+import { ogImagePath, previewOf, projectImages } from '../../lib/images';
 
 // Un bloque por proyecto, en el orden que declara cada index.md. La vista de
 // conjunto muestra la selección del proyecto (o las primeras seis) y el link
 // a la página con todas.
 const projects = (await getCollection('foto')).sort((a, b) => a.data.order - b.data.order);
+
+// Para compartir, la primera foto del primer proyecto.
+const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image);
 
 const blocks = projects.map((project) => {
   const total = projectImages('foto', project.id).length;
@@ -32,6 +35,7 @@ const blocks = projects.map((project) => {
   title="Foto · Aurora Malenchini"
   description="Fotografía y video comercial para restaurantes, eventos y espacios."
   page="photo"
+  image={ogImage}
 >
   <section class="intro wrap">
     <h1><SmallCaps text="Foto" /></h1>

@@ -227,6 +227,9 @@
     }
 
     dialog.addEventListener('close', () => {
+      // El evento llega en el turno siguiente: si en el medio se volvió a
+      // abrir el visor, esto borraría el contenido recién puesto.
+      if (dialog.open) return;
       stage.textContent = ''; // corta la reproducción del video
       document.body.style.overflow = '';
       index = -1;

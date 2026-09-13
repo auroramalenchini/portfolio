@@ -4,6 +4,8 @@ import Base from '../layouts/Base.astro';
 import SmallCaps from '../components/SmallCaps.astro';
 import Opening from '../components/Opening.astro';
 import { site, whatsappHref, mailtoHref } from '../lib/site';
+import { doors } from '../lib/doors';
+import { ogImagePath } from '../lib/images';
 import sobreMi from '../assets/about/sobre-mi.jpg';
 import prt from '../assets/about/prt.jpg';
 
@@ -13,12 +15,17 @@ const instagramHandle = '@' + site.instagram.replace(/\/+$/, '').split('/').pop(
 // Las fotos de "Sobre mí" nunca pasan de media columna en la computadora ni de
 // media pantalla en el teléfono.
 const SIZES_ABOUT = '(min-width: 801px) 30vw, 46vw';
+
+// Para compartir, la primera foto de la puerta de Foto.
+const puertaFoto = doors.find((door) => door.href === '/foto/') ?? doors[0];
+const ogImage = await ogImagePath(puertaFoto.photos[0]);
 ---
 
 <Base
   title="Aurora Malenchini · Directora, fotógrafa y creativa"
   description="Videoclips, films y fotografía comercial para restaurantes, eventos y espacios. Buenos Aires."
   page="home"
+  image={ogImage}
 >
   <script is:inline>
     // Marca que hay JavaScript: sin esto la página se ve completa y quieta.
