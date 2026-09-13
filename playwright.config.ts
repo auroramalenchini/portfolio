@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Corre contra el sitio construido (dist), no contra el dev server: lo que se
 // prueba es lo que se publica.
-const PORT = 4321;
+const PORT = Number(process.env.PW_PORT ?? 4321);
 
 export default defineConfig({
   testDir: './tests/e2e',
