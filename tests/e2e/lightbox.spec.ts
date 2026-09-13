@@ -1,15 +1,14 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-// Único lugar donde se dice contra qué se prueba. Mientras /foto/<slug>/ y
-// /video/ no existan, los tres grupos viven en la página de laboratorio.
+// Único lugar donde se dice contra qué se prueba: el visor se prueba contra
+// las páginas reales. El grupo del play de un video tiene una sola pieza, así
+// que sirve para el iframe y también para las flechas escondidas.
 const OBJETIVO = {
-  fotos: '/lab/',
-  video: '/lab/',
-  grupoMulti: 'a',
-  grupoSolo: 'b',
-  grupoVideo: 'c',
-  total: 3,
+  fotos: '/foto/anantara/',
+  grupoMulti: 'anantara',
+  video: '/video/',
+  grupoVideo: 'video:gusto-a-sal:QOTH0P_PPqc',
 };
 
 const VISOR = 'dialog.lightbox';
@@ -34,6 +33,9 @@ async function abrirPrimera(page: Page) {
 
 const contador = (page: Page) => page.locator(`${VISOR} .caption-count`);
 
+/** Cuántas piezas tiene el grupo, contadas en la página y no a mano. */
+const cuantas = (page: Page) => tarjetas(page, OBJETIVO.grupoMulti).count();
+
 /** El visor entra con un fundido: hasta que termina, todo se ve más claro. */
 async function quieto(page: Page) {
   await page
@@ -44,6 +46,9 @@ async function quieto(page: Page) {
 test('abre la primera tarjeta con foco, imagen y pie', async ({ page }) => {
   await sinYoutube(page);
   await page.goto(OBJETIVO.fotos);
+
+  const total = await cuantas(page);
+  expect(total, 'el grupo tiene que tener más de una pieza').toBeGreaterThan(1);
 
   const card = tarjetas(page, OBJETIVO.grupoMulti).first();
   const src = await card.getAttribute('data-lb-src');
@@ -64,17 +69,19 @@ test('abre la primera tarjeta con foco, imagen y pie', async ({ page }) => {
   expect(await img.getAttribute('src')).toBe(src);
 
   await expect(page.locator(`${VISOR} .caption strong`)).toHaveText(title!);
-  await expect(contador(page)).toHaveText(`1 / ${OBJETIVO.total}`);
+  await expect(contador(page)).toHaveText(`1 / ${total}`);
 });
 
 test('las flechas del teclado se detienen en el borde del grupo', async ({ page }) => {
   const card = await abrirPrimera(page);
   const visor = page.locator(VISOR);
+  const total = await cuantas(page);
 
-  await page.keyboard.press('ArrowRight');
-  await expect(contador(page)).toHaveText(`2 / ${OBJETIVO.total}`);
-  await page.keyboard.press('ArrowRight');
-  await expect(contador(page)).toHaveText(`${OBJETIVO.total} / ${OBJETIVO.total}`);
+  // Hasta la última pieza, una por una.
+  for (let i = 2; i <= total; i++) {
+    await page.keyboard.press('ArrowRight');
+    await expect(contador(page)).toHaveText(`${i} / ${total}`);
+  }
 
   // Al final del grupo cierra: no da la vuelta ni salta al proyecto siguiente.
   await page.keyboard.press('ArrowRight');
@@ -82,7 +89,7 @@ test('las flechas del teclado se detienen en el borde del grupo', async ({ page 
 
   // Y al principio, igual.
   await card.click();
-  await expect(contador(page)).toHaveText(`1 / ${OBJETIVO.total}`);
+  await expect(contador(page)).toHaveText(`1 / ${total}`);
   await page.keyboard.press('ArrowLeft');
   await expect(visor).toBeHidden();
 });
@@ -114,8 +121,10 @@ test('el botón de cerrar cierra', async ({ page }) => {
 
 test('un grupo de una sola pieza no muestra flechas', async ({ page }) => {
   await sinYoutube(page);
-  await page.goto(OBJETIVO.fotos);
-  await tarjetas(page, OBJETIVO.grupoSolo).first().click();
+  await page.goto(OBJETIVO.video);
+  // El play de un proyecto es su propio grupo, de una sola pieza.
+  await expect(tarjetas(page, OBJETIVO.grupoVideo)).toHaveCount(1);
+  await tarjetas(page, OBJETIVO.grupoVideo).first().click();
 
   await expect(page.locator(VISOR)).toBeVisible();
   await expect(page.locator(`${VISOR} .lb-prev`)).toBeHidden();
@@ -199,7 +208,7 @@ test.describe('deslizar con el dedo', () => {
   test('80px pasan a la siguiente sin cerrar', async ({ page }) => {
     await abrirPrimera(page);
     await deslizar(page, -80, 'fondo');
-    await expect(contador(page)).toHaveText(`2 / ${OBJETIVO.total}`);
+    await expect(contador(page)).toHaveText(`2 / ${await cuantas(page)}`);
     await expect(page.locator(VISOR)).toBeVisible();
   });
 
@@ -207,6 +216,6 @@ test.describe('deslizar con el dedo', () => {
     await abrirPrimera(page);
     await deslizar(page, -20, 'foto');
     await expect(page.locator(VISOR)).toBeVisible();
-    await expect(contador(page)).toHaveText(`1 / ${OBJETIVO.total}`);
+    await expect(contador(page)).toHaveText(`1 / ${await cuantas(page)}`);
   });
 });

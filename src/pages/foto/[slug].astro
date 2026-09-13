@@ -5,6 +5,7 @@ import Base from '../../layouts/Base.astro';
 import SmallCaps from '../../components/SmallCaps.astro';
 import Mosaic from '../../components/Mosaic.astro';
 import BackToTop from '../../components/BackToTop.astro';
+import Lightbox from '../../components/Lightbox.astro';
 import { projectImages } from '../../lib/images';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -45,6 +46,8 @@ const items = projectImages('foto', project.id).map(({ image, n }) => ({
   </section>
 
   <BackToTop />
+
+  <Lightbox />
 </Base>
 
 <style>

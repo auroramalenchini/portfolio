@@ -5,6 +5,7 @@ const PAGES = [
   { name: 'portada', path: '/', status: 200 },
   { name: 'video', path: '/video/', status: 200 },
   { name: 'foto', path: '/foto/', status: 200 },
+  { name: 'proyecto', path: '/foto/anantara/', status: 200 },
   { name: '404', path: '/404.html', status: 200 },
 ];
 

@@ -6,6 +6,7 @@ import SmallCaps from '../../components/SmallCaps.astro';
 import Mosaic from '../../components/Mosaic.astro';
 import ProjectBlock from '../../components/ProjectBlock.astro';
 import BackToTop from '../../components/BackToTop.astro';
+import Lightbox from '../../components/Lightbox.astro';
 import { projectImages } from '../../lib/images';
 import claqueta from '../../assets/about/claqueta.jpg';
 
@@ -123,6 +124,8 @@ const blocks = projects.map((project) => {
   </section>
 
   <BackToTop />
+
+  <Lightbox />
 </Base>
 
 <style>
