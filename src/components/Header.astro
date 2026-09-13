@@ -1,0 +1,132 @@
+---
+import { site } from '../lib/site';
+
+// Alto fijo, siempre visible, pegado arriba. No aparece ni desaparece, no le
+// entran ítems a mitad del scroll: por eso los anclajes no necesitan JS.
+// La barra final no cambia nada: /video y /video/ son la misma página.
+const normalizar = (ruta: string) => ruta.replace(/\/+$/, '') || '/';
+const actual = normalizar(Astro.url.pathname);
+
+function esActual(href: string): boolean {
+  return actual === normalizar(href);
+}
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-current={esActual('/') ? 'page' : undefined}>
+    <span>{site.name}</span>
+    <small>{site.tagline}</small>
+  </a>
+  <nav class="nav" aria-label="Principal">
+    <a href="/video/" aria-current={esActual('/video') ? 'page' : undefined}>Video</a>
+    <a href="/foto/" aria-current={esActual('/foto') ? 'page' : undefined}>Foto</a>
+    <a href="/#about">Sobre mí</a>
+    <a class="cta" href="/#contact">Contacto</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-4);
+    padding-inline: var(--pad);
+    background: rgba(243, 237, 225, .92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-weight: var(--peso-titulo);
+    font-size: var(--t-4);
+    line-height: 1.1;
+    letter-spacing: .04em;
+    color: var(--fg-title);
+  }
+  .brand small {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--t-1);
+    line-height: 1.2;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-top: var(--s-1);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    font-size: var(--t-2);
+    font-weight: 600;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+  }
+  .nav a {
+    position: relative;
+    color: var(--fg-muted);
+    padding-bottom: var(--s-1);
+    transition: color .2s;
+  }
+  .nav a[aria-current="page"] { color: var(--fg); }
+  @media (hover: hover) and (pointer: fine) {
+    .nav a:hover { color: var(--fg); }
+  }
+
+  /* El subrayado bordó, que crece de izquierda a derecha */
+  .nav a:not(.cta)::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .35s var(--ease);
+  }
+  .nav a[aria-current="page"]:not(.cta)::after { transform: scaleX(1); }
+  @media (hover: hover) and (pointer: fine) {
+    .nav a:not(.cta):hover::after { transform: scaleX(1); }
+  }
+
+  /* Botón de contacto: vive en el header sticky, así que se ve siempre */
+  .nav a.cta {
+    padding: var(--s-2) var(--s-4);
+    margin-left: var(--s-1);
+    background: var(--accent);
+    color: var(--on-media);
+    transition: background .25s ease, transform .25s var(--ease);
+  }
+  /* Con el dedo, el foco sólo dibuja un contorno: cambiarle el color al tocarlo
+     hacía que el navegador se comiera el primer toque. */
+  .nav a.cta:focus-visible { outline: 2px solid var(--fg-title); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    .nav a.cta:hover { transform: translateY(-2px); }
+    .nav a.cta:hover,
+    .nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); }
+  }
+
+  @media (max-width: 560px) {
+    /* Dos filas, como hoy: el nombre arriba y el menú abajo, con el mismo aire
+       arriba, en el medio y abajo. El alto sigue siendo --header-h. */
+    .site-header {
+      flex-wrap: wrap;
+      align-content: center;
+      gap: var(--s-3);
+      padding-inline: var(--pad);
+    }
+    .nav { width: 100%; gap: var(--s-3); align-items: center; }
+    .nav a.cta { margin-left: 0; padding: var(--s-1) var(--s-3); }
+    .brand small { display: none; }
+  }
+</style>

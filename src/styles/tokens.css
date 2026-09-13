@@ -1,0 +1,61 @@
+/* Único lugar del proyecto donde se escriben colores, medidas y clamp().
+   Todas las demás hojas usan estas variables. */
+:root {
+  /* Paleta */
+  --bg: #F3EDE1;          /* crema */
+  --bg-2: #E7DECD;        /* crema más profundo, fondo de placas */
+  --fg: #24211C;          /* marrón muy oscuro, casi negro: texto */
+  --fg-title: #4A3527;    /* marrón oscuro cálido: títulos */
+  --fg-muted: #6C6355;
+  --line: #D8CDB9;
+  --accent: #7A2233;      /* bordó */
+  --on-media: #F6F1E7;    /* texto sobre fotos */
+
+  /* Tipografías, autohospedadas con @fontsource */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Archivo Variable", "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-read: "Lora", Georgia, "Times New Roman", serif;   /* textos largos */
+
+  /* Grosor de los títulos. Si lo cambiás, cambiá también el peso de .vs para
+     que las versalitas mantengan el mismo espesor de trazo. Medido sobre la
+     letra: 600 va con 730, 700 con 800, 800 con 900. */
+  --peso-titulo: 800;
+
+  /* Medidas de página */
+  --max: 1400px;
+  --pad: clamp(1rem, 4vw, 3rem);
+  /* El header es sticky y de alto fijo: este valor es el que usa
+     scroll-padding-top, así ningún ancla queda tapada. */
+  --header-h: 72px;
+
+  /* Escala de espacio */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: clamp(1.75rem, 4vw, 2.5rem);
+  --s-7: clamp(2.5rem, 6vw, 4rem);
+  --s-8: clamp(3.5rem, 9vw, 6rem);
+
+  /* Escala tipográfica: de la etiqueta chica al nombre de la portada.
+     Si hace falta un tamaño intermedio, se agrega acá y no en otra hoja:
+     este archivo es el único con clamp(). */
+  --t-1: 0.7rem;        /* etiquetas en mayúscula */
+  --t-2: 0.82rem;       /* menú, pie, fichas */
+  --t-3: 1.0625rem;     /* cuerpo de texto, 17px */
+  --t-4: 1.26rem;       /* nombre en el header, bajadas */
+  --t-5: clamp(1.85rem, 3.4vw, 2.75rem);   /* títulos de sección */
+  --t-6: clamp(2.8rem, 10.6vw, 9rem);      /* el nombre de la portada */
+  --t-page: clamp(2.35rem, 5vw, 4rem);     /* título de página */
+  --t-door: clamp(2.15rem, 4.5vw, 3.5rem); /* etiqueta de cada puerta */
+
+  /* Curva de movimiento única para todo el sitio */
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* Abajo de 560px el header se parte en dos filas, como hoy, así que el alto
+   fijo es otro. 64px no alcanzaba para las dos filas sin achicar el nombre. */
+@media (max-width: 560px) {
+  :root { --header-h: 88px; }
+}

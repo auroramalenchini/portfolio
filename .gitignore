@@ -10,3 +10,10 @@ _miniaturas/
 Claude outputs/
 Fotos mias/0397b0aa-cbe4-49cb-99e1-68bb590f4d27.jpg
 SUBIR A GITHUB.command
+
+# Astro / Node / tests
+dist/
+.astro/
+test-results/
+playwright-report/
+tests/baseline/

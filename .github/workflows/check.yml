@@ -1,0 +1,42 @@
+name: check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Las imágenes transformadas se guardan acá: sin el cache, cada build
+      # vuelve a procesar todas las fotos.
+      - name: Cache de imágenes de Astro
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.astro
+          key: astro-${{ runner.os }}-${{ hashFiles('src/content/**', 'src/assets/**') }}
+          restore-keys: |
+            astro-${{ runner.os }}-
+
+      - name: Instalar navegadores
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Correr todas las pruebas
+        run: npm test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

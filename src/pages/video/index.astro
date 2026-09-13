@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import SmallCaps from '../../components/SmallCaps.astro';
+
+// Provisorio: los proyectos de video llegan en la fase 3.
+---
+
+<Base
+  title="Video · Aurora Malenchini"
+  description="Videoclips, sesiones en vivo, cortometrajes y fashion films."
+  page="video"
+>
+  <section class="intro wrap">
+    <h1><SmallCaps text="Video" /></h1>
+    <p>
+      Dirección creativa, realización y edición de videoclips, visualizers,
+      fashion films y sesiones musicales.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .intro { padding-block: var(--s-7) var(--s-8); }
+  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
+  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+</style>

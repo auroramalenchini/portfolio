@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import SmallCaps from '../components/SmallCaps.astro';
+---
+
+<Base
+  title="Página no encontrada · Aurora Malenchini"
+  description="Esta dirección no existe. Podés seguir por Video o por Foto."
+  page="404"
+>
+  <section class="intro wrap">
+    <h1><SmallCaps text="No está acá" /></h1>
+    <p>
+      Esa dirección no existe o cambió de lugar. Podés seguir por
+      <a href="/video/">Video</a> o por <a href="/foto/">Foto</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .intro { padding-block: var(--s-7) var(--s-8); }
+  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
+  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+  a { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
+</style>

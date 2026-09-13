@@ -1,0 +1,41 @@
+---
+import { site } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta o URL de la imagen para compartir. Se resuelve contra el dominio. */
+  image?: string;
+}
+
+const { title, description, image = '/logo-diafragma-ios.png' } = Astro.props;
+
+// La canónica sale de la URL de la página, no de una lista a mano.
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const ogImage = new URL(image, Astro.site ?? Astro.url).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<link rel="icon" href="/logo-diafragma.svg" type="image/svg+xml" />
+<link rel="icon" href="/logo-diafragma-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="/logo-diafragma-16.png" sizes="16x16" type="image/png" />
+<link rel="apple-touch-icon" href="/logo-diafragma-ios.png" />
+<meta name="theme-color" content="#7A2233" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:locale" content="es_AR" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="generator" content={Astro.generator} />

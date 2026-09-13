@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import SmallCaps from '../components/SmallCaps.astro';
+import { site } from '../lib/site';
+
+// Provisorio: la portada completa (apertura, puertas, sobre mí, contacto)
+// llega en la fase 5.
+---
+
+<Base
+  title="Aurora Malenchini · Directora, fotógrafa y creativa"
+  description="Videoclips, films y fotografía comercial para restaurantes, eventos y espacios. Buenos Aires."
+  page="home"
+>
+  <section class="intro wrap">
+    <h1><SmallCaps text={site.name} /></h1>
+    <p>{site.tagline}. En construcción: la portada nueva llega en la fase 5.</p>
+  </section>
+</Base>
+
+<style>
+  .intro { padding-block: var(--s-7) var(--s-8); }
+  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
+  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+</style>

@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import SmallCaps from '../../components/SmallCaps.astro';
+
+// Provisorio: los proyectos de foto llegan en la fase 2.
+---
+
+<Base
+  title="Foto · Aurora Malenchini"
+  description="Fotografía y video comercial para restaurantes, eventos y espacios."
+  page="photo"
+>
+  <section class="intro wrap">
+    <h1><SmallCaps text="Foto" /></h1>
+    <p>
+      Fotografía social y producto: restaurantes, eventos, rodajes y espacios.
+      También realizo video resumen o video reel, con edición y color.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .intro { padding-block: var(--s-7) var(--s-8); }
+  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
+  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+</style>
