@@ -138,6 +138,9 @@ interface Fila {
   mayor: number;
 }
 
+/** Una última fila que ocupa más que esto sin llegar al ancho entero parece un error. */
+const CASI_LLENA = 0.72;
+
 /** Un mosaico por proyecto: las filas de cada uno, agrupadas por offsetTop. */
 async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }[]> {
   return page.evaluate(() => {
@@ -186,12 +189,19 @@ async function revisarMosaico(page: Page, ruta: string, ancho: number) {
       const ultima = k === filas.length - 1;
       const cual = `${donde}, fila ${k} de ${fila.n} placa(s)`;
 
-      // Todas llenan el ancho salvo la última, que queda a tamaño natural.
+      // Todas llenan el ancho. La última también, salvo que le falte mucho:
+      // ahí queda a tamaño natural. Lo que nunca puede pasar es una última
+      // fila casi completa, que parece un error (la del 92 %).
       if (!ultima) {
         expect(Math.abs(fila.ancho - col), `${cual}: usa ${Math.round(fila.ancho)}px`)
           .toBeLessThanOrEqual(2);
       } else {
         expect(fila.ancho, `${cual}: la última se pasa`).toBeLessThanOrEqual(col + 2);
+        const llena = Math.abs(fila.ancho - col) <= 2;
+        expect(
+          llena || fila.ancho / col < CASI_LLENA,
+          `${cual}: la última ocupa ${Math.round((fila.ancho / col) * 100)} % del ancho`
+        ).toBe(true);
       }
 
       // En /video/, de 1024 para arriba, los fotogramas apaisados van de a dos

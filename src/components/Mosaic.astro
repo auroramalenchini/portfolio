@@ -123,12 +123,16 @@ const placas = await Promise.all(
     min-width: 0;
   }
 
-  /* Relleno invisible: se come el sobrante de la última fila para que sus
-     placas queden en su tamaño natural en vez de estirarse. */
+  /* Relleno de la última fila, con un ancho mínimo. Si el hueco que deja la
+     fila es más chico que ese mínimo, el relleno no entra, baja a una línea
+     propia sin alto, y la fila se estira hasta llenar el ancho como las
+     demás. Si el hueco es grande, el relleno se queda y se lo come: la fila
+     conserva su tamaño natural en vez de volverse gigante. */
   .mosaic::after {
     content: "";
-    flex: 1000000 1 0;
+    flex: 1000000 1 var(--row-slack, 30cqw);
   }
+
 
   .card {
     position: relative;
