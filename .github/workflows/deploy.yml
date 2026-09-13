@@ -24,6 +24,8 @@ jobs:
       - uses: withastro/action@v3
         with:
           node-version: 22
+          # Explícito para que corra el postbuild que poda dist/_astro.
+          build_cmd: npm run build
 
   deploy:
     needs: build
