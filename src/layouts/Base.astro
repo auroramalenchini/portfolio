@@ -7,6 +7,19 @@ import '@fontsource/lora/400.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 
+// Las cuatro caras latinas, pedidas de entrada. Sin esto el navegador las
+// descubre recién al parsear el CSS, llegan tarde y el reacomodo corre el
+// último pintado del elemento más grande. Medido con 5 corridas de Lighthouse:
+// /foto/<slug>/ baja de 3,41 s a 2,50 s de LCP, /video/ de 2,79 a 2,72 y la
+// portada queda igual (2,56). No alcanza para los 2,5 s porque el resto es
+// ancho de banda, no tipografía; el detalle está en lighthouserc.cjs.
+// El ?url devuelve el mismo archivo con el mismo hash que pide @fontsource,
+// así que no se descarga dos veces.
+import archivo from '@fontsource-variable/archivo/files/archivo-latin-wght-normal.woff2?url';
+import lora from '@fontsource/lora/files/lora-latin-400-normal.woff2?url';
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+import inter600 from '@fontsource/inter/files/inter-latin-600-normal.woff2?url';
+
 import Seo from '../components/Seo.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -24,6 +37,11 @@ const { title, description, page, image } = Astro.props;
 
 <html lang="es">
   <head>
+    {
+      [archivo, inter400, inter600, lora].map((fuente) => (
+        <link rel="preload" href={fuente} as="font" type="font/woff2" crossorigin />
+      ))
+    }
     <Seo title={title} description={description} image={image} />
   </head>
   <body data-page={page}>

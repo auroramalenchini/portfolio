@@ -17,11 +17,15 @@ const MEDIANA = 'median';
 const comunes = {
   'categories:performance': ['error', { minScore: 0.9 }],
   'cumulative-layout-shift': ['error', { maxNumericValue: 0.05 }],
-  // Queda en warn a propósito: la mediana da 2,6 s en la portada y 2,8 s en
-  // /video/. No es peso de imagen (184 y 253 KB) ni bloqueo de JavaScript
-  // (TBT 0 ms) sino el reacomodo al llegar las tipografías, que corre el
-  // último pintado del elemento más grande. Bajarlo pide tocar la carga de
-  // fuentes o la altura de esos bloques, que es otra discusión.
+  // Queda en warn a propósito: la mediana da 2,57 s en la portada y 2,72 s en
+  // /video/ (de 5 corridas). No es bloqueo de JavaScript (TBT 0 ms) ni el
+  // reacomodo de las tipografías: con las cuatro pedidas de entrada desde
+  // Base.astro el primer pintado queda en 915 ms, clavado, y el LCP igual
+  // llega a los 2,7 s. Es ancho de banda: el 4G simulado de Lighthouse da
+  // unos 200 KB/s y /video/ pesa 382 KB (261 de imagen, 103 de tipografía),
+  // así que el elemento más grande termina de pintarse cuando terminan de
+  // llegar los bytes. Bajarlo pide menos bytes arriba de todo —otra ronda de
+  // ajuste de `sizes` y de anchos generados—, que es otra discusión.
   'largest-contentful-paint': ['warn', { maxNumericValue: 2500 }],
 };
 
