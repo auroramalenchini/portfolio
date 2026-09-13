@@ -71,27 +71,6 @@
   /* Alto de la foto al lado de la bajada cuando la página se apila (video) */
   --h-intro-media: clamp(160px, 24vh, 240px);
 
-  /* Alto al que apunta cada fila del mosaico. Va en cqw, o sea en porcentaje
-     del ancho de la columna del mosaico: el contenedor lo declara Mosaic.astro.
-     Si fuera un valor fijo en px, al angostarse la columna la placa apaisada
-     dejaría de entrar de a dos y la fila se cortaría en una sola foto estirada
-     al ancho entero, que es lo que pasaba.
-     El piso en px es para el teléfono: ahí la columna mide unos 350px y el
-     porcentaje daría filas de seis fotos verticales de 55px de alto. Con el
-     piso van de tres en tres y la apaisada va sola, como el sitio viejo.
-
-     En /video/ el porcentaje está abajo del 27,7%, que es 1/(2 × 1,90 × 0,95):
-     así el fotograma más apaisado del sitio entra siempre de a dos, como en el
-     baseline a 1440 y a 1024.
-
-     En /foto/ va a propósito arriba de ese límite: el motor viejo ponía una
-     sola foto apaisada por fila —la primera de Oruga medía 527px de alto en la
-     columna de 948— y con 32% la apaisada de 1,78 no entra de a dos a ningún
-     ancho. Las verticales siguen yendo de cuatro y de cinco por fila. */
-  --row-video: clamp(150px, 26.5cqw, 300px);
-  --row-foto: clamp(150px, 32cqw, 340px);
-  /* La página de un proyecto usa el ancho entero, y ahí la fila va más alta. */
-  --row-proyecto: clamp(200px, 28.5cqw, 420px);
 
   /* Curva de movimiento única para todo el sitio */
   --ease: cubic-bezier(.2, .7, .2, 1);

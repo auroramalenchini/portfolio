@@ -34,9 +34,6 @@ const { title, category, side } = Astro.props;
 
   .project + .project { margin-top: var(--s-8); }
 
-  /* Si una fila no llega a llenar el ancho, queda pegada al lado del título. */
-  .project.right :global(.mosaic) { justify-content: flex-end; }
-
   .project-info {
     /* Pegado arriba mientras el mosaico pasa al lado, con aire bajo el header. */
     position: sticky;

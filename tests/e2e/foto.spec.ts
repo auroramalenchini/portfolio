@@ -136,10 +136,9 @@ interface Fila {
   ars: number[];
   /** La placa más ancha de la fila. */
   mayor: number;
+  /** El alto de cada placa. */
+  altos: number[];
 }
-
-/** Una última fila que ocupa más que esto sin llegar al ancho entero parece un error. */
-const CASI_LLENA = 0.72;
 
 /** Un mosaico por proyecto: las filas de cada uno, agrupadas por offsetTop. */
 async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }[]> {
@@ -147,7 +146,7 @@ async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }
     const salida: { col: number; filas: Fila[] }[] = [];
     for (const mosaico of document.querySelectorAll<HTMLElement>('.mosaic')) {
       const gap = Number.parseFloat(getComputedStyle(mosaico).columnGap) || 0;
-      const porFila = new Map<number, { w: number; ar: number }[]>();
+      const porFila = new Map<number, { w: number; h: number; ar: number }[]>();
       for (const placa of mosaico.querySelectorAll<HTMLElement>('.card-wrap')) {
         // El tope de pantalla angosta esconde placas: no son fila.
         if (getComputedStyle(placa).display === 'none') continue;
@@ -156,6 +155,7 @@ async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }
           ...(porFila.get(top) ?? []),
           {
             w: placa.getBoundingClientRect().width,
+            h: placa.getBoundingClientRect().height,
             ar: Number(getComputedStyle(placa).getPropertyValue('--ar')),
           },
         ]);
@@ -169,6 +169,7 @@ async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }
             ancho: placas.reduce((s, p) => s + p.w, 0) + gap * (placas.length - 1),
             ars: placas.map((p) => p.ar),
             mayor: Math.max(...placas.map((p) => p.w)),
+            altos: placas.map((p) => p.h),
           })),
       });
     }
@@ -189,20 +190,15 @@ async function revisarMosaico(page: Page, ruta: string, ancho: number) {
       const ultima = k === filas.length - 1;
       const cual = `${donde}, fila ${k} de ${fila.n} placa(s)`;
 
-      // Todas llenan el ancho. La última también, salvo que le falte mucho:
-      // ahí queda a tamaño natural. Lo que nunca puede pasar es una última
-      // fila casi completa, que parece un error (la del 92 %).
-      if (!ultima) {
-        expect(Math.abs(fila.ancho - col), `${cual}: usa ${Math.round(fila.ancho)}px`)
-          .toBeLessThanOrEqual(2);
-      } else {
-        expect(fila.ancho, `${cual}: la última se pasa`).toBeLessThanOrEqual(col + 2);
-        const llena = Math.abs(fila.ancho - col) <= 2;
-        expect(
-          llena || fila.ancho / col < CASI_LLENA,
-          `${cual}: la última ocupa ${Math.round((fila.ancho / col) * 100)} % del ancho`
-        ).toBe(true);
-      }
+      // Todas llenan el ancho, la última también: ninguna foto queda suelta.
+      expect(Math.abs(fila.ancho - col), `${cual}: usa ${Math.round(fila.ancho)}px`)
+        .toBeLessThanOrEqual(2);
+
+      // Y dentro de la fila todas las fotos miden lo mismo de alto.
+      expect(
+        Math.max(...fila.altos) - Math.min(...fila.altos),
+        `${cual}: altos ${fila.altos.map(Math.round).join('/')}`
+      ).toBeLessThanOrEqual(2);
 
       // En /video/, de 1024 para arriba, los fotogramas apaisados van de a dos
       // o más: uno solo estirado al ancho entero es justo el defecto. En las

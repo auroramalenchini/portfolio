@@ -1,9 +1,12 @@
 ---
-// El mosaico justificado, ahora sin JavaScript: cada placa crece en
-// proporción a su forma, así que las filas llenan el ancho solas y ninguna
-// foto se recorta. La última fila queda en su tamaño natural (la rellena el
-// ::after), que es la única diferencia visible con la versión anterior.
+// El mosaico justificado, sin JavaScript en el navegador. Dónde termina cada
+// fila se decide al publicar (src/lib/rows.ts), por separado para pantalla
+// ancha y angosta: entre fila y fila va un corte de línea que sólo se muestra
+// en su pantalla. Dentro de cada fila las placas crecen en proporción a su
+// forma, así que la fila llena el ancho con todas las fotos del mismo alto y
+// ninguna se recorta. Ninguna fila queda suelta, tampoco la última.
 import { Picture, getImage } from 'astro:assets';
+import { partitionRows, rowEnds, ROW_TARGET, type MosaicLayout } from '../lib/rows';
 
 export interface MosaicItem {
   image: ImageMetadata;
@@ -14,15 +17,15 @@ export interface MosaicItem {
 
 interface Props {
   items: MosaicItem[];
-  /** Alto al que apunta cada fila: uno de los tokens --row-* de tokens.css. */
-  row?: string;
+  /** Qué mosaico es: define el alto buscado de las filas (ROW_TARGET). */
+  layout: MosaicLayout;
   /** El `sizes` del `<img>`: cuánto de la pantalla ocupa una placa. */
   sizes: string;
-  /** Opcional: cuántas placas se ven abajo de 800px. */
+  /** Opcional: cuántas placas se ven en pantalla angosta. */
   mobileLimit?: number;
 }
 
-const { items, row = 'var(--row-foto)', sizes, mobileLimit } = Astro.props;
+const { items, layout, sizes, mobileLimit } = Astro.props;
 
 const ANCHOS = [480, 960, 1600];
 const ANCHO_VISOR = 1600;
@@ -53,86 +56,94 @@ const placas = await Promise.all(
     };
   })
 );
+
+const ratios = placas.map((p) => p.ar);
+// En pantalla angosta el tope de placas deja afuera las últimas: las filas se
+// arman sólo con las que se ven.
+const visiblesAngosto = mobileLimit ? Math.min(mobileLimit, placas.length) : placas.length;
+const cortesAncho = rowEnds(partitionRows(ratios, ROW_TARGET[layout].wide));
+const cortesAngosto = rowEnds(partitionRows(ratios.slice(0, visiblesAngosto), ROW_TARGET[layout].narrow));
 ---
 
-<!-- La caja de afuera existe sólo para medir: es el contenedor de consulta
-     contra el que se resuelven los cqw de --row. Tiene que ser un elemento
-     aparte, porque un elemento no puede consultarse a sí mismo. -->
-<div class="mosaic-box">
-<div class="mosaic" style={`--row: ${row}`} data-mobile-limit={mobileLimit}>
+<div class="mosaic">
   {
     placas.map((placa, i) => (
-      <div class="card-wrap" style={`--ar: ${placa.ar}`}>
-        <button
-          type="button"
-          class="card"
-          style={`--ar: ${placa.ar}`}
-          data-lb={placa.lb.group}
-          data-lb-src={placa.src}
-          data-lb-w={placa.w}
-          data-lb-h={placa.h}
-          data-lb-title={placa.lb.title}
-          data-lb-sub={placa.lb.sub}
-        >
-          <Picture
-            src={placa.image}
-            widths={placa.widths}
-            formats={['avif']}
-            fallbackFormat="jpg"
-            sizes={sizes}
-            alt={placa.alt}
-            loading={placa.eager ? 'eager' : 'lazy'}
-            decoding="async"
+      <>
+        <div class:list={['card-wrap', { 'solo-ancho': i >= visiblesAngosto }]} style={`--ar: ${placa.ar}`}>
+          <button
+            type="button"
+            class="card"
+            style={`--ar: ${placa.ar}`}
+            data-lb={placa.lb.group}
+            data-lb-src={placa.src}
+            data-lb-w={placa.w}
+            data-lb-h={placa.h}
+            data-lb-title={placa.lb.title}
+            data-lb-sub={placa.lb.sub}
+          >
+            <Picture
+              src={placa.image}
+              widths={placa.widths}
+              formats={['avif']}
+              fallbackFormat="jpg"
+              sizes={sizes}
+              alt={placa.alt}
+              loading={placa.eager ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </button>
+          {i === 0 && <slot name="play" />}
+        </div>
+        {(cortesAncho.has(i) || cortesAngosto.has(i)) && (
+          <span
+            class:list={['corte', { ancho: cortesAncho.has(i), angosto: cortesAngosto.has(i) }]}
+            aria-hidden="true"
           />
-        </button>
-        {i === 0 && <slot name="play" />}
-      </div>
+        )}
+      </>
     ))
   }
 </div>
-</div>
 
 <style>
-  .mosaic-box { container-type: inline-size; }
-
+  /* Una sola fila por línea: las placas parten de ancho cero, así que nunca
+     saltan de línea por su cuenta; sólo lo hacen en un corte. El corte ocupa
+     el 100% y queda solo en una línea sin alto: por eso el espacio vertical
+     va a la mitad, y entre fila y fila suman lo mismo que el horizontal. */
   .mosaic {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-2);
+    column-gap: var(--s-2);
+    row-gap: calc(var(--s-2) / 2);
     align-items: flex-start;
   }
 
-  /* El crecimiento proporcional a la forma es lo que justifica la fila: si el
-     ancho sobra, cada placa se lleva una parte proporcional a lo apaisada que
-     es, así todas terminan con el mismo alto.
-
-     El .95 del tamaño de partida es lo que hace que entren las que tienen que
-     entrar. Dos fotogramas 16:9 a 250px de alto miden 956px con la separación
-     en el medio, y la columna mide 948: por 8px se iba uno a la fila
-     siguiente y quedaba solo, al doble de alto. Con el tamaño de partida un
-     poco más chico que el alto buscado entran los dos y después crecen hasta
-     llenar la fila, que es de donde sale el alto final.
-
-     El cqw de --row se resuelve acá, que es adentro del contenedor: por eso
-     el token puede vivir en tokens.css y el porcentaje igual se mide contra
-     la columna del mosaico y no contra la pantalla. */
+  /* Crecer en proporción a la forma es lo que justifica la fila: el ancho se
+     reparte según lo apaisada que es cada foto, así que todas terminan con el
+     mismo alto. El ×1000 no es decorativo: si los factores de una fila suman
+     menos de 1 (una vertical sola es 0,67), flexbox reparte sólo esa fracción
+     del sobrante y la fila no llega al borde. */
   .mosaic > .card-wrap {
     position: relative;
-    flex: calc(var(--ar) * 1000) 1 calc(var(--ar) * var(--row) * .95);
+    flex: calc(var(--ar) * 1000) 1 0;
     aspect-ratio: var(--ar);
     min-width: 0;
   }
 
-  /* Relleno de la última fila, con un ancho mínimo. Si el hueco que deja la
-     fila es más chico que ese mínimo, el relleno no entra, baja a una línea
-     propia sin alto, y la fila se estira hasta llenar el ancho como las
-     demás. Si el hueco es grande, el relleno se queda y se lo come: la fila
-     conserva su tamaño natural en vez de volverse gigante. */
-  .mosaic::after {
-    content: "";
-    flex: 1000000 1 var(--row-slack, 30cqw);
+  .corte {
+    display: none;
+    flex: 0 0 100%;
+    height: 0;
   }
-
+  @media (min-width: 801px) {
+    .corte.ancho { display: block; }
+  }
+  @media (max-width: 800px) {
+    .corte.angosto { display: block; }
+    /* El tope de placas en pantalla angosta: los proyectos con muchos
+       fotogramas dejaban un bloque larguísimo en el teléfono. */
+    .solo-ancho { display: none; }
+  }
 
   .card {
     position: relative;
@@ -161,27 +172,4 @@ const placas = await Promise.all(
     .card:hover :global(img) { transform: scale(1.07); }
   }
 
-  /* Tope de placas en pantalla angosta, sin JavaScript: los proyectos con
-     muchos fotogramas dejaban un bloque larguísimo en el teléfono. Una regla
-     por tope posible, porque nth-child no acepta variables. */
-  @media (max-width: 800px) {
-    .mosaic[data-mobile-limit="1"] > .card-wrap:nth-child(n + 2),
-    .mosaic[data-mobile-limit="2"] > .card-wrap:nth-child(n + 3),
-    .mosaic[data-mobile-limit="3"] > .card-wrap:nth-child(n + 4),
-    .mosaic[data-mobile-limit="4"] > .card-wrap:nth-child(n + 5),
-    .mosaic[data-mobile-limit="5"] > .card-wrap:nth-child(n + 6),
-    .mosaic[data-mobile-limit="6"] > .card-wrap:nth-child(n + 7),
-    .mosaic[data-mobile-limit="7"] > .card-wrap:nth-child(n + 8),
-    .mosaic[data-mobile-limit="8"] > .card-wrap:nth-child(n + 9),
-    .mosaic[data-mobile-limit="9"] > .card-wrap:nth-child(n + 10),
-    .mosaic[data-mobile-limit="10"] > .card-wrap:nth-child(n + 11),
-    .mosaic[data-mobile-limit="11"] > .card-wrap:nth-child(n + 12),
-    .mosaic[data-mobile-limit="12"] > .card-wrap:nth-child(n + 13),
-    .mosaic[data-mobile-limit="13"] > .card-wrap:nth-child(n + 14),
-    .mosaic[data-mobile-limit="14"] > .card-wrap:nth-child(n + 15),
-    .mosaic[data-mobile-limit="15"] > .card-wrap:nth-child(n + 16),
-    .mosaic[data-mobile-limit="16"] > .card-wrap:nth-child(n + 17) {
-      display: none;
-    }
-  }
 </style>

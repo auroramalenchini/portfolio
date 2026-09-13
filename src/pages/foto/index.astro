@@ -58,7 +58,7 @@ const blocks = projects.map((project) => {
               Ver las {block.total} fotos
             </a>
           )}
-          <Mosaic items={block.items} row="var(--row-foto)" sizes="(max-width: 800px) 60vw, 30vw" />
+          <Mosaic items={block.items} layout="foto" sizes="(max-width: 800px) 60vw, 30vw" />
         </ProjectBlock>
       ))
     }
