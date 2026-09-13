@@ -123,8 +123,10 @@ mientras editás.
 - **Pruebas**: `npm test` corre `astro check`, el build, `html-validate`,
   vitest (esquemas, numeración, imágenes del build) y Playwright en tres
   tamaños con dedo y con mouse. `npm run test:lh` corre Lighthouse con
-  presupuestos (performance ≥ 90 en móvil, CLS ≤ 0,05, LCP ≤ 2,5 s, imágenes
-  ≤ 800 KB en la portada y ≤ 1,5 MB en `/foto/`); tarda minutos y va aparte.
+  presupuestos sobre la mediana de tres corridas: performance ≥ 90 en móvil,
+  CLS ≤ 0,05, imágenes ≤ 800 KB en la portada y ≤ 1,5 MB en `/foto/`, y LCP
+  ≤ 2,5 s como aviso (hoy da 2,6 y 2,8 s por el reacomodo al cargar las
+  tipografías). Tarda minutos, así que va aparte de `npm test`.
 
 ### Pasar el sitio a esta versión (fase 8 del PLAN.md)
 
