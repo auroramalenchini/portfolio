@@ -79,6 +79,38 @@ test.describe('las dos puertas', () => {
     expect(new URL(page.url()).pathname).toBe('/video/');
   });
 
+  test('en la computadora, el nombre y las puertas quedan centrados debajo del header', async ({
+    page,
+  }, info) => {
+    test.skip(info.project.name !== 'desktop', 'sólo con el escenario fijo');
+    // Pantallas comunes de notebook y de escritorio: el escenario empezaba
+    // debajo del header y medía la pantalla entera, así que todo quedaba 36px
+    // abajo del centro y las puertas se cortaban.
+    for (const [width, height] of [[1280, 720], [1440, 900], [1920, 1080]]) {
+      await page.setViewportSize({ width, height });
+      await page.goto('/', { waitUntil: 'load' });
+      for (const fraccion of [0, 0.3, 0.9]) {
+        await page.evaluate((f) => window.scrollTo(0, window.innerHeight * f), fraccion);
+        await page.waitForTimeout(100);
+        const m = await page.evaluate(() => {
+          const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+          const header = r('.site-header').bottom;
+          const escenario = r('.opening-stage');
+          const nombre = (r('.opening-front h1').top + r('.hero-role').bottom) / 2;
+          return {
+            nombre: nombre - (header + window.innerHeight) / 2,
+            arriba: escenario.top - header,
+            abajo: window.innerHeight - escenario.bottom,
+          };
+        });
+        const donde = `${width}x${height}, scroll ${fraccion * 100}%`;
+        expect(Math.abs(m.nombre), `${donde}: nombre corrido ${Math.round(m.nombre)}px`).toBeLessThanOrEqual(2);
+        expect(Math.abs(m.arriba), `${donde}: escenario tapado por el header`).toBeLessThanOrEqual(1);
+        expect(Math.abs(m.abajo), `${donde}: escenario pasado del piso`).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+
   test('la puerta de Video trae el recorte mudo y en bucle', async ({ page }) => {
     await apertutaLista(page);
     const video = puerta(page, 'Video').locator('video');

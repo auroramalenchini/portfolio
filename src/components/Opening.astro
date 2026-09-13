@@ -91,10 +91,15 @@ import { site } from '../lib/site';
         view-timeline-axis: block;
       }
 
+      /* El escenario ocupa lo que queda debajo del header, no la pantalla
+         entera: con 100svh desde arriba empezaba debajo del header y se
+         pasaba de la pantalla por su alto, así que al abrir el nombre
+         quedaba 36px más abajo del centro y las puertas cortadas abajo; y ya
+         pegado, quedaba debajo del header con las puertas tapadas arriba. */
       .opening-stage {
         position: sticky;
-        top: 0;
-        height: 100svh;
+        top: var(--header-h);
+        height: calc(100svh - var(--header-h));
         overflow: hidden;
         display: grid;
         place-items: center;
