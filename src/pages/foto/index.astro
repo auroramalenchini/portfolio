@@ -1,8 +1,30 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SmallCaps from '../../components/SmallCaps.astro';
+import Mosaic from '../../components/Mosaic.astro';
+import ProjectBlock from '../../components/ProjectBlock.astro';
+import BackToTop from '../../components/BackToTop.astro';
+import { previewOf, projectImages } from '../../lib/images';
 
-// Provisorio: los proyectos de foto llegan en la fase 2.
+// Un bloque por proyecto, en el orden que declara cada index.md. La vista de
+// conjunto muestra la selección del proyecto (o las primeras seis) y el link
+// a la página con todas.
+const projects = (await getCollection('foto')).sort((a, b) => a.data.order - b.data.order);
+
+const blocks = projects.map((project) => {
+  const total = projectImages('foto', project.id).length;
+  return {
+    slug: project.id,
+    data: project.data,
+    total,
+    items: previewOf(project).map(({ image, n }) => ({
+      image,
+      alt: `${project.data.title} — foto ${n}`,
+      lb: { group: project.id, title: project.data.title, sub: project.data.category },
+    })),
+  };
+});
 ---
 
 <Base
@@ -17,10 +39,40 @@ import SmallCaps from '../../components/SmallCaps.astro';
       También realizo video resumen o video reel, con edición y color.
     </p>
   </section>
+
+  <section class="projects wrap" aria-label="Trabajos de fotografía">
+    {
+      blocks.map((block, i) => (
+        <ProjectBlock
+          title={block.data.title}
+          category={block.data.category}
+          side={i % 2 ? 'right' : 'left'}
+        >
+          {block.items.length < block.total && (
+            <a slot="info" class="see-all" href={`/foto/${block.slug}/`}>
+              Ver las {block.total} fotos
+            </a>
+          )}
+          <Mosaic items={block.items} row="260px" sizes="(max-width: 800px) 60vw, 30vw" />
+        </ProjectBlock>
+      ))
+    }
+  </section>
+
+  <BackToTop />
 </Base>
 
 <style>
-  .intro { padding-block: var(--s-7) var(--s-8); }
-  h1 { font-size: var(--t-page); margin-bottom: var(--s-4); }
-  p { color: var(--fg-muted); font-family: var(--font-read); max-width: 52ch; }
+  .intro { padding-block: var(--s-7) var(--s-5); }
+  h1 { font-size: var(--t-page); line-height: .96; margin-bottom: var(--s-4); }
+  .intro p {
+    color: var(--fg-muted);
+    font-family: var(--font-read);
+    font-size: var(--t-4);
+    line-height: 1.62;
+    max-width: 52ch;
+  }
+
+  /* Un respiro entre la bajada de la página y el primer proyecto. */
+  .projects { padding-block: var(--s-7) var(--s-8); }
 </style>

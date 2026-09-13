@@ -53,6 +53,16 @@
   --t-page: clamp(2.35rem, 5vw, 4rem);     /* título de página */
   --t-door: clamp(2.15rem, 4.5vw, 3.5rem); /* etiqueta de cada puerta */
 
+  /* Bloque de proyecto: el título de la columna y la letra chica que lo rodea */
+  --t-project: clamp(1.45rem, 2.8vw, 2.35rem);  /* título del proyecto */
+  --t-label: 0.74rem;        /* categoría, "ver todas", "volver" */
+  --t-credit: 0.78rem;       /* créditos del equipo */
+  --t-credit-label: 0.62rem; /* "Dirección de fotografía" y demás rótulos */
+  --t-award: 0.92rem;        /* premio o distinción */
+
+  /* Alto de la foto al lado de la bajada cuando la página se apila (video) */
+  --h-intro-media: clamp(160px, 24vh, 240px);
+
   /* Curva de movimiento única para todo el sitio */
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
