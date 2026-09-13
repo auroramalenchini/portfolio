@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "node scripts/prune-dist.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "test:html": "html-validate \"dist/**/*.html\"",
     "test": "npm run check && npm run build && npm run test:html && npm run test:unit && npm run test:e2e",
-    "baseline": "playwright test --config playwright.baseline.config.ts"
+    "baseline": "playwright test --config playwright.baseline.config.ts",
+    "test:lh": "lhci autorun --config=lighthouserc.cjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
