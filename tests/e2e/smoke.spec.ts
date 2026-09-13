@@ -46,6 +46,16 @@ for (const p of PAGES) {
       `${p.path} se va de ancho: ${overflow.scrollWidth} > ${overflow.innerWidth}`
     ).toBeLessThanOrEqual(overflow.innerWidth);
 
+    // El pie va abajo, también en una página más corta que la pantalla.
+    const pie = await page.evaluate(() => {
+      const caja = document.querySelector('.site-footer')!.getBoundingClientRect();
+      return { fin: Math.round(caja.bottom), pantalla: window.innerHeight };
+    });
+    expect(
+      pie.fin,
+      `${p.path}: el pie termina a ${pie.fin}px de ${pie.pantalla}px de pantalla`
+    ).toBeGreaterThanOrEqual(pie.pantalla - 1);
+
     expect(errores, `errores de consola en ${p.path}`).toEqual([]);
     expect(fallidos, `pedidos fallados en ${p.path}`).toEqual([]);
     expect(externos, `pedidos externos en ${p.path}`).toEqual([]);

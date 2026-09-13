@@ -12,7 +12,13 @@ html {
   scroll-padding-top: var(--header-h);
 }
 
+/* Columna de alto de pantalla con el medio elástico: en una página más corta
+   que la ventana el pie queda abajo y no flotando a media crema. svh y no vh
+   para que en el teléfono no lo empuje la barra del navegador. */
 body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
   margin: 0;
   background: var(--bg);
   color: var(--fg);
@@ -23,6 +29,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+main { flex: 1; }
 
 img,
 video,
