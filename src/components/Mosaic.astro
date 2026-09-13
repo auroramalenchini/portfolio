@@ -14,7 +14,7 @@ export interface MosaicItem {
 
 interface Props {
   items: MosaicItem[];
-  /** Alto al que apunta cada fila. */
+  /** Alto al que apunta cada fila: uno de los tokens --row-* de tokens.css. */
   row?: string;
   /** El `sizes` del `<img>`: cuánto de la pantalla ocupa una placa. */
   sizes: string;
@@ -22,7 +22,7 @@ interface Props {
   mobileLimit?: number;
 }
 
-const { items, row = '260px', sizes, mobileLimit } = Astro.props;
+const { items, row = 'var(--row-foto)', sizes, mobileLimit } = Astro.props;
 
 const ANCHOS = [480, 960, 1600];
 const ANCHO_VISOR = 1600;
@@ -55,6 +55,10 @@ const placas = await Promise.all(
 );
 ---
 
+<!-- La caja de afuera existe sólo para medir: es el contenedor de consulta
+     contra el que se resuelven los cqw de --row. Tiene que ser un elemento
+     aparte, porque un elemento no puede consultarse a sí mismo. -->
+<div class="mosaic-box">
 <div class="mosaic" style={`--row: ${row}`} data-mobile-limit={mobileLimit}>
   {
     placas.map((placa, i) => (
@@ -86,8 +90,11 @@ const placas = await Promise.all(
     ))
   }
 </div>
+</div>
 
 <style>
+  .mosaic-box { container-type: inline-size; }
+
   .mosaic {
     display: flex;
     flex-wrap: wrap;
@@ -104,7 +111,11 @@ const placas = await Promise.all(
      en el medio, y la columna mide 948: por 8px se iba uno a la fila
      siguiente y quedaba solo, al doble de alto. Con el tamaño de partida un
      poco más chico que el alto buscado entran los dos y después crecen hasta
-     llenar la fila, que es de donde sale el alto final. */
+     llenar la fila, que es de donde sale el alto final.
+
+     El cqw de --row se resuelve acá, que es adentro del contenedor: por eso
+     el token puede vivir en tokens.css y el porcentaje igual se mide contra
+     la columna del mosaico y no contra la pantalla. */
   .mosaic > .card-wrap {
     position: relative;
     flex: calc(var(--ar) * 1000) 1 calc(var(--ar) * var(--row) * .95);

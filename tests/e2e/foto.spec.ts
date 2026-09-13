@@ -120,36 +120,120 @@ test.describe('/foto/<slug>/', () => {
   }
 });
 
-test.describe('el mosaico', () => {
-  test('las filas llenan el ancho, menos la última', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'desktop', 'se mide en escritorio');
-    await page.goto('/foto/oruga/', { waitUntil: 'load' });
+// El mosaico se mide igual en las tres páginas que lo usan y en los tres
+// proyectos. Es la prueba que faltaba: la vieja sólo medía el ancho de la fila
+// en escritorio, y una fila de una sola foto estirada al ancho entero —el
+// defecto— también llena el ancho, así que pasaba con el mosaico roto.
+const CON_MOSAICO = ['/video/', '/foto/', `/foto/${PROYECTOS[0].slug}/`];
 
-    const filas = await page.evaluate(() => {
-      const mosaico = document.querySelector('.mosaic') as HTMLElement;
-      const placas = [...mosaico.querySelectorAll<HTMLElement>('.card-wrap')];
+/** Una placa apaisada: la forma que dejaba de entrar de a dos. */
+const APAISADA = 1.3;
+
+interface Fila {
+  n: number;
+  /** Ancho usado por la fila, separaciones incluidas. */
+  ancho: number;
+  ars: number[];
+  /** La placa más ancha de la fila. */
+  mayor: number;
+}
+
+/** Un mosaico por proyecto: las filas de cada uno, agrupadas por offsetTop. */
+async function medirMosaicos(page: Page): Promise<{ col: number; filas: Fila[] }[]> {
+  return page.evaluate(() => {
+    const salida: { col: number; filas: Fila[] }[] = [];
+    for (const mosaico of document.querySelectorAll<HTMLElement>('.mosaic')) {
       const gap = Number.parseFloat(getComputedStyle(mosaico).columnGap) || 0;
-      const porFila = new Map<number, number[]>();
-      for (const placa of placas) {
+      const porFila = new Map<number, { w: number; ar: number }[]>();
+      for (const placa of mosaico.querySelectorAll<HTMLElement>('.card-wrap')) {
+        // El tope de pantalla angosta esconde placas: no son fila.
+        if (getComputedStyle(placa).display === 'none') continue;
         const top = Math.round(placa.offsetTop);
-        porFila.set(top, [...(porFila.get(top) ?? []), placa.getBoundingClientRect().width]);
+        porFila.set(top, [
+          ...(porFila.get(top) ?? []),
+          {
+            w: placa.getBoundingClientRect().width,
+            ar: Number(getComputedStyle(placa).getPropertyValue('--ar')),
+          },
+        ]);
       }
-      return {
-        ancho: mosaico.getBoundingClientRect().width,
-        gap,
+      salida.push({
+        col: mosaico.getBoundingClientRect().width,
         filas: [...porFila.entries()]
           .sort((a, b) => a[0] - b[0])
-          .map(([, anchos]) => anchos.reduce((s, w) => s + w, 0) + gap * (anchos.length - 1)),
-      };
-    });
-
-    expect(filas.filas.length).toBeGreaterThan(1);
-    // La última queda en su tamaño natural: es la única que puede no llenar.
-    for (const usado of filas.filas.slice(0, -1)) {
-      expect(Math.abs(usado - filas.ancho), `fila de ${usado}px en ${filas.ancho}px`)
-        .toBeLessThanOrEqual(2);
+          .map(([, placas]) => ({
+            n: placas.length,
+            ancho: placas.reduce((s, p) => s + p.w, 0) + gap * (placas.length - 1),
+            ars: placas.map((p) => p.ar),
+            mayor: Math.max(...placas.map((p) => p.w)),
+          })),
+      });
     }
-    expect(filas.filas.at(-1)!).toBeLessThanOrEqual(filas.ancho + 2);
+    return salida;
+  });
+}
+
+/** Revisa las tres reglas del mosaico a un ancho dado. */
+async function revisarMosaico(page: Page, ruta: string, ancho: number) {
+  const mosaicos = await medirMosaicos(page);
+  expect(mosaicos.length, `${ruta} a ${ancho}px no tiene mosaicos`).toBeGreaterThan(0);
+
+  for (const [i, { col, filas }] of mosaicos.entries()) {
+    const donde = `${ruta} a ${ancho}px, mosaico ${i} (columna de ${Math.round(col)}px)`;
+    expect(filas.length, `${donde}: sin filas`).toBeGreaterThan(0);
+
+    for (const [k, fila] of filas.entries()) {
+      const ultima = k === filas.length - 1;
+      const cual = `${donde}, fila ${k} de ${fila.n} placa(s)`;
+
+      // Todas llenan el ancho salvo la última, que queda a tamaño natural.
+      if (!ultima) {
+        expect(Math.abs(fila.ancho - col), `${cual}: usa ${Math.round(fila.ancho)}px`)
+          .toBeLessThanOrEqual(2);
+      } else {
+        expect(fila.ancho, `${cual}: la última se pasa`).toBeLessThanOrEqual(col + 2);
+      }
+
+      // De 1024 para arriba las apaisadas van de a dos o más: una sola
+      // apaisada estirada al ancho entero es justo el defecto.
+      if (ancho >= 1024 && !ultima && fila.ars.every((ar) => ar >= APAISADA)) {
+        expect(fila.n, `${cual}: apaisada sola, ars=${fila.ars.join(' ')}`)
+          .toBeGreaterThanOrEqual(2);
+      }
+
+      // En el teléfono ninguna placa se pasa de la columna.
+      if (ancho <= 390) {
+        expect(Math.round(fila.mayor), `${cual}: placa de ${Math.round(fila.mayor)}px`)
+          .toBeLessThanOrEqual(Math.round(col));
+      }
+    }
+  }
+}
+
+test.describe('el mosaico', () => {
+  test('las filas llenan el ancho y empacan las apaisadas de a dos', async ({ page }, info) => {
+    // En escritorio se recorren además los dos anchos de notebook que caían
+    // del lado roto: 1280 y 1340.
+    const anchos =
+      info.project.name === 'desktop' ? [1440, 1340, 1280] : [page.viewportSize()!.width];
+
+    for (const ancho of anchos) {
+      if (ancho !== page.viewportSize()!.width) {
+        await page.setViewportSize({ width: ancho, height: 900 });
+      }
+      for (const ruta of CON_MOSAICO) {
+        await page.goto(ruta, { waitUntil: 'load' });
+        await revisarMosaico(page, ruta, ancho);
+      }
+    }
+  });
+
+  test('/video/ a 1024 no se estira a lo largo', async ({ page }, info) => {
+    test.skip(info.project.name !== 'tablet-touch', 'el proyecto que mide 1024 de ancho');
+    await page.goto('/video/', { waitUntil: 'load' });
+    // El baseline mide 7965px; con el mosaico roto eran 22000.
+    const alto = await page.evaluate(() => document.documentElement.scrollHeight);
+    expect(alto, `/video/ a 1024 mide ${alto}px`).toBeLessThan(10_000);
   });
 
   test('no se va de ancho en el teléfono', async ({ page }, testInfo) => {

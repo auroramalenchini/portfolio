@@ -46,7 +46,7 @@ const ogImage = await ogImagePath(items[0].image);
   </section>
 
   <section class="photos wrap" aria-label={`Fotos de ${title}`}>
-    <Mosaic items={items} row="360px" sizes="(max-width: 800px) 90vw, 40vw" />
+    <Mosaic items={items} row="var(--row-proyecto)" sizes="(max-width: 800px) 90vw, 40vw" />
   </section>
 
   <BackToTop />
