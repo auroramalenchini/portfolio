@@ -37,6 +37,9 @@
   --s-6: clamp(1.75rem, 4vw, 2.5rem);
   --s-7: clamp(2.5rem, 6vw, 4rem);
   --s-8: clamp(3.5rem, 9vw, 6rem);
+  /* Aire de arriba del visor. No sale de la escala porque es una medida:
+     tiene que dejar pasar el botón de cerrar (0.75rem de borde + 48px). */
+  --s-visor: 3.5rem;
 
   /* Escala tipográfica: de la etiqueta chica al nombre de la portada.
      Si hace falta un tamaño intermedio, se agrega acá y no en otra hoja:
