@@ -148,6 +148,14 @@ test('el video entra en un iframe sin cookies y se corta al cerrar', async ({ pa
   await expect(page.locator(`${VISOR} .stage iframe`)).toHaveCount(0);
 });
 
+test('el header no se transparenta a través del visor', async ({ page }) => {
+  await abrirPrimera(page);
+  await expect(page.locator('.site-header')).toBeHidden();
+  await page.locator(`${VISOR} .lb-close`).click();
+  await expect(page.locator(VISOR)).toBeHidden();
+  await expect(page.locator('.site-header')).toBeVisible();
+});
+
 test('el cuerpo no scrollea mientras el visor está abierto', async ({ page }) => {
   await abrirPrimera(page);
   expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe('hidden');

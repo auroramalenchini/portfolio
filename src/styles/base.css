@@ -82,6 +82,12 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   padding-inline: var(--pad);
 }
 
+/* Con el visor abierto el header se esconde. El fondo del diálogo es crema al
+   98,5% y a través de él se leía "Aurora Malenchini" detrás del botón de
+   cerrar; en v1 no molestaba porque el header desaparecía al scrollear.
+   visibility y no display: así no se recalcula el layout al abrir y cerrar. */
+body:has(dialog[open]) .site-header { visibility: hidden; }
+
 /* El fundido entre páginas: una regla en vez del script que interceptaba los
    links. Los navegadores que no la entienden navegan normal. */
 @view-transition { navigation: auto; }
