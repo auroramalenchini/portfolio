@@ -94,7 +94,9 @@ const { title, category, side } = Astro.props;
     font-size: var(--t-credit-label);
     letter-spacing: .16em;
     text-transform: uppercase;
-    opacity: .75;
+    /* Sin opacidad: el marrón apagado sobre la crema da 5,07 de contraste y
+       pasa, pero al 75% baja a 3,11 y a 9,9px de cuerpo axe lo marca como
+       grave. La jerarquía la hacen el cuerpo, las mayúsculas y el espaciado. */
     margin-bottom: var(--s-1);
   }
   .project.right .project-info :global(.credits) { align-items: flex-end; }
