@@ -217,6 +217,24 @@ test.describe('movimiento reducido', () => {
     expect(back.opacity).toBe('1');
     expect(back.transform).toBe('none');
   });
+
+  test('el recorte de la puerta no se reproduce', async ({ page }) => {
+    await page.goto('/');
+    const video = puerta(page, 'Video').locator('video');
+    await expect(video).toHaveCount(1);
+    const estado = await video.evaluate((el: HTMLVideoElement) => ({
+      pausado: el.paused,
+      display: getComputedStyle(el).display,
+      autoplay: el.hasAttribute('autoplay'),
+      loop: el.hasAttribute('loop'),
+    }));
+    expect(
+      estado.pausado || estado.display === 'none',
+      `el recorte sigue en marcha (paused=${estado.pausado}, display=${estado.display})`
+    ).toBe(true);
+    expect(estado.autoplay, 'le queda el autoplay').toBe(false);
+    expect(estado.loop, 'le queda el loop').toBe(false);
+  });
 });
 
 test.describe('higiene', () => {

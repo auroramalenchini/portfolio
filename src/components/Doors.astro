@@ -30,7 +30,11 @@ for (const door of doors) {
 <nav class="doors" aria-label="Elegí por dónde empezar">
   {
     doors.map((door) => (
-      <a class="door" href={door.href}>
+      <a
+        class="door"
+        href={door.href}
+        style={posters.has(door.href) ? `--poster: url(${posters.get(door.href)})` : undefined}
+      >
         {door.clip ? (
           <video
             class="door-media door-clip"
@@ -172,6 +176,19 @@ for (const door of doors) {
     max-width: 36ch;
   }
 
+  /* Con movimiento reducido el recorte no se ve: en su lugar queda el cartel,
+     que es la misma foto ya optimizada por el build. El fondo sólo se descarga
+     si la consulta encaja, así que a quien no la pide no le cuesta nada. */
+  @media (prefers-reduced-motion: reduce) {
+    .door-clip { display: none; }
+    .door:has(.door-clip)::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--poster) center / cover no-repeat var(--bg-2);
+    }
+  }
+
   /* ---------- Escritorio con mouse: lado a lado, detrás del nombre ----------
      La misma condición que usa Opening.astro para el escenario fijo. Si las
      dos no coincidieran, las puertas quedarían lado a lado sin el escenario
@@ -222,6 +239,18 @@ for (const door of doors) {
   const LAPSO = 5000;
   const FUNDIDO = 700;
   const reducido = matchMedia('(prefers-reduced-motion: reduce)');
+
+  // El recorte de la puerta de Video no se reproduce con movimiento reducido.
+  // El CSS ya lo esconde y pinta el cartel en su lugar; esto es para que el
+  // navegador tampoco lo siga decodificando en bucle atrás de todo.
+  if (reducido.matches) {
+    for (const clip of document.querySelectorAll<HTMLVideoElement>('.door-clip')) {
+      clip.removeAttribute('autoplay');
+      clip.removeAttribute('loop');
+      clip.pause();
+      clip.currentTime = 0;
+    }
+  }
 
   for (const media of document.querySelectorAll<HTMLElement>('.door-media[data-rotar]')) {
     const molde = media.querySelector('template');
