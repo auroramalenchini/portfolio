@@ -52,6 +52,14 @@
   --t-6: clamp(2.8rem, 10.6vw, 9rem);      /* el nombre de la portada */
   --t-page: clamp(2.35rem, 5vw, 4rem);     /* título de página */
   --t-door: clamp(2.15rem, 4.5vw, 3.5rem); /* etiqueta de cada puerta */
+  --t-contact: clamp(2.25rem, 4.7vw, 3.6rem); /* "Contactame", más grande que --t-5 */
+
+  /* Alto de cada puerta con la apertura apilada. Lado a lado ocupan el alto
+     entero del escenario y este valor no se usa. */
+  --door-h: clamp(300px, 46vh, 420px);
+
+  /* Alto de la fila de fotos de "Sobre mí" en pantalla angosta. */
+  --about-h: clamp(132px, 18.5vh, 172px);
 
   /* Bloque de proyecto: el título de la columna y la letra chica que lo rodea */
   --t-project: clamp(1.45rem, 2.8vw, 2.35rem);  /* título del proyecto */
