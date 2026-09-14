@@ -20,6 +20,11 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 // se captura, porque se disparan en el recorrido previo de
 // `pasarPorTodoElAlto`.
 
+// Las capturas de referencia se generan en la Mac: macOS y Linux dibujan
+// las letras con distinto suavizado, así que en la integración continua
+// (Linux) no hay contra qué comparar. Esta prueba corre sólo en local.
+test.skip(!!process.env.CI, 'las capturas de referencia son de macOS');
+
 const PAGES = [
   { name: 'home', path: '/' },
   { name: 'video', path: '/video/' },
