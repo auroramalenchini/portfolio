@@ -71,6 +71,10 @@
   /* Alto de la foto al lado de la bajada cuando la página se apila (video) */
   --h-intro-media: clamp(160px, 24vh, 240px);
 
+  /* Esquinas apenas redondeadas, no una píldora: el botón de Contacto, las
+     puertas de la portada y las fotos de "Sobre mí". */
+  --r-esquina: 6px;
+
 
   /* Curva de movimiento única para todo el sitio */
   --ease: cubic-bezier(.2, .7, .2, 1);

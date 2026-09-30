@@ -108,6 +108,10 @@ for (const door of doors) {
     overflow: hidden;
     height: var(--door-h);
     background: var(--bg-2);
+    border-radius: var(--r-esquina);
+    /* Safari deja de recortar las esquinas mientras la foto se agranda con el
+       mouse encima; con su propio contexto de apilamiento las mantiene. */
+    isolation: isolate;
   }
   .door:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 
@@ -201,7 +205,10 @@ for (const door of doors) {
         inset: 0;
         grid-template-columns: 1fr 1fr;
         gap: var(--s-3);
-        padding: 0;
+        /* Con las esquinas redondeadas, apoyadas sobre la línea de "Sobre mí"
+           la dejaban asomar entre las curvas: las separa el mismo aire que
+           hay entre una puerta y la otra. */
+        padding: 0 0 var(--s-3);
         transition: grid-template-columns .7s var(--ease);
       }
       .door { height: 100%; }

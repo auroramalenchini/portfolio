@@ -103,7 +103,11 @@ function esActual(href: string): boolean {
   .nav a.cta {
     padding: var(--s-2) var(--s-4);
     margin-left: var(--s-1);
-    background: var(--accent);
+    /* background-color y no background: el atajo reponía background-clip y,
+       con el dedo, la píldora se pintaba también sobre el borde transparente
+       que agranda la zona de toque (quedaba 20px más alta y corrida). */
+    background-color: var(--accent);
+    border-radius: var(--r-esquina);
     color: var(--on-media);
     transition: background .25s ease, transform .25s var(--ease);
   }
@@ -113,7 +117,7 @@ function esActual(href: string): boolean {
   @media (hover: hover) and (pointer: fine) {
     .nav a.cta:hover { transform: translateY(-2px); }
     .nav a.cta:hover,
-    .nav a.cta:focus-visible { background: var(--fg); color: var(--on-media); }
+    .nav a.cta:focus-visible { background-color: var(--fg); color: var(--on-media); }
   }
 
   @media (max-width: 560px) {
@@ -126,8 +130,26 @@ function esActual(href: string): boolean {
       padding-inline: var(--pad);
     }
     .nav { width: 100%; gap: var(--s-3); align-items: center; }
-    .nav a.cta { margin-left: 0; padding: var(--s-1) var(--s-3); }
+    .nav a.cta { margin-left: 0; padding: var(--s-2) var(--s-3); }
     .brand small { display: none; }
+  }
+
+  /* Contacto a la derecha y centrado en el alto del header, como en la
+     compu, con el nombre y el menú apilados a su izquierda. Debajo de 360px
+     pisaría el nombre, así que ahí sigue en la fila del menú. */
+  @media (min-width: 360px) and (max-width: 560px) {
+    .nav a.cta {
+      position: absolute;
+      right: var(--pad);
+      top: 50%;
+      transform: translateY(-50%);
+      /* Fuera del flujo, el margen negativo de la zona de toque ya no
+         compensa nada: sólo la subiría 10px. */
+      margin-block: 0;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .nav a.cta:hover { transform: translateY(calc(-50% - 2px)); }
+    }
   }
 
   /* Con el dedo cada destino necesita 44px de alto, y el menú mide 25. La
@@ -142,5 +164,8 @@ function esActual(href: string): boolean {
       margin-block: -10px;
       background-clip: padding-box;
     }
+    /* El redondeo se mide desde el borde de afuera: sin sumarle el borde
+       transparente, la parte bordó quedaba con las esquinas rectas. */
+    .nav a.cta { border-radius: var(--r-esquina) / calc(var(--r-esquina) + 10px); }
   }
 </style>
