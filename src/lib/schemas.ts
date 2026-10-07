@@ -14,6 +14,8 @@ export const fotoSchema = z.object({
   // Opcional: qué fotos se ven en la vista de conjunto, y en qué orden.
   // Por defecto, las primeras seis.
   preview: z.array(z.number().int().positive()).optional(),
+  // Opcional: cuántas fotos de la previa se ven en pantalla angosta.
+  mobileLimit: z.number().int().positive().optional(),
 });
 
 export const videoSchema = z.object({

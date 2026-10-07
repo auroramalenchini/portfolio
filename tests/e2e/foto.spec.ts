@@ -13,6 +13,7 @@ interface Proyecto {
   title: string;
   fotos: number;
   preview?: number[];
+  mobileLimit?: number;
 }
 
 function proyectos(): Proyecto[] {
@@ -31,6 +32,7 @@ function proyectos(): Proyecto[] {
         preview: preview
           ? preview.replace(/[[\]]/g, '').split(',').map((n) => Number(n.trim()))
           : undefined,
+        mobileLimit: dato('mobileLimit') ? Number(dato('mobileLimit')) : undefined,
       };
     })
     .sort((a, b) => a.order - b.order);
@@ -87,13 +89,18 @@ test.describe('/foto/', () => {
 
   test('el link a todas las fotos aparece sólo si falta alguna', async ({ page }) => {
     await page.goto('/foto/');
+    // De 800px para abajo, el tope del teléfono también esconde fotos.
+    const angosto = page.viewportSize()!.width <= 800;
     for (const [i, proyecto] of PROYECTOS.entries()) {
       const link = page.locator('.project').nth(i).locator('.see-all');
-      if (cuantasEnLaPrevia(proyecto) < proyecto.fotos) {
+      const enLaPrevia = cuantasEnLaPrevia(proyecto);
+      const aLaVista = angosto && proyecto.mobileLimit ? Math.min(proyecto.mobileLimit, enLaPrevia) : enLaPrevia;
+      if (aLaVista < proyecto.fotos) {
+        await expect(link).toBeVisible();
         await expect(link).toHaveAttribute('href', `/foto/${proyecto.slug}/`);
         await expect(link).toContainText(`Ver las ${proyecto.fotos} fotos`);
       } else {
-        await expect(link).toHaveCount(0);
+        await expect(link).toBeHidden();
       }
     }
   });

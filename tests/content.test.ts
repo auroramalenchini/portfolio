@@ -95,6 +95,18 @@ describe('carpetas de proyecto', () => {
       expect(new Set(preview).size).toBe(preview.length);
     }
   );
+
+  it.each(foto.map((p) => [p.slug, p] as const))(
+    'foto/%s: el tope de pantalla angosta cabe en la previa',
+    (_slug, proyecto) => {
+      const tope = proyecto.data.mobileLimit as number | undefined;
+      if (tope === undefined) return;
+      // La previa son las fotos de `preview`, o las primeras seis.
+      const previa = (proyecto.data.preview as number[] | undefined)?.length ?? Math.min(6, proyecto.jpgs.length);
+      // Un tope igual o mayor que la previa no esconde nada.
+      expect(tope).toBeLessThan(previa);
+    }
+  );
 });
 
 describe('orden de los proyectos', () => {

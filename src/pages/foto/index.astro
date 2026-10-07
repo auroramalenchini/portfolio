@@ -18,15 +18,20 @@ const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image
 
 const blocks = projects.map((project) => {
   const total = projectImages('foto', project.id).length;
+  const items = previewOf(project).map(({ image, n }) => ({
+    image,
+    alt: `${project.data.title} — foto ${n}`,
+    lb: { group: project.id, title: project.data.title, sub: project.data.category },
+  }));
+  const { mobileLimit } = project.data;
   return {
     slug: project.id,
     data: project.data,
     total,
-    items: previewOf(project).map(({ image, n }) => ({
-      image,
-      alt: `${project.data.title} — foto ${n}`,
-      lb: { group: project.id, title: project.data.title, sub: project.data.category },
-    })),
+    items,
+    // "Ver las N fotos" va siempre que la previa no las muestre todas. Si sólo
+    // las esconde el tope del teléfono, el link es sólo del teléfono.
+    verTodas: items.length < total ? 'siempre' : mobileLimit && mobileLimit < total ? 'angosto' : null,
   };
 });
 ---
@@ -53,12 +58,21 @@ const blocks = projects.map((project) => {
           category={block.data.category}
           side={i % 2 ? 'right' : 'left'}
         >
-          {block.items.length < block.total && (
-            <a slot="info" class="see-all" href={`/foto/${block.slug}/`}>
+          {block.verTodas && (
+            <a
+              slot="info"
+              class:list={['see-all', { 'solo-angosto': block.verTodas === 'angosto' }]}
+              href={`/foto/${block.slug}/`}
+            >
               Ver las {block.total} fotos
             </a>
           )}
-          <Mosaic items={block.items} layout="foto" sizes="(max-width: 800px) 60vw, 30vw" />
+          <Mosaic
+            items={block.items}
+            layout="foto"
+            sizes="(max-width: 800px) 60vw, 30vw"
+            mobileLimit={block.data.mobileLimit}
+          />
         </ProjectBlock>
       ))
     }
@@ -70,6 +84,12 @@ const blocks = projects.map((project) => {
 </Base>
 
 <style>
+  /* El mismo corte que el tope de Mosaic.astro: en pantalla ancha se ven
+     todas las fotos y el link sobra. */
+  @media (min-width: 801px) {
+    .solo-angosto { display: none; }
+  }
+
   .intro { padding-block: var(--s-7) var(--s-5); }
   h1 { font-size: var(--t-page); line-height: .96; margin-bottom: var(--s-4); }
   .intro p {

@@ -34,6 +34,10 @@ preview: [1, 8, 4, 11, 15, 9]          # opcional: qué fotos van en la previa
 
 Sin `preview` se muestran las primeras seis.
 
+Si en el teléfono la previa queda muy cargada, `mobileLimit: 3` muestra ahí
+sólo las tres primeras, con el link "Ver las N fotos" para ver el resto. En la
+compu se sigue viendo la previa entera.
+
 ## Un proyecto de video nuevo
 
 Carpeta `src/content/video/<slug>/` con los stills (fotogramas) numerados, y un
