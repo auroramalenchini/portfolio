@@ -7,7 +7,7 @@ import ProjectBlock from '../../components/ProjectBlock.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { ogImagePath, previewOf, projectImages } from '../../lib/images';
-import { GRUPOS_FOTO } from '../../lib/schemas';
+import { GRUPOS_FOTO, NOMBRES_GRUPO, etiquetaGrupos } from '../../lib/schemas';
 
 // Un bloque por proyecto, en el orden que declara cada index.md. La vista de
 // conjunto muestra la selección del proyecto (o las primeras seis) y el link
@@ -19,30 +19,26 @@ const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image
 
 // Los filtros. Uno sin proyectos no se muestra: llevaría a una página sin
 // nada.
-const NOMBRES: Record<(typeof GRUPOS_FOTO)[number], string> = {
-  eventos: 'Eventos',
-  gastronomia: 'Gastronomía',
-  espacios: 'Espacios',
-  rodajes: 'Rodajes',
-};
 const filtros = GRUPOS_FOTO.map((grupo) => ({
   grupo,
-  nombre: NOMBRES[grupo],
+  nombre: NOMBRES_GRUPO[grupo],
   cuantos: projects.filter((p) => p.data.grupos.includes(grupo)).length,
 })).filter((f) => f.cuantos > 0);
 
 const blocks = projects.map((project) => {
   const total = projectImages('foto', project.id).length;
+  const etiqueta = etiquetaGrupos(project.data.grupos);
   const items = previewOf(project).map(({ image, n }) => ({
     image,
     alt: `${project.data.title} — foto ${n}`,
-    lb: { group: project.id, title: project.data.title, sub: project.data.category },
+    lb: { group: project.id, title: project.data.title, sub: etiqueta },
   }));
   const { mobileLimit } = project.data;
   return {
     slug: project.id,
     data: project.data,
     total,
+    etiqueta,
     items,
     // "Ver las N fotos" va siempre que la previa no las muestre todas. Si sólo
     // las esconde el tope del teléfono, el link es sólo del teléfono.
@@ -82,7 +78,7 @@ const blocks = projects.map((project) => {
       blocks.map((block, i) => (
         <ProjectBlock
           title={block.data.title}
-          category={block.data.category}
+          category={block.etiqueta}
           side={i % 2 ? 'right' : 'left'}
           grupos={block.data.grupos}
         >

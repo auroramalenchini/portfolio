@@ -7,13 +7,29 @@ import { z } from 'zod';
 /** Un id de YouTube: once caracteres, letras, números, guión y guión bajo. */
 export const youtubeId = z.string().regex(/^[\w-]{11}$/);
 
-/** Los filtros de la página de Foto. El rubro (`category`) es más fino. */
+/** Los filtros de la página de Foto, en el orden de los botones. */
 export const GRUPOS_FOTO = ['eventos', 'gastronomia', 'espacios', 'rodajes'] as const;
+export type GrupoFoto = (typeof GRUPOS_FOTO)[number];
+
+export const NOMBRES_GRUPO: Record<GrupoFoto, string> = {
+  eventos: 'Eventos',
+  gastronomia: 'Gastronomía',
+  espacios: 'Espacios',
+  rodajes: 'Rodajes',
+};
+
+/** Lo que va debajo del título de un proyecto: sus grupos, en el orden de
+ *  los botones ("Gastronomía · Espacios"). */
+export function etiquetaGrupos(grupos: GrupoFoto[]): string {
+  return GRUPOS_FOTO.filter((g) => grupos.includes(g))
+    .map((g) => NOMBRES_GRUPO[g])
+    .join(' · ');
+}
 
 export const fotoSchema = z.object({
   title: z.string(),
-  category: z.string(),
-  // En qué filtros de la página de Foto aparece: uno o varios.
+  // En qué filtros de la página de Foto aparece: uno o varios. Son también
+  // lo que se lee debajo del título.
   grupos: z.array(z.enum(GRUPOS_FOTO)).min(1),
   order: z.number(),
   // Opcional: qué fotos se ven en la vista de conjunto, y en qué orden.

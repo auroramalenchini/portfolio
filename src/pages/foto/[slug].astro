@@ -7,6 +7,7 @@ import Mosaic from '../../components/Mosaic.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { ogImagePath, projectImages } from '../../lib/images';
+import { etiquetaGrupos } from '../../lib/schemas';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const projects = await getCollection('foto');
@@ -21,12 +22,13 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, category } = project.data;
+const { title } = project.data;
+const etiqueta = etiquetaGrupos(project.data.grupos);
 
 const items = projectImages('foto', project.id).map(({ image, n }) => ({
   image,
   alt: `${title} — foto ${n}`,
-  lb: { group: project.id, title, sub: category },
+  lb: { group: project.id, title, sub: etiqueta },
 }));
 
 // Para compartir, la primera foto del proyecto.
@@ -35,14 +37,14 @@ const ogImage = await ogImagePath(items[0].image);
 
 <Base
   title={`${title} · Aurora Malenchini`}
-  description={`${title}. ${category}, ${items.length} fotos.`}
+  description={`${title}. ${etiqueta}, ${items.length} fotos.`}
   page="proyecto"
   image={ogImage}
 >
   <section class="intro wrap">
     <p class="back"><a href="/foto/">← Volver a todo en Foto</a></p>
     <h1><SmallCaps text={title} /></h1>
-    <p class="sub">{category} · {items.length} fotos</p>
+    <p class="sub">{etiqueta} · {items.length} fotos</p>
   </section>
 
   <section class="photos wrap" aria-label={`Fotos de ${title}`}>
