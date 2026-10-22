@@ -1,6 +1,6 @@
 ---
 title: "Fotografías retiro PsicoDeAr"
 category: "Evento"
-grupo: eventos
+grupos: [eventos]
 order: 13
 ---

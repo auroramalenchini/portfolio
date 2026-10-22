@@ -1,6 +1,6 @@
 ---
 title: "Fotografías para evento de turismo: FemTur"
 category: "Evento"
-grupo: eventos
+grupos: [eventos]
 order: 4
 ---

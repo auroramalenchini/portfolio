@@ -14,7 +14,7 @@ interface Proyecto {
   fotos: number;
   preview?: number[];
   mobileLimit?: number;
-  grupo: string;
+  grupos: string[];
 }
 
 function proyectos(): Proyecto[] {
@@ -34,7 +34,7 @@ function proyectos(): Proyecto[] {
           ? preview.replace(/[[\]]/g, '').split(',').map((n) => Number(n.trim()))
           : undefined,
         mobileLimit: dato('mobileLimit') ? Number(dato('mobileLimit')) : undefined,
-        grupo: dato('grupo') ?? '',
+        grupos: (dato('grupos') ?? '').replace(/[[\]]/g, '').split(',').map((g) => g.trim()).filter(Boolean),
       };
     })
     .sort((a, b) => a.order - b.order);
@@ -109,11 +109,11 @@ test.describe('/foto/', () => {
 
   test('los filtros muestran sólo su grupo y los lados siguen alternando', async ({ page }) => {
     await page.goto('/foto/');
-    const grupos = [...new Set(PROYECTOS.map((p) => p.grupo))];
+    const grupos = [...new Set(PROYECTOS.flatMap((p) => p.grupos))];
     for (const grupo of [...grupos, '']) {
       await page.locator(`.filtro[data-filtro="${grupo}"]`).click();
       await expect(page.locator(`.filtro[data-filtro="${grupo}"]`)).toHaveAttribute('aria-pressed', 'true');
-      const esperados = PROYECTOS.filter((p) => !grupo || p.grupo === grupo);
+      const esperados = PROYECTOS.filter((p) => !grupo || p.grupos.includes(grupo));
       const visibles = page.locator('.project:visible');
       await expect(visibles).toHaveCount(esperados.length);
       for (const [i, proyecto] of esperados.entries()) {
@@ -130,11 +130,11 @@ test.describe('/foto/', () => {
   });
 
   test('un link con #grupo abre la página ya filtrada', async ({ page }) => {
-    const grupo = PROYECTOS[0].grupo;
+    const grupo = PROYECTOS[0].grupos[0];
     await page.goto(`/foto/#${grupo}`);
     await expect(page.locator(`.filtro[data-filtro="${grupo}"]`)).toHaveAttribute('aria-pressed', 'true');
     await expect(page.locator('.project:visible')).toHaveCount(
-      PROYECTOS.filter((p) => p.grupo === grupo).length
+      PROYECTOS.filter((p) => p.grupos.includes(grupo)).length
     );
   });
 

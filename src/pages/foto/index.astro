@@ -21,13 +21,14 @@ const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image
 // nada.
 const NOMBRES: Record<(typeof GRUPOS_FOTO)[number], string> = {
   eventos: 'Eventos',
-  gastronomia: 'Gastronomía y espacios',
+  gastronomia: 'Gastronomía',
+  espacios: 'Espacios',
   rodajes: 'Rodajes',
 };
 const filtros = GRUPOS_FOTO.map((grupo) => ({
   grupo,
   nombre: NOMBRES[grupo],
-  cuantos: projects.filter((p) => p.data.grupo === grupo).length,
+  cuantos: projects.filter((p) => p.data.grupos.includes(grupo)).length,
 })).filter((f) => f.cuantos > 0);
 
 const blocks = projects.map((project) => {
@@ -83,7 +84,7 @@ const blocks = projects.map((project) => {
           title={block.data.title}
           category={block.data.category}
           side={i % 2 ? 'right' : 'left'}
-          grupo={block.data.grupo}
+          grupos={block.data.grupos}
         >
           {block.verTodas && (
             <a
@@ -111,20 +112,21 @@ const blocks = projects.map((project) => {
 </Base>
 
 <script>
-  // Los filtros: esconden los proyectos de otros grupos y vuelven a alternar
+  // Los filtros: esconden los proyectos que no están en el grupo elegido (uno
+  // puede estar en varios) y vuelven a alternar
   // los lados entre los que quedan, para que no queden dos títulos seguidos
   // del mismo lado. El filtro elegido va en la dirección (#eventos), así un
   // link puede abrir la página ya filtrada.
   const caja = document.querySelector<HTMLElement>('.filtros');
   const botones = Array.from(document.querySelectorAll<HTMLButtonElement>('.filtro'));
-  const proyectos = Array.from(document.querySelectorAll<HTMLElement>('.project[data-grupo]'));
+  const proyectos = Array.from(document.querySelectorAll<HTMLElement>('.project[data-grupos]'));
   const validos = new Set(botones.map((b) => b.dataset.filtro));
 
   function filtrar(grupo: string) {
     for (const b of botones) b.setAttribute('aria-pressed', String(b.dataset.filtro === grupo));
     let i = 0;
     for (const p of proyectos) {
-      const va = !grupo || p.dataset.grupo === grupo;
+      const va = !grupo || (p.dataset.grupos ?? '').split(' ').includes(grupo);
       p.hidden = !va;
       if (va) p.classList.toggle('right', i++ % 2 === 1);
     }

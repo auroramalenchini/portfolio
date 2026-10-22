@@ -1,6 +1,6 @@
 ---
 title: "Fotografías charla y fiesta PsicodeAr"
 category: "Evento"
-grupo: eventos
+grupos: [eventos]
 order: 11
 ---

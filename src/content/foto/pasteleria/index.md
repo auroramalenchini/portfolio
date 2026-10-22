@@ -1,6 +1,6 @@
 ---
 title: "Fotografías para pastelería"
 category: "Emprendimiento"
-grupo: gastronomia
+grupos: [gastronomia]
 order: 14
 ---

@@ -1,6 +1,6 @@
 ---
 title: "Fotografía de evento: Hackathon YHAT"
 category: "Evento"
-grupo: eventos
+grupos: [eventos]
 order: 12
 ---

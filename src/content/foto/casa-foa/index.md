@@ -1,6 +1,6 @@
 ---
 title: "Fotografías para instalación artística: Casa FOA"
 category: "Evento"
-grupo: eventos
+grupos: [eventos, espacios]
 order: 7
 ---

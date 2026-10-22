@@ -8,13 +8,13 @@ import { z } from 'zod';
 export const youtubeId = z.string().regex(/^[\w-]{11}$/);
 
 /** Los filtros de la página de Foto. El rubro (`category`) es más fino. */
-export const GRUPOS_FOTO = ['eventos', 'gastronomia', 'rodajes'] as const;
+export const GRUPOS_FOTO = ['eventos', 'gastronomia', 'espacios', 'rodajes'] as const;
 
 export const fotoSchema = z.object({
   title: z.string(),
   category: z.string(),
-  // En qué filtro de la página de Foto aparece.
-  grupo: z.enum(GRUPOS_FOTO),
+  // En qué filtros de la página de Foto aparece: uno o varios.
+  grupos: z.array(z.enum(GRUPOS_FOTO)).min(1),
   order: z.number(),
   // Opcional: qué fotos se ven en la vista de conjunto, y en qué orden.
   // Por defecto, las primeras seis.

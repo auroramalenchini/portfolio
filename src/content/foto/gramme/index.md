@@ -1,6 +1,6 @@
 ---
 title: "Fotografías para Gramme catering"
 category: "Casamiento"
-grupo: gastronomia
+grupos: [gastronomia]
 order: 5
 ---

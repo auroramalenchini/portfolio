@@ -1,7 +1,7 @@
 ---
 title: "Fotografías para hotel: Anantara"
 category: "Hotel"
-grupo: gastronomia
+grupos: [espacios]
 order: 2
 mobileLimit: 3
 ---
