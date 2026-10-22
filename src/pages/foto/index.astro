@@ -240,6 +240,11 @@ const blocks = projects.map((project) => {
     line-height: 1.62;
     max-width: 52ch;
   }
+  /* En el teléfono la bajada a cuerpo de lectura ocupaba media pantalla
+     antes de la primera foto: va al tamaño del menú. */
+  @media (max-width: 560px) {
+    .intro p { font-size: var(--t-2); }
+  }
 
   /* Un respiro entre la bajada de la página y el primer proyecto. */
   .projects { padding-block: var(--s-7) var(--s-8); }
