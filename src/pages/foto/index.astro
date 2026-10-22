@@ -8,6 +8,7 @@ import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { ogImagePath, previewOf, projectImages } from '../../lib/images';
 import { GRUPOS_FOTO, NOMBRES_GRUPO, etiquetaGrupos } from '../../lib/schemas';
+import { site } from '../../lib/site';
 
 // Un bloque por proyecto, en el orden que declara cada index.md. La vista de
 // conjunto muestra la selección del proyecto (o las primeras seis) y el link
@@ -61,7 +62,13 @@ const blocks = projects.map((project) => {
     </p>
     <!-- Sin JavaScript los botones no harían nada: nacen escondidos y el
          script los muestra. Sin ellos se ve todo, como antes. -->
-    <div class="filtros" role="group" aria-label="Filtrar trabajos" hidden>
+    <div
+      class="filtros"
+      role="group"
+      aria-label="Filtrar trabajos"
+      data-ordenes={JSON.stringify(site.fotoFiltros ?? {})}
+      hidden
+    >
       <button type="button" class="filtro" data-filtro="" aria-pressed="true">Todo</button>
       {
         filtros.map((f) => (
@@ -81,6 +88,7 @@ const blocks = projects.map((project) => {
           category={block.etiqueta}
           side={i % 2 ? 'right' : 'left'}
           grupos={block.data.grupos}
+          slug={block.slug}
         >
           {block.verTodas && (
             <a
@@ -109,19 +117,36 @@ const blocks = projects.map((project) => {
 
 <script>
   // Los filtros: esconden los proyectos que no están en el grupo elegido (uno
-  // puede estar en varios) y vuelven a alternar
-  // los lados entre los que quedan, para que no queden dos títulos seguidos
-  // del mismo lado. El filtro elegido va en la dirección (#eventos), así un
+  // puede estar en varios), los ponen en el orden propio del filtro si
+  // site.json lo trae, y vuelven a alternar los lados entre los que quedan,
+  // para que no queden dos títulos seguidos del mismo lado. El filtro elegido va en la dirección (#eventos), así un
   // link puede abrir la página ya filtrada.
   const caja = document.querySelector<HTMLElement>('.filtros');
   const botones = Array.from(document.querySelectorAll<HTMLButtonElement>('.filtro'));
   const proyectos = Array.from(document.querySelectorAll<HTMLElement>('.project[data-grupos]'));
   const validos = new Set(botones.map((b) => b.dataset.filtro));
+  const ordenes: Record<string, string[]> = JSON.parse(caja?.dataset.ordenes ?? '{}');
+
+  /** El orden de un filtro: primero los de su lista, después el resto en el
+   *  orden general. Sin lista, el orden general. */
+  function enOrden(grupo: string): HTMLElement[] {
+    const lista = ordenes[grupo] ?? [];
+    const puesto = (p: HTMLElement) => {
+      const i = lista.indexOf(p.dataset.slug ?? '');
+      return i === -1 ? lista.length : i;
+    };
+    // sort es estable: los que empatan conservan el orden general.
+    return [...proyectos].sort((a, b) => puesto(a) - puesto(b));
+  }
 
   function filtrar(grupo: string) {
     for (const b of botones) b.setAttribute('aria-pressed', String(b.dataset.filtro === grupo));
+    // Se mueven en el documento y no sólo a la vista: así el teclado y los
+    // lectores de pantalla los recorren en el mismo orden en que se ven.
+    const ordenados = enOrden(grupo);
+    ordenados[0]?.parentElement?.append(...ordenados);
     let i = 0;
-    for (const p of proyectos) {
+    for (const p of ordenados) {
       const va = !grupo || (p.dataset.grupos ?? '').split(' ').includes(grupo);
       p.hidden = !va;
       if (va) p.classList.toggle('right', i++ % 2 === 1);
@@ -138,8 +163,13 @@ const blocks = projects.map((project) => {
         history.replaceState(null, '', grupo ? `#${grupo}` : location.pathname);
       });
     }
-    const pedido = location.hash.slice(1);
-    if (pedido && validos.has(pedido)) filtrar(pedido);
+    const pedido = () => {
+      const grupo = location.hash.slice(1);
+      filtrar(validos.has(grupo) ? grupo : '');
+    };
+    if (location.hash) pedido();
+    // Si se cambia a mano el #filtro de la dirección, con la página abierta.
+    addEventListener('hashchange', pedido);
   }
 </script>
 

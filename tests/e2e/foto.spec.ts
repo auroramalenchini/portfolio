@@ -42,6 +42,17 @@ function proyectos(): Proyecto[] {
 
 const PROYECTOS = proyectos();
 
+/** El orden propio de cada filtro, de src/content/site.json. */
+const ORDENES: Record<string, string[]> =
+  JSON.parse(readFileSync(new URL('../../src/content/site.json', import.meta.url), 'utf8')).fotoFiltros ?? {};
+
+/** Los proyectos de un filtro en el orden en que tienen que verse. */
+function delFiltro(grupo: string): Proyecto[] {
+  const lista = ORDENES[grupo] ?? [];
+  const puesto = (p: Proyecto) => (lista.includes(p.slug) ? lista.indexOf(p.slug) : lista.length);
+  return PROYECTOS.filter((p) => !grupo || p.grupos.includes(grupo)).sort((a, b) => puesto(a) - puesto(b));
+}
+
 /** Cuántas placas tiene que mostrar la vista de conjunto de un proyecto. */
 function cuantasEnLaPrevia(p: Proyecto): number {
   return p.preview ? p.preview.length : Math.min(p.fotos, PREVIEW_MAX);
@@ -113,7 +124,7 @@ test.describe('/foto/', () => {
     for (const grupo of [...grupos, '']) {
       await page.locator(`.filtro[data-filtro="${grupo}"]`).click();
       await expect(page.locator(`.filtro[data-filtro="${grupo}"]`)).toHaveAttribute('aria-pressed', 'true');
-      const esperados = PROYECTOS.filter((p) => !grupo || p.grupos.includes(grupo));
+      const esperados = delFiltro(grupo);
       const visibles = page.locator('.project:visible');
       await expect(visibles).toHaveCount(esperados.length);
       for (const [i, proyecto] of esperados.entries()) {

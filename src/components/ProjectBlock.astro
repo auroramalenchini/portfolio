@@ -10,12 +10,14 @@ interface Props {
   side: 'left' | 'right';
   /** Opcional: los filtros de la página en los que aparece. */
   grupos?: string[];
+  /** Opcional: con qué nombre lo ordenan los filtros que tienen orden propio. */
+  slug?: string;
 }
 
-const { title, category, side, grupos } = Astro.props;
+const { title, category, side, grupos, slug } = Astro.props;
 ---
 
-<article class:list={['project', { right: side === 'right' }]} data-grupos={grupos?.join(' ')}>
+<article class:list={['project', { right: side === 'right' }]} data-grupos={grupos?.join(' ')} data-slug={slug}>
   <div class="project-info">
     <h3><SmallCaps text={title} /></h3>
     <span class="project-cat">{category}</span>

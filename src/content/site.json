@@ -23,5 +23,8 @@
       "foto/anantara/06",
       "foto/oruga/17"
     ]
+  },
+  "fotoFiltros": {
+    "espacios": ["anantara", "casa-foa", "marte", "apertura-bar"]
   }
 }

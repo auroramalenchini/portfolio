@@ -109,6 +109,17 @@ describe('carpetas de proyecto', () => {
   );
 });
 
+describe('orden propio de los filtros (site.json)', () => {
+  it.each(Object.entries(site.fotoFiltros ?? {}))('%s: cada proyecto existe y está en el filtro', (grupo, lista) => {
+    for (const slug of lista) {
+      const proyecto = foto.find((p) => p.slug === slug);
+      expect(proyecto, `no hay un proyecto de foto "${slug}"`).toBeDefined();
+      expect(proyecto!.data.grupos as string[], `${slug} no está en ${grupo}`).toContain(grupo);
+    }
+    expect(new Set(lista).size, 'un proyecto repetido en la lista').toBe(lista.length);
+  });
+});
+
 describe('orden de los proyectos', () => {
   it.each([
     ['foto', foto],

@@ -34,6 +34,18 @@ preview: [1, 8, 4, 11, 15, 9]          # opcional: qué fotos van en la previa
 
 Sin `preview` se muestran las primeras seis.
 
+Los filtros de la página de Foto muestran sus proyectos en el orden general
+(`order`). Para darle a un filtro un orden propio, listá los slugs en
+`src/content/site.json`, en `fotoFiltros`:
+
+```json
+"fotoFiltros": {
+  "espacios": ["anantara", "casa-foa", "marte", "apertura-bar"]
+}
+```
+
+Los del filtro que no estén en la lista van después, en el orden general.
+
 Si en el teléfono la previa queda muy cargada, `mobileLimit: 3` muestra ahí
 sólo las tres primeras, con el link "Ver las N fotos" para ver el resto. En la
 compu se sigue viendo la previa entera.

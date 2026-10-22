@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import raw from '../content/site.json';
+import { GRUPOS_FOTO } from './schemas';
 
 // Los datos del sitio (nombre, contacto, puertas de la portada) viven en
 // src/content/site.json. Se validan una sola vez, al importar: si falta un
@@ -17,6 +18,10 @@ export const siteSchema = z.object({
     videoClipWebm: z.string().optional(),
     photo: z.array(z.string()).min(1),
   }),
+  // Opcional: un orden propio para un filtro de la página de Foto, con los
+  // slugs de sus proyectos. Los que no figuran van después, en el orden
+  // general; un filtro sin lista usa el orden general.
+  fotoFiltros: z.record(z.enum(GRUPOS_FOTO), z.array(z.string())).optional(),
 });
 
 export type Site = z.infer<typeof siteSchema>;
