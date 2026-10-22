@@ -17,7 +17,10 @@ import { site } from '../lib/site';
         <span class="linea"><SmallCaps text="Aurora" /></span>
         <span class="linea"><SmallCaps text="Malenchini" /></span>
       </h1>
-      <p class="hero-role">{site.tagline}</p>
+      <div class="hero-sub">
+        <p class="hero-role">{site.tagline}</p>
+        <p class="hero-place">{site.location}</p>
+      </div>
     </div>
     <div class="opening-veil" aria-hidden="true"></div>
     <div class="opening-back">
@@ -59,13 +62,23 @@ import { site } from '../lib/site';
   }
   .opening-front h1 .linea { display: block; }
 
-  .hero-role {
+  /* El oficio y la ciudad van juntos, más pegados entre sí que al nombre. */
+  .hero-sub {
+    display: grid;
+    gap: var(--s-2);
+  }
+  .hero-role,
+  .hero-place {
     margin: 0;
     font-size: var(--t-1);
     font-weight: 600;
     letter-spacing: .3em;
     text-transform: uppercase;
     color: var(--fg-title);
+  }
+  .hero-place {
+    font-weight: 500;
+    color: var(--fg-muted);
   }
 
   /* Apilada no hay nada que velar: el velo es del escenario fijo. */

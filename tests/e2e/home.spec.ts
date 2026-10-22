@@ -96,7 +96,8 @@ test.describe('las dos puertas', () => {
           const r = (s: string) => document.querySelector(s)!.getBoundingClientRect();
           const header = r('.site-header').bottom;
           const escenario = r('.opening-stage');
-          const nombre = (r('.opening-front h1').top + r('.hero-role').bottom) / 2;
+          // El bloque entero: el nombre, el oficio y la ciudad.
+          const nombre = (r('.opening-front h1').top + r('.hero-sub').bottom) / 2;
           return {
             nombre: nombre - (header + window.innerHeight) / 2,
             arriba: escenario.top - header,

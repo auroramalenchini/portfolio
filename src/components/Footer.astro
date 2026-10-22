@@ -5,7 +5,9 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <span>© {year} {site.name}</span>
+  <!-- La ciudad va junto al nombre y no del otro lado: a la derecha la
+       tapaba el botón de volver arriba. -->
+  <span>© {year} {site.name}<span class="lugar">{site.location}</span></span>
 </footer>
 
 <style>
@@ -20,5 +22,12 @@ const year = new Date().getFullYear();
     font-size: var(--t-2);
     font-weight: 500;
     letter-spacing: .04em;
+  }
+  .lugar::before { content: " · "; }
+  /* En el teléfono, en un renglón aparte: seguido del nombre llegaba hasta
+     el botón de volver arriba. */
+  @media (max-width: 560px) {
+    .lugar { display: block; margin-top: var(--s-1); }
+    .lugar::before { content: none; }
   }
 </style>
