@@ -13,6 +13,27 @@ const { title, description, image = '/logo-diafragma-ios.png' } = Astro.props;
 // La canónica sale de la URL de la página, no de una lista a mano.
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const ogImage = new URL(image, Astro.site ?? Astro.url).href;
+
+// En la portada, una ficha para Google con los mismos datos que se ven en el
+// sitio: quién es, qué hace, dónde y su Instagram. Le sirve para unir el
+// nombre con el sitio y para mostrar "Aurora Malenchini" como nombre del sitio.
+const inicio = new URL('/', Astro.site ?? Astro.url).href;
+const ficha =
+  Astro.url.pathname === '/'
+    ? [
+        { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: inicio },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: site.name,
+          jobTitle: 'Directora, fotógrafa y creativa',
+          url: inicio,
+          email: `mailto:${site.email}`,
+          address: { '@type': 'PostalAddress', addressLocality: 'Buenos Aires', addressCountry: 'AR' },
+          sameAs: [site.instagram],
+        },
+      ]
+    : null;
 ---
 
 <meta charset="utf-8" />
@@ -20,6 +41,10 @@ const ogImage = new URL(image, Astro.site ?? Astro.url).href;
 <title>{title}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
+<!-- La verificación de Google Search Console (cuenta auroramalenchini@gmail.com).
+     Si se borra, Search Console deja de reconocer el sitio como suyo. -->
+<meta name="google-site-verification" content="adwQa_UvIvKarUyokALGeDOKbEHfm2WFe9JFoPzZeOs" />
+{ficha && <script type="application/ld+json" set:html={JSON.stringify(ficha)} />}
 
 <link rel="icon" href="/logo-diafragma.svg" type="image/svg+xml" />
 <link rel="icon" href="/logo-diafragma-32.png" sizes="32x32" type="image/png" />
