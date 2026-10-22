@@ -142,6 +142,10 @@ const blocks = projects.map((project) => {
     line-height: 1.62;
     max-width: 52ch;
   }
+  /* En el teléfono, más chica: igual que en Foto. */
+  @media (max-width: 560px) {
+    .intro p { font-size: var(--t-bajada-tel); }
+  }
 
   /* Bajada y foto lado a lado. La foto se recorta al alto exacto del título
      más la bajada: va absoluta para no empujar la fila, si no sería ella la

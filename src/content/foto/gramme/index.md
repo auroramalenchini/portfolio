@@ -1,6 +1,6 @@
 ---
 title: "Fotografías para Gramme catering"
-grupos: [gastronomia]
+grupos: [eventos, gastronomia]
 order: 5
 mobileLimit: 5
 ---

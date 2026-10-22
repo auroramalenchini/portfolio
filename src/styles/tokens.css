@@ -47,6 +47,7 @@
   --t-1: 0.7rem;        /* etiquetas en mayúscula */
   --t-2: 0.82rem;       /* menú, pie, fichas */
   --t-3: 1.0625rem;     /* cuerpo de texto, 17px */
+  --t-bajada-tel: 0.94rem; /* la bajada de Foto y Video en el teléfono, 15px */
   --t-4: 1.26rem;       /* nombre en el header, bajadas */
   --t-5: clamp(1.85rem, 3.4vw, 2.75rem);   /* títulos de sección */
   --t-6: clamp(2.8rem, 10.6vw, 9rem);      /* el nombre de la portada */
