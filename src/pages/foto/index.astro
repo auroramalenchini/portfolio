@@ -17,8 +17,8 @@ const projects = (await getCollection('foto')).sort((a, b) => a.data.order - b.d
 // Para compartir, la primera foto del primer proyecto.
 const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image);
 
-// Los filtros, con cuántos proyectos tiene cada uno. Un filtro vacío no se
-// muestra: llevaría a una página sin nada.
+// Los filtros. Uno sin proyectos no se muestra: llevaría a una página sin
+// nada.
 const NOMBRES: Record<(typeof GRUPOS_FOTO)[number], string> = {
   eventos: 'Eventos',
   gastronomia: 'Gastronomía y espacios',
@@ -69,7 +69,7 @@ const blocks = projects.map((project) => {
       {
         filtros.map((f) => (
           <button type="button" class="filtro" data-filtro={f.grupo} aria-pressed="false">
-            {f.nombre} <span class="cuantos">{f.cuantos}</span>
+            {f.nombre}
           </button>
         ))
       }
@@ -179,7 +179,6 @@ const blocks = projects.map((project) => {
     cursor: pointer;
     transition: color .2s, border-color .2s, background-color .2s;
   }
-  .filtro .cuantos { margin-left: var(--s-1); opacity: .6; }
   .filtro[aria-pressed="true"] {
     background-color: var(--accent);
     border-color: var(--accent);
