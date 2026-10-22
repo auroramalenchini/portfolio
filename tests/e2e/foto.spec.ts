@@ -294,16 +294,21 @@ test.describe('el mosaico', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/foto/', { waitUntil: 'load' });
 
-    // El motor viejo daba 527px a la primera foto de Oruga en la columna de
-    // 948: una sola apaisada por fila, no dos chicas.
-    const alto = await page
-      .locator('.project')
-      .first()
-      .locator('.card-wrap')
-      .first()
-      .evaluate((el) => el.getBoundingClientRect().height);
-    expect(Math.round(alto), `la primera placa de la previa mide ${Math.round(alto)}px`)
-      .toBeGreaterThanOrEqual(480);
+    // Una apaisada que el mosaico deja sola en su fila ocupa toda la columna
+    // de 948: el motor viejo la achicaba como si fueran dos chicas. Se buscan
+    // en toda la página, sin atarse a la previa de un proyecto en particular.
+    const solas = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('.project .mosaic')].flatMap((mosaico) => {
+        const placas = [...mosaico.querySelectorAll<HTMLElement>('.card-wrap')].map((el) => el.getBoundingClientRect());
+        return placas
+          .filter((r) => r.width > r.height && placas.filter((o) => Math.round(o.top) === Math.round(r.top)).length === 1)
+          .map((r) => Math.round(r.height));
+      })
+    );
+    expect(solas.length, 'ninguna apaisada sola en su fila: la prueba no mide nada').toBeGreaterThan(0);
+    for (const alto of solas) {
+      expect(alto, `una apaisada sola en su fila mide ${alto}px`).toBeGreaterThanOrEqual(480);
+    }
   });
 
   test('/video/ a 1024 no se estira a lo largo', async ({ page }, info) => {
