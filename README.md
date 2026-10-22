@@ -27,6 +27,7 @@ Carpeta `src/content/foto/<slug>/` (el slug queda en la dirección web:
 ---
 title: "Fotografías para bar: Marte"   # va entre comillas
 category: "Restaurante"                # el rubro: Evento, Hotel, Rodaje…
+grupo: gastronomia                     # el filtro: eventos, gastronomia o rodajes
 order: 5                               # puesto en la página de Foto, sin repetir
 preview: [1, 8, 4, 11, 15, 9]          # opcional: qué fotos van en la previa
 ---

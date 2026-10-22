@@ -7,9 +7,14 @@ import { z } from 'zod';
 /** Un id de YouTube: once caracteres, letras, números, guión y guión bajo. */
 export const youtubeId = z.string().regex(/^[\w-]{11}$/);
 
+/** Los filtros de la página de Foto. El rubro (`category`) es más fino. */
+export const GRUPOS_FOTO = ['eventos', 'gastronomia', 'rodajes'] as const;
+
 export const fotoSchema = z.object({
   title: z.string(),
   category: z.string(),
+  // En qué filtro de la página de Foto aparece.
+  grupo: z.enum(GRUPOS_FOTO),
   order: z.number(),
   // Opcional: qué fotos se ven en la vista de conjunto, y en qué orden.
   // Por defecto, las primeras seis.

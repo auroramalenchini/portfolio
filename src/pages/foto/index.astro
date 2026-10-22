@@ -7,6 +7,7 @@ import ProjectBlock from '../../components/ProjectBlock.astro';
 import BackToTop from '../../components/BackToTop.astro';
 import Lightbox from '../../components/Lightbox.astro';
 import { ogImagePath, previewOf, projectImages } from '../../lib/images';
+import { GRUPOS_FOTO } from '../../lib/schemas';
 
 // Un bloque por proyecto, en el orden que declara cada index.md. La vista de
 // conjunto muestra la selección del proyecto (o las primeras seis) y el link
@@ -15,6 +16,19 @@ const projects = (await getCollection('foto')).sort((a, b) => a.data.order - b.d
 
 // Para compartir, la primera foto del primer proyecto.
 const ogImage = await ogImagePath(projectImages('foto', projects[0].id)[0].image);
+
+// Los filtros, con cuántos proyectos tiene cada uno. Un filtro vacío no se
+// muestra: llevaría a una página sin nada.
+const NOMBRES: Record<(typeof GRUPOS_FOTO)[number], string> = {
+  eventos: 'Eventos',
+  gastronomia: 'Gastronomía y espacios',
+  rodajes: 'Rodajes',
+};
+const filtros = GRUPOS_FOTO.map((grupo) => ({
+  grupo,
+  nombre: NOMBRES[grupo],
+  cuantos: projects.filter((p) => p.data.grupo === grupo).length,
+})).filter((f) => f.cuantos > 0);
 
 const blocks = projects.map((project) => {
   const total = projectImages('foto', project.id).length;
@@ -48,6 +62,18 @@ const blocks = projects.map((project) => {
       Fotografía social y producto: restaurantes, eventos, rodajes y espacios.
       También realizo video resumen o video reel, con edición y color.
     </p>
+    <!-- Sin JavaScript los botones no harían nada: nacen escondidos y el
+         script los muestra. Sin ellos se ve todo, como antes. -->
+    <div class="filtros" role="group" aria-label="Filtrar trabajos" hidden>
+      <button type="button" class="filtro" data-filtro="" aria-pressed="true">Todo</button>
+      {
+        filtros.map((f) => (
+          <button type="button" class="filtro" data-filtro={f.grupo} aria-pressed="false">
+            {f.nombre} <span class="cuantos">{f.cuantos}</span>
+          </button>
+        ))
+      }
+    </div>
   </section>
 
   <section class="projects wrap" aria-label="Trabajos de fotografía">
@@ -57,6 +83,7 @@ const blocks = projects.map((project) => {
           title={block.data.title}
           category={block.data.category}
           side={i % 2 ? 'right' : 'left'}
+          grupo={block.data.grupo}
         >
           {block.verTodas && (
             <a
@@ -83,7 +110,94 @@ const blocks = projects.map((project) => {
   <Lightbox />
 </Base>
 
+<script>
+  // Los filtros: esconden los proyectos de otros grupos y vuelven a alternar
+  // los lados entre los que quedan, para que no queden dos títulos seguidos
+  // del mismo lado. El filtro elegido va en la dirección (#eventos), así un
+  // link puede abrir la página ya filtrada.
+  const caja = document.querySelector<HTMLElement>('.filtros');
+  const botones = Array.from(document.querySelectorAll<HTMLButtonElement>('.filtro'));
+  const proyectos = Array.from(document.querySelectorAll<HTMLElement>('.project[data-grupo]'));
+  const validos = new Set(botones.map((b) => b.dataset.filtro));
+
+  function filtrar(grupo: string) {
+    for (const b of botones) b.setAttribute('aria-pressed', String(b.dataset.filtro === grupo));
+    let i = 0;
+    for (const p of proyectos) {
+      const va = !grupo || p.dataset.grupo === grupo;
+      p.hidden = !va;
+      if (va) p.classList.toggle('right', i++ % 2 === 1);
+    }
+  }
+
+  if (caja) {
+    caja.hidden = false;
+    for (const b of botones) {
+      b.addEventListener('click', () => {
+        const grupo = b.dataset.filtro ?? '';
+        filtrar(grupo);
+        // replaceState y no location.hash: cambiar el hash saltaría al ancla.
+        history.replaceState(null, '', grupo ? `#${grupo}` : location.pathname);
+      });
+    }
+    const pedido = location.hash.slice(1);
+    if (pedido && validos.has(pedido)) filtrar(pedido);
+  }
+</script>
+
 <style>
+  /* Los proyectos escondidos por un filtro. El [hidden] del navegador pierde
+     contra el display: grid del bloque, y el espacio entre proyectos pasa a
+     ser un gap: con el margen entre hermanos, el primero visible arrastraba
+     el aire del escondido de arriba. */
+  .projects {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-8);
+  }
+  .projects :global(.project + .project) { margin-top: 0; }
+  .projects :global(.project[hidden]) { display: none; }
+
+  .filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-top: var(--s-5);
+  }
+  .filtros[hidden] { display: none; }
+  .filtro {
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--line);
+    border-radius: var(--r-esquina);
+    background: transparent;
+    color: var(--fg-muted);
+    font-family: var(--font-sans);
+    font-size: var(--t-label);
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color .2s, border-color .2s, background-color .2s;
+  }
+  .filtro .cuantos { margin-left: var(--s-1); opacity: .6; }
+  .filtro[aria-pressed="true"] {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-media);
+  }
+  .filtro:focus-visible { outline: 2px solid var(--fg-title); outline-offset: 2px; }
+  @media (hover: hover) and (pointer: fine) {
+    .filtro[aria-pressed="false"]:hover { color: var(--fg); border-color: var(--fg); }
+  }
+  /* Los 44px del dedo, como en el menú. */
+  @media (any-pointer: coarse) {
+    .filtro { min-height: 44px; }
+  }
+  /* En el teléfono, con el aire de la compu, ocupaban tres renglones. */
+  @media (max-width: 560px) {
+    .filtro { padding-inline: var(--s-3); letter-spacing: .08em; }
+  }
+
   /* El mismo corte que el tope de Mosaic.astro: en pantalla ancha se ven
      todas las fotos y el link sobra. */
   @media (min-width: 801px) {

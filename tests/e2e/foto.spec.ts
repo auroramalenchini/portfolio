@@ -14,6 +14,7 @@ interface Proyecto {
   fotos: number;
   preview?: number[];
   mobileLimit?: number;
+  grupo: string;
 }
 
 function proyectos(): Proyecto[] {
@@ -33,6 +34,7 @@ function proyectos(): Proyecto[] {
           ? preview.replace(/[[\]]/g, '').split(',').map((n) => Number(n.trim()))
           : undefined,
         mobileLimit: dato('mobileLimit') ? Number(dato('mobileLimit')) : undefined,
+        grupo: dato('grupo') ?? '',
       };
     })
     .sort((a, b) => a.order - b.order);
@@ -103,6 +105,37 @@ test.describe('/foto/', () => {
         await expect(link).toBeHidden();
       }
     }
+  });
+
+  test('los filtros muestran sólo su grupo y los lados siguen alternando', async ({ page }) => {
+    await page.goto('/foto/');
+    const grupos = [...new Set(PROYECTOS.map((p) => p.grupo))];
+    for (const grupo of [...grupos, '']) {
+      await page.locator(`.filtro[data-filtro="${grupo}"]`).click();
+      await expect(page.locator(`.filtro[data-filtro="${grupo}"]`)).toHaveAttribute('aria-pressed', 'true');
+      const esperados = PROYECTOS.filter((p) => !grupo || p.grupo === grupo);
+      const visibles = page.locator('.project:visible');
+      await expect(visibles).toHaveCount(esperados.length);
+      for (const [i, proyecto] of esperados.entries()) {
+        const bloque = visibles.nth(i);
+        await expect(bloque.locator('h3')).toContainText(proyecto.title.split(':')[0].slice(0, 12), {
+          ignoreCase: true,
+        });
+        // Entre los que quedan, uno a cada lado: nunca dos títulos seguidos
+        // del mismo lado.
+        await expect(bloque).toHaveClass(i % 2 ? /\bright\b/ : /^(?!.*\bright\b)/);
+      }
+      expect(new URL(page.url()).hash).toBe(grupo ? `#${grupo}` : '');
+    }
+  });
+
+  test('un link con #grupo abre la página ya filtrada', async ({ page }) => {
+    const grupo = PROYECTOS[0].grupo;
+    await page.goto(`/foto/#${grupo}`);
+    await expect(page.locator(`.filtro[data-filtro="${grupo}"]`)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('.project:visible')).toHaveCount(
+      PROYECTOS.filter((p) => p.grupo === grupo).length
+    );
   });
 
   test('las imágenes vienen medidas y con srcset, y ninguna falta', async ({ page }) => {
