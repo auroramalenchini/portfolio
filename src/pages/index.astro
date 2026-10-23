@@ -57,11 +57,11 @@ const ogImage = await ogImagePath(puertaFoto.photos[0]);
         pictureAttributes={{ class: 'reveal' }}
       />
     </div>
-    <div>
+    <div class="about-texto">
       <h2 class="reveal"><SmallCaps text="Sobre mí" /></h2>
       <p class="reveal">
-        Soy una cineasta, fotógrafa y creativa argentina de 22 años. Soy egresada de
-        la Universidad del Cine; soy amante del arte y del contenido visual.
+        Soy cineasta, fotógrafa y creativa argentina de 22 años. Soy egresada de
+        la Universidad del Cine; amante del arte y del contenido visual.
       </p>
       <p class="reveal">
         Trabajo de imaginar y realizar fotografía y video: cubro eventos y capturo
@@ -265,6 +265,15 @@ const ogImage = await ogImagePath(puertaFoto.photos[0]);
       height: var(--about-h);
     }
     .about-fotos :global(picture) { width: 100%; justify-self: stretch; }
+    /* El texto en un recuadro: a todo el ancho quedaba pegado a los bordes
+       de la pantalla, y a cuerpo de lectura ocupaba demasiado. */
+    .about-texto {
+      padding: var(--s-5);
+      background: var(--bg-2);
+      border-radius: var(--r-esquina);
+    }
+    .about p,
+    .contact-lead { font-size: var(--t-bajada-tel); }
     /* Ella y la cámara viven en la franja izquierda del cuadro: centrado al
        medio, el recorte le come la cara. */
     .about-fotos :global(picture:last-child img) { object-position: 32% center; }

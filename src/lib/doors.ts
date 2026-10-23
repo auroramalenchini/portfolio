@@ -62,18 +62,19 @@ const videoClip = site.doors.videoClip
     }
   : undefined;
 
+// Foto primero: a la izquierda en la computadora, arriba en el teléfono.
 export const doors: Door[] = [
+  {
+    label: 'Foto',
+    sub: 'Eventos, restaurantes, rodajes, foto producto y más',
+    href: '/foto/',
+    photos: site.doors.photo.map(resolverFoto),
+  },
   {
     label: 'Video',
     sub: 'Videoclips, visualizers, fashion films y sesiones musicales',
     href: '/video/',
     photos: site.doors.video.map(resolverFoto),
     clip: videoClip,
-  },
-  {
-    label: 'Foto',
-    sub: 'Eventos, restaurantes, rodajes, foto producto y más',
-    href: '/foto/',
-    photos: site.doors.photo.map(resolverFoto),
   },
 ];

@@ -47,10 +47,10 @@ test.describe('las dos puertas', () => {
 
     if (info.project.name === 'desktop') {
       expect(Math.abs(v!.y - f!.y), 'mismo techo').toBeLessThanOrEqual(2);
-      expect(f!.x, 'Foto a la derecha de Video').toBeGreaterThan(v!.x + v!.width / 2);
+      expect(v!.x, 'Video a la derecha de Foto').toBeGreaterThan(f!.x + f!.width / 2);
     } else {
       expect(Math.abs(v!.x - f!.x), 'misma izquierda').toBeLessThanOrEqual(2);
-      expect(f!.y, 'Foto abajo de Video').toBeGreaterThan(v!.y + v!.height / 2);
+      expect(v!.y, 'Video abajo de Foto').toBeGreaterThan(f!.y + f!.height / 2);
     }
   });
 

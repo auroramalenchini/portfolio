@@ -18,8 +18,8 @@ function esActual(href: string): boolean {
     <small>{site.tagline}</small>
   </a>
   <nav class="nav" aria-label="Principal">
-    <a href="/video/" aria-current={esActual('/video') ? 'page' : undefined}>Video</a>
     <a href="/foto/" aria-current={esActual('/foto') ? 'page' : undefined}>Foto</a>
+    <a href="/video/" aria-current={esActual('/video') ? 'page' : undefined}>Video</a>
     <a href="/#about">Sobre mí</a>
     <a class="cta" href="/#contact">Contacto</a>
   </nav>
@@ -129,9 +129,11 @@ function esActual(href: string): boolean {
       gap: var(--s-3);
       padding-inline: var(--pad);
     }
-    .nav { width: 100%; gap: var(--s-3); align-items: center; }
+    .nav { width: 100%; gap: var(--s-3); align-items: center; font-size: var(--t-1); }
     .nav a.cta { margin-left: 0; padding: var(--s-2) var(--s-3); }
     .brand small { display: none; }
+    /* Todo un punto más chico: el menú casi tocaba el nombre. */
+    .brand { font-size: var(--t-3); }
   }
 
   /* Contacto a la derecha y centrado en el alto del header, como en la
