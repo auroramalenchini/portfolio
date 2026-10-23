@@ -21,7 +21,14 @@ const inicio = new URL('/', Astro.site ?? Astro.url).href;
 const ficha =
   Astro.url.pathname === '/'
     ? [
-        { '@context': 'https://schema.org', '@type': 'WebSite', name: site.name, url: inicio },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: site.siteName,
+          // Si Google no usa el nombre del sitio, que caiga en el de ella.
+          alternateName: site.name,
+          url: inicio,
+        },
         {
           '@context': 'https://schema.org',
           '@type': 'Person',
@@ -58,7 +65,7 @@ const ficha =
 <meta name="theme-color" content="#7A2233" />
 
 <meta property="og:type" content="website" />
-<meta property="og:site_name" content={site.name} />
+<meta property="og:site_name" content={site.siteName} />
 <meta property="og:locale" content="es_AR" />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />

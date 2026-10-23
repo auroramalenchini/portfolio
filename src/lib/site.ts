@@ -7,6 +7,9 @@ import { GRUPOS_FOTO } from './schemas';
 // campo, el build falla en vez de publicar una página a medias.
 export const siteSchema = z.object({
   name: z.string().min(1),
+  // Cómo se llama el sitio: lo que Google muestra al lado del logo en los
+  // resultados, y el nombre del sitio al compartir un link.
+  siteName: z.string().min(1),
   tagline: z.string().min(1),
   location: z.string().min(1),
   email: z.string().email(),
